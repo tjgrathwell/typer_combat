@@ -1,0 +1,89 @@
+DEBUGGERS:
+    Jumping debugger - fixed set of platforms to show edge-cases for jumping, jump-pathfinding without enemies.
+    Feed debugger - show original content, sentences, words
+    Animation debugger - display individual animations all on one screen, for easy design replacement
+
+Challenge Screen
+  Enable words to be shown on challenge screen and typed on
+  Let a wordbuilder be sent into challenge
+  Fix feeds to get sentences
+
+Architecture
+  Use feedparser.py for feeds.
+  Make an EventManager class ("Mediator") that parses events on tick and dispatches whatever signals
+    need to be done depending on current scene.
+
+Interface
+  START/OPTIONS at beginning
+      Options lets you set word source, other parameters
+  SMB3 style world map to select stages?
+      The most important part of making this would be it lets me abstract out some stuff with regard to what 'scene' is being drawn.
+
+Bugs
+  Player jump isn't as optimistic as it should be when jumping from ledge to ledge with an interrupt in ground inbetween.
+  Word's draw function needs to have x really be centerx for multi-line sentences. Also comment that sucker.
+  Fix int division bug with resolutions not divisible by 5/6
+  Figure out how to use eclipse right
+  Score row shitty updating bug
+  Align updates to refresh rate to eliminate ugliness?
+  Parabolic jump for such as enemies
+  Better jump collision with edges; don't start falling after collision
+
+General
+  Make different "standard" levels on worldmap differentiable by platform texture?
+  Footer with gems
+  Options Screen
+  Better randomly generated environs
+  Image for platforms/better looking platforms
+  Better backgrounds and tiles
+  Reorganize images into sprite sheets? Or not, who cares.
+  better graphic for platform edges
+  player death anim! mega-man style asterisk explosion would be good.
+
+Weapons
+  Weapon Powerups
+  Weapon Effects
+
+Powerups
+  Have powerups drop from enemies gracefully instead of hitting the ground instantly.
+  Slowmo (Might require changing all tick() functions to take an "amount of time since last tick")
+
+Enemies
+  Commando enemy serves as sub-boss, lurks on his own platform, you need to get close to him to engage. Engagement results in TYPING CHALLENGE!$
+  Make the soldier jump
+  Or perhaps, subclass into not-jumping soldier (StrandedSoldier?) and jumping soldier
+  Maybe: BasicSoldier (only falls), StrandedSoldier (scared of heights), JumpingSoldier (follows you)
+  Pathfinding for chopper - probably pretty hard!
+  Redo soldier falling collision
+  A boss
+  CHOPPER ALGORITHM: Move to the nearest hole in direction of player, traverse hole
+  PRELIMINARY SOLDIER ALGORITHM: Jump at -every- oppurtunity.
+
+Player
+  Better AI jump algorithm: enable lateral jumps, make 'late jumps' more possible, make jump look more graceful in general
+  Running from enemies? Or not.
+  Death animation
+  Platform queueing?
+  shooting while jumping
+
+Far Future
+  Minigames
+      Math minigame a-la brain age
+      Backwards typing - two ways to do it
+  Sound
+  Multiplayer?
+
+-- AI RULES --
+Gameplay will normally consist of (automatically) running forward while stopping to type at enemies before they collide with you.
+The player will have no control over the movement of the character other than periodic "choice words" that pop up, directing them to jump to a ledge, shoot a powerup etc
+The player character will run forward unless doing so brings it straight into an enemy.
+If there is an enemy ahead, the character will turn around to increase the distance between itself and the enemy.
+Unless there is an enemy a shorter distance in the other direction. In which case the player will go into idle state until one of the two is destroyed.
+Player's character will periodically stop for 'events', like bosses and minigames
+
+Idea: explosive enemies detonate other nearby enemies when killed (you don't get word credit for those killed)
+
+Idea: normal weapon freezes words in place
+Idea: shotgun weapon blasts enemy backwards along shot vector
+Idea: smart bomb kills all the enemies
+Idea: fun to think about but hard to code - moving platform area where smart jumps still work
