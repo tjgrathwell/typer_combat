@@ -1,3 +1,11 @@
+Quick Fixes:
+  That weird hop when you fall down from a height.
+  Powerup fall animation
+  Score header stuff is disapeering for no reason.
+  Point values when you score would be nice... maybe something too to indicate miss
+  Regular soldiers pain anim doesn't show? I didn't do it :P
+  The way animations are loaded is as i recall shitty and probalu shows bad knowlege of python
+
 DEBUGGERS:
     Jumping debugger - fixed set of platforms to show edge-cases for jumping, jump-pathfinding without enemies.
     Feed debugger - show original content, sentences, words

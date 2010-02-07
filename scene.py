@@ -82,6 +82,20 @@ class Health:
             self.redraw = True
     def value(self):
         return self.current_hearts
+             
+class LoadingScreen:
+    def __init__(self,screen):
+        self.dirty = True
+        self.screen = screen
+        self.showing = True
+
+    def draw(self):
+        self.screen.fill((0,0,0))
+        message = GetFont(72).render("Loading...", 1, (250,250,250))
+        self.screen.blit(message,message.get_rect(centerx=self.screen.get_width()/2,centery=self.screen.get_height()*.25))
+        pygame.display.update()
+        
+        self.dirty = False
                         
 class GameOverScreen:
     def __init__(self,screen):
@@ -105,8 +119,31 @@ class GameOverScreen:
         
     def showMe(self):
         return self.showing
-                        
-class SplashScreen:
+                   
+class TitleScreen:
+    def __init__(self,screen):
+        self.dirty = True
+        self.screen = screen
+        self.showing = True
+    def draw(self):
+        self.screen.fill((50,50,50))
+        title = GetFont(50).render("TYPER COMBAT", 1, (250,250,250))
+        title_rect = title.get_rect(centerx=game_constants.w/2, top=0)
+        self.screen.blit(title,title_rect) 
+
+
+        pygame.display.update()
+        self.dirty = False
+        
+    def handleEvent(self, event_key):
+        if event_key == K_RETURN:
+            return InstructionsScreen(self.screen)
+        return None
+        
+    def showMe(self):
+        return self.showing
+                 
+class InstructionsScreen:
     def __init__(self,screen):
         self.dirty = True
         self.screen = screen
@@ -122,9 +159,6 @@ class SplashScreen:
 
     def draw(self):
         self.screen.fill((50,50,50))
-        title = GetFont(50).render("TYPER COMBAT", 1, (250,250,250))
-        title_rect = title.get_rect(centerx=game_constants.w/2, top=0)
-        self.screen.blit(title,title_rect)   
 
         enemy_list_text = ["SOLDIERS are constrained by the laws of gravity."]
         enemy_list_text.append("COPTERS can fly, but won't go through platforms.")
@@ -153,7 +187,7 @@ class SplashScreen:
             self.screen.blit(image,image.get_rect(centerx=rect.left-image.get_width()-10,centery=this))
             last = this
        
-        gunstar_top = (last+title_rect.bottom)/2 - self.image.get_height()/2
+        gunstar_top = (last)/2 - self.image.get_height()/2
         self.screen.blit(self.image,self.image.get_rect(centerx=game_constants.w/2,top=gunstar_top))     
        
         pygame.display.update()
@@ -306,7 +340,7 @@ class MainGameScene:
         self.time_elapsed = 0
         
         self.health = Health(5)
-        self.score = Score()
+        self.score = Score(screen)
         self.player = Player((screen.get_width()/2, screen.get_height()/2-30))
         self.playergroup = RenderUpdatesDraw(self.player)
 

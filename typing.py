@@ -8,12 +8,12 @@ import pygame, sys, random, math, time, string, os
 from pygame.locals import *
 from feeder import GetFeeder
 from general import *
-from scene import MainGameScene, SplashScreen, OptionsScreen, GameOverScreen, ChallengeScreen
+from scene import MainGameScene, TitleScreen, InstructionsScreen, OptionsScreen, GameOverScreen, ChallengeScreen, LoadingScreen
 from opponents import Soldier, Copter, Ghost, Commando
 from controller import Controller
 
 # Show options screen when DEBUG is there
-DEBUG = 0
+DEBUG = 1
 
 if not pygame.font:
     print "Couldn't load font library, crashing hard"
@@ -55,7 +55,7 @@ def main(argv=sys.argv):
      
     while True: # The Full Game Loop
         screen.set_clip()
-        intro_screens = [SplashScreen(screen)]
+        intro_screens = [TitleScreen(screen)]
         if DEBUG:
             options_screen = OptionsScreen(screen,['Google','Digg','Slashdot'], [Soldier, Copter, Ghost, Commando])
             intro_screens.append(options_screen)
@@ -65,14 +65,16 @@ def main(argv=sys.argv):
                 if event:
                     processEventsForKillSignal([event])
                     if event.type == KEYDOWN:
-                        basic_screen.handleEvent(event.key)
+                        new_screen = basic_screen.handleEvent(event.key)
+                        if new_screen: basic_screen = new_screen
                 if basic_screen.dirty:
                     basic_screen.draw()
                 event = pygame.event.wait()
         
-        main_game_scene = MainGameScene(screen)
-        main_game_scene.redraw()
+        loading_scene = LoadingScreen(screen)
+        loading_scene.draw()
         pygame.display.update()
+        main_game_scene = MainGameScene(screen)
         
         starttime = time.time()
         player_movement = False
@@ -96,6 +98,9 @@ def main(argv=sys.argv):
         words = WordMaker(word_list)
         sentences = WordMaker(sentence_list)
         controller = Controller(main_game_scene,words,sentences)
+        
+        main_game_scene.redraw()
+        pygame.display.update()
         while main_game_scene.showMe(): # Real game phase
             elapsed = time.time() - starttime + 1 # Prevent divide by zero errors the cheater's way
             clock.tick(60)

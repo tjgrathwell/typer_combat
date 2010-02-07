@@ -22,20 +22,24 @@ class Controller:
             if self.jumpsoon: # A jump has been scheduled
                 if self.direction == 'r':
                     if self.player.rect.right > self.jumppos: # Distance less than the maximum jump distance
-                        self.jumpsoon = False
                         self.player.jump(self.selected_platform)
-                        self.selected_platform.selected = False
+                        self.clear_jump()
                 elif self.direction == 'l':
                     if self.player.rect.left < self.jumppos: # Distance less than the maximum jump distance
-                        self.jumpsoon = False
                         self.player.jump(self.selected_platform)
-                        self.selected_platform.selected = False
+                        self.clear_jump()
                         
         if self.player.state is not States.shooting: # Player is capable of movement
             if self.direction == 'r':
                 self.player.direct(K_RIGHT)
             elif self.direction == 'l':
                 self.player.direct(K_LEFT)
+    def clear_jump(self):
+        self.jumppos = None
+        self.jumpsoon = False
+        if (self.selected_platform):
+            self.selected_platform.selected = False     
+            self.selected_platform = None   
     def tock(self,spawners):
         # See if any enemies are colliding with the player, kill them if so
         # TODO Retool this so it's more robust
@@ -126,10 +130,8 @@ class Controller:
             self.direction = 'r'
         elif self.direction == 'r':
             self.direction = 'l'
+        self.clear_jump()
     def type_normal(self,key):
-        if self.scene.player.state in (States.falling,States.jumping):
-            return
-
         if not self.player.selected_opponent: # If we aren't shooting at anything in particular
             for opponent in self.scene.actives: # Try to shoot everyone!
                 hit = opponent.typeon(key)

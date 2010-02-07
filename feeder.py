@@ -63,10 +63,14 @@ class Feeder:
             old = True
 
         if old:
-            xml = self.getxml(self.feedurl)
-            out = open(self.filename,"w")
-            out.write(xml.read())
-            out.close()
+            try:
+                xml = self.getxml(self.feedurl)
+            except urllib2.URLError:
+                pass
+            else:
+                out = open(self.filename,"w")
+                out.write(xml.read())
+                out.close()
         xml = open(self.filename)
         try:
             parsed_feed = feedparser.parse(xml)

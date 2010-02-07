@@ -171,19 +171,27 @@ class SpecialChars:
 class Score(pygame.sprite.Sprite):
     """ Displays score in the upper-right of screen. Draw function requires total elapsed time since game start. """
     font = None
-    def __init__(self,color=Color.score_color):
+    def __init__(self,surface,color=Color.score_color):
         pygame.sprite.Sprite.__init__(self)
         self.color = color
         self.score = 0.0
         self.misses = 0
         self.frames = 0
-        self.rendered_score = Score.font.render("Score: %.2f" % self.score, 1, self.color)
-        self.rendered_misses = Score.font.render("Misses: %i" % self.misses, 1, self.color)
-        self.rendered_wpm = Score.font.render("WPM: 00", 1, self.color)
-        self.scorepos, self.misspos, self.wpmpos = pygame.rect.Rect(0,0,0,0),pygame.rect.Rect(0,0,0,0),pygame.rect.Rect(0,0,0,0)
-        self.drawscore, self.drawmiss, self.drawwpm = True, True, True
+        self.render_initial(surface)
+        self.drawscore, self.drawmiss, self.drawwpm = (True, True, True)
 
         self.drawn_once = False
+    def render_initial(self,surface):
+        self.rendered_score =  Score.font.render("Score: %.2f" % self.score,  1, self.color)
+        self.rendered_misses = Score.font.render("Misses: %i"  % self.misses, 1, self.color)
+        self.rendered_wpm =    Score.font.render("WPM: %3i"    % 0,           1, self.color)
+
+        left_edge = surface.get_rect().right - self.rendered_wpm.get_rect().width * 1.5
+        self.wpm_rect = self.rendered_wpm.get_rect(top=5, left=left_edge)
+        left_edge -= self.rendered_misses.get_rect().width * 1.5
+        self.miss_rect = self.rendered_misses.get_rect(top=5, left=left_edge)
+        left_edge -= self.rendered_score.get_rect().width * 1.5
+        self.score_rect = self.rendered_score.get_rect(top=5, left=left_edge)
     def increase(self,value):
         self.score += value
         self.rendered_score = Score.font.render("Score: %.2f" % self.score, 1, self.color)
@@ -193,43 +201,34 @@ class Score(pygame.sprite.Sprite):
         self.rendered_misses = Score.font.render("Misses: %i" % self.misses, 1, self.color)
         self.drawmiss = True
     def clear(self,surface,background):
-        if self.drawn_once:
-            if self.drawscore:
-                surface.blit(background, self.scorepos)
-            if self.drawmiss:
-                surface.blit(background, self.misspos)
-            if self.drawwpm:
-                surface.blit(background, self.wpmpos)
-    def draw(self,surface,elapsed): # campos is ignored but kept around for the sake of the other sprites
+        if not self.drawn_once: return
+        
+        if self.drawscore:
+            surface.blit(background, self.score_rect)
+        if self.drawmiss:
+            surface.blit(background, self.miss_rect)
+        if self.drawwpm:
+            surface.blit(background, self.wpm_rect)
+    def draw(self,surface,elapsed):
         self.frames += 1
-        screenrect = surface.get_rect()
-        centerscreen = screenrect.centerx
-        farscreen = screenrect.right-self.rendered_wpm.get_width()-10
-        midscreen = centerscreen + (farscreen - centerscreen)/2
+       
+        if self.frames > 60: # Choose whether to draw wpm next frame
+            self.rendered_wpm = Score.font.render("WPM: %3i" % (self.score/(elapsed/60)), 1, self.color)
+            self.drawwpm = True
+            self.frames = 0        
         
         dirty = []
-        if self.drawscore:
-            oldpos = self.scorepos
-            self.scorepos = self.rendered_score.get_rect(top=5,left=screenrect.centerx)
-            dirty += [oldpos.union(surface.blit(self.rendered_score, self.scorepos))]
-            self.drawscore = False
+        if self.drawwpm:
+            dirty += [surface.blit(self.rendered_wpm,self.wpm_rect)]
+            self.drawwpm = True        
         
         if self.drawmiss:
-            oldpos = self.misspos
-            self.misspos = self.rendered_misses.get_rect(top=5,left=midscreen)
-            dirty += [oldpos.union(surface.blit(self.rendered_misses, self.misspos))]
-            self.drawmiss = False
+            dirty += [surface.blit(self.rendered_misses, self.miss_rect)]
+            self.drawmiss = True        
         
-        if self.drawwpm:
-            oldpos = self.wpmpos
-            self.wpmpos = self.rendered_wpm.get_rect(top=5,left=farscreen)
-            dirty += [oldpos.union(surface.blit(self.rendered_wpm,self.wpmpos))]
-            self.drawwpm = False
-            
-        if self.frames > 60: # Choose whether to draw wpm next frame
-            self.rendered_wpm = Score.font.render("WPM: %i" % (self.score/(elapsed/60)), 1, self.color)
-            self.drawwpm = True
-            self.frames = 0
+        if self.drawscore:
+            dirty += [surface.blit(self.rendered_score, self.score_rect)]
+            self.drawscore = True
         
         self.drawn_once = True
         
@@ -342,6 +341,9 @@ class Word(pygame.sprite.Sprite):
         return False
     def done(self):
         return self.strpos == len(self.string)
+ 
+def n_of(format_string, n):
+    return [format_string % i for i in xrange(1,n+1)] 
     
 def loadImagesForAnimations():
     """ Load all the images in the game from files into surfaces as class members. """
@@ -364,7 +366,7 @@ def loadImagesForAnimations():
     Player.images_downleft = flippedframes(Player.images_downright)
     Player.images_idleright = loadframes("gunstar",("rest1.png","rest2.png"))
     Player.images_idleleft = flippedframes(Player.images_idleright)
-    Player.images_runright = loadframes("gunstar",("run1.png","run2.png","run3.png","run4.png","run5.png","run6.png"))
+    Player.images_runright = loadframes("gunstar",n_of("run%i.png",6))
     Player.images_runleft = flippedframes(Player.images_runright)
     Player.images_jumpright = loadframes("gunstar",("jump1.png","jump2.png"))
     Player.images_jumpleft = flippedframes(Player.images_jumpright)
@@ -387,21 +389,19 @@ def loadImagesForAnimations():
     
     Soldier.images_idleright = loadframes("soldier",("rest1.gif","rest2.gif"))
     Soldier.images_idleleft = flippedframes(Soldier.images_idleright)
-    Soldier.images_runright = loadframes("soldier",("run1.gif","run2.gif","run3.gif","run4.gif"))
+    Soldier.images_runright = loadframes("soldier",n_of("run%i.gif",4))
     Soldier.images_runleft = flippedframes(Soldier.images_runright)
     Soldier.images_fallright = loadframes("soldier",("fall1.gif","fall2.gif"))
     Soldier.images_fallleft = flippedframes(Soldier.images_fallright)
     Soldier.images_jumpright = loadframes("soldier",("flip1.gif","flip2.gif"))
     Soldier.images_jumpleft = flippedframes(Soldier.images_jumpright)
     
-    Copter.images_fly = loadframes("copter",("fly1.gif","fly2.gif","fly3.gif","fly4.gif","fly5.gif","fly6.gif"))
+    Copter.images_fly = loadframes("copter",["fly%s.gif" % i for i in xrange(1,7)])
     
     Commando.images_idleright = loadframes("commando",("rest1.gif","rest2.gif"))
     Commando.images_idleleft = flippedframes(Commando.images_idleright)
     
-    Assorted.images_explosion = loadframes("assorted",("explosion01.gif","explosion02.gif","explosion03.gif","explosion04.gif",
-                              "explosion05.gif","explosion06.gif","explosion07.gif","explosion08.gif",
-                              "explosion09.gif","explosion10.gif"))                        
+    Assorted.images_explosion = loadframes("assorted",n_of("explosion%02.f.gif", 10))                        
     Assorted.images_heartfull = loadframes("assorted",(["heartfull.gif"]))
     Assorted.images_heartempty = loadframes("assorted",(["heartempty.gif"]))
     

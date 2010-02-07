@@ -240,7 +240,8 @@ class Player(pygame.sprite.Sprite):
     def point(self, selected): # Point gun at some quadrant
         # 1 _|_ 2
         # 4   |   3
-        self.state = States.shooting
+        if (self.state not in (States.falling, States.jumping)):
+            self.state = States.shooting
         x = self.rect.center[0]-selected.x
         y = self.rect.center[1]-selected.y
         h = math.sqrt(x**2+y**2)
