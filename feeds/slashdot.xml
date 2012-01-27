@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:syn="http://purl.org/rss/1.0/modules/syndication/" xmlns:admin="http://webns.net/mvcb/" xmlns:feedburner="http://rssnamespace.org/feedburner/ext/1.0">
+
+<channel rdf:about="http://slashdot.org/">
+<title>Slashdot</title>
+<link>http://slashdot.org/</link>
+<description>News for nerds, stuff that matters</description>
+<dc:language>en-us</dc:language>
+<dc:rights>Copyright 1997-2012, Geeknet, Inc.  All Rights Reserved.</dc:rights>
+<dc:date>2012-01-27T04:28:10+00:00</dc:date>
+<dc:publisher>Geeknet, Inc.</dc:publisher>
+<dc:creator>help@slashdot.org</dc:creator>
+<dc:subject>Technology</dc:subject>
+<syn:updateBase>1970-01-01T00:00+00:00</syn:updateBase>
+<syn:updateFrequency>1</syn:updateFrequency>
+<syn:updatePeriod>hourly</syn:updatePeriod>
+<items>
+ <rdf:Seq>
+  <rdf:li rdf:resource="http://yro.slashdot.org/story/12/01/27/0154231/twitter-can-now-block-tweets-in-specific-countries?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="http://science.slashdot.org/story/12/01/26/2330204/scientists-create-worlds-first-atomic-x-ray-laser?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="http://yro.slashdot.org/story/12/01/26/2315249/us-plummets-on-world-press-freedom-ranking?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="http://games.slashdot.org/story/12/01/26/238244/pac-man-is-np-hard?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="http://science.slashdot.org/story/12/01/26/2226229/11-new-multi-planet-star-systems-discovered?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="http://yro.slashdot.org/story/12/01/26/227256/railroad-association-says-tsas-hacking-memo-was-wrong?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="http://hardware.slashdot.org/story/12/01/26/2124256/jailbreaking-could-soon-become-illegal-again?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="http://hardware.slashdot.org/story/12/01/26/2033234/for-sinclair-fans-the-zx81-lives-on?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="http://developers.slashdot.org/story/12/01/26/1937214/yahoos-project-to-disrupt-mobile-publishing?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="http://yro.slashdot.org/story/12/01/26/1832219/object-lesson-in-non-transparency-at-energygov?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="http://games.slashdot.org/story/12/01/26/1829232/xbox-720-might-reject-used-games?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="http://yro.slashdot.org/story/12/01/26/1746202/acta-signed-by-22-eu-countries?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="http://science.slashdot.org/story/12/01/26/174249/top-google-executives-approved-illegal-drug-ads?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="http://tech.slashdot.org/story/12/01/26/1550212/wikileaks-cable-nasdaq-folded-to-chinese-pressure?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="http://yro.slashdot.org/story/12/01/26/1539229/o2-fixes-accidental-leak-of-phone-numbers?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+ </rdf:Seq>
+</items>
+<image rdf:resource="http://a.fsdn.com/sd/topics/topicslashdot.gif" />
+<textinput rdf:resource="http://slashdot.org/search.pl" />
+<atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/rdf+xml" href="http://rss.slashdot.org/Slashdot/slashdot" /><feedburner:info uri="slashdot/slashdot" /><atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="hub" href="http://pubsubhubbub.appspot.com/" /></channel>
+<image rdf:about="http://a.fsdn.com/sd/topics/topicslashdot.gif">
+<title>Slashdot</title>
+<url>http://a.fsdn.com/sd/topics/topicslashdot.gif</url>
+<link>http://slashdot.org/</link>
+</image>
+<item rdf:about="http://yro.slashdot.org/story/12/01/27/0154231/twitter-can-now-block-tweets-in-specific-countries?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Twitter Can Now Block Tweets In Specific Countries</title>
+<link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/E_iEAVMI0bM/twitter-can-now-block-tweets-in-specific-countries</link>
+<description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/z9H5JGbS5JzPY6Um9wdqtxL1gtk/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/z9H5JGbS5JzPY6Um9wdqtxL1gtk/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href="http://feedads.g.doubleclick.net/~at/z9H5JGbS5JzPY6Um9wdqtxL1gtk/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/z9H5JGbS5JzPY6Um9wdqtxL1gtk/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;itwbennett writes "In a blog post on Thursday, Twitter announced that it can now block individual Tweets in specific countries, while leaving them visible in other countries. 'We try to keep content up whenever and wherever we can, and we will be transparent with users when we can't,' the blog said. Twitter will publish requests it receives to block content through its partnership with Chilling Effects."&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a href="http://twitter.com/home?status=Twitter+Can+Now+Block+Tweets+In+Specific+Countries%3A+http%3A%2F%2Fbit.ly%2FwkldZM"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fyro.slashdot.org%2Fstory%2F12%2F01%2F27%2F0154231%2Ftwitter-can-now-block-tweets-in-specific-countries%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="https://plusone.google.com/_/+1/confirm?hl=en&amp;amp;url=http://slashdot.org"&gt;&lt;img src="//a.fsdn.com/sd/googleplus_icon_large.png"&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://yro.slashdot.org/story/12/01/27/0154231/twitter-can-now-block-tweets-in-specific-countries?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2640891&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/E_iEAVMI0bM" height="1" width="1"/&gt;</description>
+<dc:creator>samzenpus</dc:creator>
+<dc:date>2012-01-27T03:22:00+00:00</dc:date>
+<dc:subject>censorship</dc:subject>
+<slash:department>142-countries-or-less</slash:department>
+<slash:section>yro</slash:section>
+<slash:comments>26</slash:comments>
+<slash:hit_parade>26,23,20,14,4,3,0</slash:hit_parade>
+<feedburner:origLink>http://yro.slashdot.org/story/12/01/27/0154231/twitter-can-now-block-tweets-in-specific-countries?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+<item rdf:about="http://science.slashdot.org/story/12/01/26/2330204/scientists-create-worlds-first-atomic-x-ray-laser?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Scientists Create World's First Atomic X-Ray Laser</title>
+<link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/zXiAS4CfEAw/scientists-create-worlds-first-atomic-x-ray-laser</link>
+<description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/DjB7vbwXOihdAn8y1Wd66C0-cao/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/DjB7vbwXOihdAn8y1Wd66C0-cao/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href="http://feedads.g.doubleclick.net/~at/DjB7vbwXOihdAn8y1Wd66C0-cao/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/DjB7vbwXOihdAn8y1Wd66C0-cao/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;First time accepted submitter newmission33 writes "Government researchers have created the fastest, purest X-ray laser pulses ever achieved, and have fulfilled a 1967 prediction that an atomic scale x-ray laser could be made in the same manner as visible-light lasers., according to a statement released Wednesday. Researchers at the SLAC National Accelerator Laboratory used the Linac Coherent Light Source to aim a powerful x-ray source beam, a billion times brighter than any previous source, at a capsule of neon gas and triggered an 'avalanche' of X-ray emissions to become the world's first 'atomic X-ray laser.'"&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a href="http://twitter.com/home?status=Scientists+Create+World's+First+Atomic+X-Ray+Laser%3A+http%3A%2F%2Fbit.ly%2FxHLErI"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fscience.slashdot.org%2Fstory%2F12%2F01%2F26%2F2330204%2Fscientists-create-worlds-first-atomic-x-ray-laser%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="https://plusone.google.com/_/+1/confirm?hl=en&amp;amp;url=http://slashdot.org"&gt;&lt;img src="//a.fsdn.com/sd/googleplus_icon_large.png"&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://science.slashdot.org/story/12/01/26/2330204/scientists-create-worlds-first-atomic-x-ray-laser?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2640777&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/zXiAS4CfEAw" height="1" width="1"/&gt;</description>
+<dc:creator>samzenpus</dc:creator>
+<dc:date>2012-01-27T01:00:00+00:00</dc:date>
+<dc:subject>shark</dc:subject>
+<slash:department>what-could-go-wrong?</slash:department>
+<slash:section>science</slash:section>
+<slash:comments>72</slash:comments>
+<slash:hit_parade>72,70,59,53,19,11,7</slash:hit_parade>
+<feedburner:origLink>http://science.slashdot.org/story/12/01/26/2330204/scientists-create-worlds-first-atomic-x-ray-laser?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+<item rdf:about="http://yro.slashdot.org/story/12/01/26/2315249/us-plummets-on-world-press-freedom-ranking?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>US Plummets On World Press Freedom Ranking</title>
+<link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/8VoMm1n6BrE/us-plummets-on-world-press-freedom-ranking</link>
+<description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/LO321ZaglKoHCCPmwrvc2LCXsnY/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/LO321ZaglKoHCCPmwrvc2LCXsnY/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href="http://feedads.g.doubleclick.net/~at/LO321ZaglKoHCCPmwrvc2LCXsnY/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/LO321ZaglKoHCCPmwrvc2LCXsnY/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;Jeremiah Cornelius writes "Reporters Without Borders released its 2011 &amp;mdash; 2012 global Press Freedom Index. The indicators for press freedom in the U.S. are dramatic, with a downward movement from 27th to 47th in the global ranking, from the previous year. Much of this is correlated directly to the arrest and incarceration of American journalists covering the "Occupy" protest movements in New York and across the country. "This is especially troubling as we head into an election year which is sure to spark new conflicts between police and press covering rallies, protests and political events." Only Chile, who dropped from 33 to 80, joined the U.S. in falling over 100% of their previous ranking. Similarly, Chile was downgraded for "freedom of information violations committed by the security forces during student protests.""&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a href="http://twitter.com/home?status=US+Plummets+On+World+Press+Freedom+Ranking%3A+http%3A%2F%2Fbit.ly%2FA0qYns"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fyro.slashdot.org%2Fstory%2F12%2F01%2F26%2F2315249%2Fus-plummets-on-world-press-freedom-ranking%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="https://plusone.google.com/_/+1/confirm?hl=en&amp;amp;url=http://slashdot.org"&gt;&lt;img src="//a.fsdn.com/sd/googleplus_icon_large.png"&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://yro.slashdot.org/story/12/01/26/2315249/us-plummets-on-world-press-freedom-ranking?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2640773&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/8VoMm1n6BrE" height="1" width="1"/&gt;</description>
+<dc:creator>samzenpus</dc:creator>
+<dc:date>2012-01-27T00:15:00+00:00</dc:date>
+<dc:subject>censorship</dc:subject>
+<slash:department>47th-amendment</slash:department>
+<slash:section>yro</slash:section>
+<slash:comments>175</slash:comments>
+<slash:hit_parade>175,170,129,105,51,32,25</slash:hit_parade>
+<feedburner:origLink>http://yro.slashdot.org/story/12/01/26/2315249/us-plummets-on-world-press-freedom-ranking?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+<item rdf:about="http://games.slashdot.org/story/12/01/26/238244/pac-man-is-np-hard?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Pac-Man Is NP-Hard</title>
+<link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/3nfltwimYbE/pac-man-is-np-hard</link>
+<description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/WAkadMJL2E3x9P7mGgIGKQmQLDM/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/WAkadMJL2E3x9P7mGgIGKQmQLDM/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href="http://feedads.g.doubleclick.net/~at/WAkadMJL2E3x9P7mGgIGKQmQLDM/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/WAkadMJL2E3x9P7mGgIGKQmQLDM/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;MrSeb writes "An Italian researcher with a penchant for retro games &amp;mdash; or perhaps just looking for an excuse to play games in the name of science! &amp;mdash; has used computational complexity theory to decide, once and for all, just how hard video games are. In a truly epic undertaking, Giovanni Viglietta of the University of Pisa has worked out the theoretical difficulty of 13 old games, including Pac-Man, Doom, Lemmings, Prince of Persia, and Boulder Dash. Pac-Man, with its traversal of space, is NP-hard. Doom, on the other hand, is PSPACE-hard."&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a href="http://twitter.com/home?status=Pac-Man+Is+NP-Hard%3A+http%3A%2F%2Fbit.ly%2FyqBq4S"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fgames.slashdot.org%2Fstory%2F12%2F01%2F26%2F238244%2Fpac-man-is-np-hard%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="https://plusone.google.com/_/+1/confirm?hl=en&amp;amp;url=http://slashdot.org"&gt;&lt;img src="//a.fsdn.com/sd/googleplus_icon_large.png"&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://games.slashdot.org/story/12/01/26/238244/pac-man-is-np-hard?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2640757&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/3nfltwimYbE" height="1" width="1"/&gt;</description>
+<dc:creator>samzenpus</dc:creator>
+<dc:date>2012-01-26T23:33:00+00:00</dc:date>
+<dc:subject>math</dc:subject>
+<slash:department>not-all-fun-and-games</slash:department>
+<slash:section>games</slash:section>
+<slash:comments>83</slash:comments>
+<slash:hit_parade>83,74,54,46,25,15,9</slash:hit_parade>
+<feedburner:origLink>http://games.slashdot.org/story/12/01/26/238244/pac-man-is-np-hard?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+<item rdf:about="http://science.slashdot.org/story/12/01/26/2226229/11-new-multi-planet-star-systems-discovered?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>11 New Multi-Planet Star Systems Discovered</title>
+<link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/pQHN_7wL1SY/11-new-multi-planet-star-systems-discovered</link>
+<description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/H6uCpwhJOgGw6G08D3lMjfvIeIk/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/H6uCpwhJOgGw6G08D3lMjfvIeIk/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href="http://feedads.g.doubleclick.net/~at/H6uCpwhJOgGw6G08D3lMjfvIeIk/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/H6uCpwhJOgGw6G08D3lMjfvIeIk/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;astroengine writes "The number of known multi-planetary star systems has just tripled. What's more, the Kepler space telescope science team has just announced that they have doubled the number of confirmed exoplanetary sightings made by the observatory. Some of the newly discovered worlds are only 1.5 times the size of Earth, while others are bigger than Jupiter. Fifteen exoplanets are between Earth and Neptune in size, but further observations will be needed to determine if any have a rocky surface like Earth, or a gaseous consistency like Neptune."&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a href="http://twitter.com/home?status=11+New+Multi-Planet+Star+Systems+Discovered%3A+http%3A%2F%2Fbit.ly%2FxQJyag"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fscience.slashdot.org%2Fstory%2F12%2F01%2F26%2F2226229%2F11-new-multi-planet-star-systems-discovered%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="https://plusone.google.com/_/+1/confirm?hl=en&amp;amp;url=http://slashdot.org"&gt;&lt;img src="//a.fsdn.com/sd/googleplus_icon_large.png"&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://science.slashdot.org/story/12/01/26/2226229/11-new-multi-planet-star-systems-discovered?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2640711&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/pQHN_7wL1SY" height="1" width="1"/&gt;</description>
+<dc:creator>timothy</dc:creator>
+<dc:date>2012-01-26T22:50:00+00:00</dc:date>
+<dc:subject>space</dc:subject>
+<slash:department>ok-now-sort-on-forest-moon</slash:department>
+<slash:section>science</slash:section>
+<slash:comments>68</slash:comments>
+<slash:hit_parade>68,67,48,41,11,4,3</slash:hit_parade>
+<feedburner:origLink>http://science.slashdot.org/story/12/01/26/2226229/11-new-multi-planet-star-systems-discovered?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+<item rdf:about="http://yro.slashdot.org/story/12/01/26/227256/railroad-association-says-tsas-hacking-memo-was-wrong?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Railroad Association Says TSA's Hacking Memo Was Wrong</title>
+<link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/pXcpGxBsVAM/railroad-association-says-tsas-hacking-memo-was-wrong</link>
+<description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/sVO2tNSxTqd-_6RQeuL_Zw4SW_0/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/sVO2tNSxTqd-_6RQeuL_Zw4SW_0/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href="http://feedads.g.doubleclick.net/~at/sVO2tNSxTqd-_6RQeuL_Zw4SW_0/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/sVO2tNSxTqd-_6RQeuL_Zw4SW_0/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;McGruber writes "Wired reports that the American Association of Railroads is refuting the U.S. Transportation Security Administration memorandum that said hackers had disrupted railroad signals. In fact, 'There was no targeted computer-based attack on a railroad,' said AAR spokesman Holly Arthur. 'The memo on which the story was based has numerous inaccuracies.' The TSA memo was subject of an earlier Slashdot story in which Slashdot user currently_awake accurately commented on the true nature of the incident."&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a href="http://twitter.com/home?status=Railroad+Association+Says+TSA's+Hacking+Memo+Was+Wrong%3A+http%3A%2F%2Fbit.ly%2FxgWOlS"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fyro.slashdot.org%2Fstory%2F12%2F01%2F26%2F227256%2Frailroad-association-says-tsas-hacking-memo-was-wrong%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="https://plusone.google.com/_/+1/confirm?hl=en&amp;amp;url=http://slashdot.org"&gt;&lt;img src="//a.fsdn.com/sd/googleplus_icon_large.png"&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://yro.slashdot.org/story/12/01/26/227256/railroad-association-says-tsas-hacking-memo-was-wrong?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2640687&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/pXcpGxBsVAM" height="1" width="1"/&gt;</description>
+<dc:creator>timothy</dc:creator>
+<dc:date>2012-01-26T22:09:00+00:00</dc:date>
+<dc:subject>government</dc:subject>
+<slash:department>switch-in-time-saves-none</slash:department>
+<slash:section>yro</slash:section>
+<slash:comments>86</slash:comments>
+<slash:hit_parade>86,82,67,57,32,22,13</slash:hit_parade>
+<feedburner:origLink>http://yro.slashdot.org/story/12/01/26/227256/railroad-association-says-tsas-hacking-memo-was-wrong?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+<item rdf:about="http://hardware.slashdot.org/story/12/01/26/2124256/jailbreaking-could-soon-become-illegal-again?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Jailbreaking Could Soon Become Illegal Again</title>
+<link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/M4TQgIDpngo/jailbreaking-could-soon-become-illegal-again</link>
+<description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/KSqwemcuh65WpB0TbJL3NWhEM2w/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/KSqwemcuh65WpB0TbJL3NWhEM2w/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href="http://feedads.g.doubleclick.net/~at/KSqwemcuh65WpB0TbJL3NWhEM2w/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/KSqwemcuh65WpB0TbJL3NWhEM2w/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;Diggester writes "Back in July 2010, the United Stated government approved few exemptions in a federal law which made jailbreaking/rooting of electronic devices(iPhones and Android devices) legal. The court ruling stated that every three years, the exemptions have to be renewed considering they don't infringe any copyrighted material. The three year period is due to expire and Electronic Frontier Foundation (EFF) is looking to get the exemptions renewed. In order to do so, they have filed a petition which aims at government to declare jailbreaking legal once again. In addition to that, EFF is also asking for a change in the original ruling to include tablet devices." Here's the EFF's own page on the issue.&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a href="http://twitter.com/home?status=Jailbreaking+Could+Soon+Become+Illegal+Again%3A+http%3A%2F%2Fbit.ly%2FxttWnh"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fhardware.slashdot.org%2Fstory%2F12%2F01%2F26%2F2124256%2Fjailbreaking-could-soon-become-illegal-again%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="https://plusone.google.com/_/+1/confirm?hl=en&amp;amp;url=http://slashdot.org"&gt;&lt;img src="//a.fsdn.com/sd/googleplus_icon_large.png"&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://hardware.slashdot.org/story/12/01/26/2124256/jailbreaking-could-soon-become-illegal-again?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2640619&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/M4TQgIDpngo" height="1" width="1"/&gt;</description>
+<dc:creator>timothy</dc:creator>
+<dc:date>2012-01-26T21:25:00+00:00</dc:date>
+<dc:subject>eff</dc:subject>
+<slash:department>so-stay-in-that-cage</slash:department>
+<slash:section>hardware</slash:section>
+<slash:comments>161</slash:comments>
+<slash:hit_parade>161,159,128,118,43,27,22</slash:hit_parade>
+<feedburner:origLink>http://hardware.slashdot.org/story/12/01/26/2124256/jailbreaking-could-soon-become-illegal-again?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+<item rdf:about="http://hardware.slashdot.org/story/12/01/26/2033234/for-sinclair-fans-the-zx81-lives-on?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>For Sinclair Fans, The ZX81 Lives On</title>
+<link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/7E3A1I8bCWY/for-sinclair-fans-the-zx81-lives-on</link>
+<description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/6JmngIO1AeX6BzKeGGBYp50FB3M/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/6JmngIO1AeX6BzKeGGBYp50FB3M/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href="http://feedads.g.doubleclick.net/~at/6JmngIO1AeX6BzKeGGBYp50FB3M/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/6JmngIO1AeX6BzKeGGBYp50FB3M/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;An anonymous reader writes "The ZX81 Museum was set-up to preserve and showcase a private collection of original Sinclair branded ZX81 hardware, software and literature. The museum has since expanded to include ZX81 software from other publishers of the time and a variety of other ZX81 peripherals and reference books. The collection dates from 1981 to 1983 and features the complete Sinclair-branded software series. The activities of the museum are regularly reported via Twitter, along with updates from the ever growing ZX81 fanbase. There is even a YouTube channel for the diehard 8-bit fans out there, of which there seems to be many!" This was one of the first computers I ever used; I suspect it's still buried in some deep stratum in my dad's basement. As is often the case, the old advertisements are great.&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a href="http://twitter.com/home?status=For+Sinclair+Fans%2C+The+ZX81+Lives+On%3A+http%3A%2F%2Fbit.ly%2FxDBxEp"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fhardware.slashdot.org%2Fstory%2F12%2F01%2F26%2F2033234%2Ffor-sinclair-fans-the-zx81-lives-on%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="https://plusone.google.com/_/+1/confirm?hl=en&amp;amp;url=http://slashdot.org"&gt;&lt;img src="//a.fsdn.com/sd/googleplus_icon_large.png"&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://hardware.slashdot.org/story/12/01/26/2033234/for-sinclair-fans-the-zx81-lives-on?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2640543&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/7E3A1I8bCWY" height="1" width="1"/&gt;</description>
+<dc:creator>timothy</dc:creator>
+<dc:date>2012-01-26T20:41:00+00:00</dc:date>
+<dc:subject>uk</dc:subject>
+<slash:department>sweet-pain-of-memory</slash:department>
+<slash:section>hardware</slash:section>
+<slash:comments>112</slash:comments>
+<slash:hit_parade>112,109,97,80,22,14,10</slash:hit_parade>
+<feedburner:origLink>http://hardware.slashdot.org/story/12/01/26/2033234/for-sinclair-fans-the-zx81-lives-on?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+<item rdf:about="http://developers.slashdot.org/story/12/01/26/1937214/yahoos-project-to-disrupt-mobile-publishing?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Yahoo's Project To Disrupt Mobile Publishing</title>
+<link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/IXVHvH2pGQg/yahoos-project-to-disrupt-mobile-publishing</link>
+<description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/nqVFccV2ZUXm90YpEuMKUp5iEw4/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/nqVFccV2ZUXm90YpEuMKUp5iEw4/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href="http://feedads.g.doubleclick.net/~at/nqVFccV2ZUXm90YpEuMKUp5iEw4/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/nqVFccV2ZUXm90YpEuMKUp5iEw4/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;waderoush writes "Right now, content publishers who want to reach readers through dedicated mobile apps have to hire a separate engineering team to build each app &amp;mdash; one for iOS (based on Objective-C), another for Android (Java), a third for Windows Phone (C#), etc. Yahoo's Platform Technology Group is working on an alternative: a set of JavaScript and HTML-based tools that would handle core UI and data-management tasks inside mobile apps for any operating system, moving developers closer to the nirvana of 'write once, run everywhere.' The tools are gradually being open-sourced &amp;mdash; starting with Mojito, a framework for running hybrid server/browser module-widgets ('mojits') &amp;mdash; and Yahoo is showing off what they can do in the form of Livestand, the news reader app it released for the iPad in November. In his first extensive public interview about Mojito and the larger 'Cocktails' project, Bruno Fernandez-Ruiz, chief architect at Yahoo's Platform Technology Group, explains how the tools work and why the company is sharing them."&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a href="http://twitter.com/home?status=Yahoo's+Project+To+Disrupt+Mobile+Publishing%3A+http%3A%2F%2Fbit.ly%2FzjzTqd"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fdevelopers.slashdot.org%2Fstory%2F12%2F01%2F26%2F1937214%2Fyahoos-project-to-disrupt-mobile-publishing%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="https://plusone.google.com/_/+1/confirm?hl=en&amp;amp;url=http://slashdot.org"&gt;&lt;img src="//a.fsdn.com/sd/googleplus_icon_large.png"&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://developers.slashdot.org/story/12/01/26/1937214/yahoos-project-to-disrupt-mobile-publishing?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2640457&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/IXVHvH2pGQg" height="1" width="1"/&gt;</description>
+<dc:creator>timothy</dc:creator>
+<dc:date>2012-01-26T20:00:00+00:00</dc:date>
+<dc:subject>software</dc:subject>
+<slash:department>giving-you-the-once-over</slash:department>
+<slash:section>developers</slash:section>
+<slash:comments>98</slash:comments>
+<slash:hit_parade>98,73,56,43,14,11,6</slash:hit_parade>
+<feedburner:origLink>http://developers.slashdot.org/story/12/01/26/1937214/yahoos-project-to-disrupt-mobile-publishing?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+<item rdf:about="http://yro.slashdot.org/story/12/01/26/1832219/object-lesson-in-non-transparency-at-energygov?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Object Lesson in Non-Transparency At Energy.gov</title>
+<link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/KwqtUbktuVQ/object-lesson-in-non-transparency-at-energygov</link>
+<description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/UQTMmoOCJf_ZUqoTzXeIwu-X4P8/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/UQTMmoOCJf_ZUqoTzXeIwu-X4P8/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href="http://feedads.g.doubleclick.net/~at/UQTMmoOCJf_ZUqoTzXeIwu-X4P8/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/UQTMmoOCJf_ZUqoTzXeIwu-X4P8/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;Harperdog writes "Dawn Stover recounts her attempts to access information at energy.gov, the U.S. Energy Department's 'cutting-edge, interactive information platform,' which apparently isn't any of those things. Especially frustrating were her attempts to locate important documents related to the Yucca Mountain nuclear waste repository. An interesting read for anyone interested in true government transparency."&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a href="http://twitter.com/home?status=Object+Lesson+in+Non-Transparency+At+Energy.gov%3A+http%3A%2F%2Fbit.ly%2FyV62j0"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fyro.slashdot.org%2Fstory%2F12%2F01%2F26%2F1832219%2Fobject-lesson-in-non-transparency-at-energygov%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="https://plusone.google.com/_/+1/confirm?hl=en&amp;amp;url=http://slashdot.org"&gt;&lt;img src="//a.fsdn.com/sd/googleplus_icon_large.png"&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://yro.slashdot.org/story/12/01/26/1832219/object-lesson-in-non-transparency-at-energygov?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2640385&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/KwqtUbktuVQ" height="1" width="1"/&gt;</description>
+<dc:creator>timothy</dc:creator>
+<dc:date>2012-01-26T19:19:00+00:00</dc:date>
+<dc:subject>government</dc:subject>
+<slash:department>but-it's-a-dry-heat-death</slash:department>
+<slash:section>yro</slash:section>
+<slash:comments>99</slash:comments>
+<slash:hit_parade>99,75,55,37,17,10,7</slash:hit_parade>
+<feedburner:origLink>http://yro.slashdot.org/story/12/01/26/1832219/object-lesson-in-non-transparency-at-energygov?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+<item rdf:about="http://games.slashdot.org/story/12/01/26/1829232/xbox-720-might-reject-used-games?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Xbox 720 Might Reject Used Games</title>
+<link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/wyuO9SFLzhM/xbox-720-might-reject-used-games</link>
+<description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/pBAxMrdjDbqF3dH6OF1-c9QJkZQ/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/pBAxMrdjDbqF3dH6OF1-c9QJkZQ/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href="http://feedads.g.doubleclick.net/~at/pBAxMrdjDbqF3dH6OF1-c9QJkZQ/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/pBAxMrdjDbqF3dH6OF1-c9QJkZQ/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;silentbrad writes "Online passes are a recent staple in staving off used sales. Limiting what used buyers can access is a protective measure for publishers, much to the chagrin of parts of the gaming community. Chris Kohler of Wired argues that the death of used games is inevitable, and passes are the first step toward something exactly like a native anti-used game something integrated into consoles. He notes, of course, that digital is the future of buying games, but in the meantime we may be looking at 'an interim period in which the disc as a delivery method is still around but ... becomes more like a PC game, which are sold with one-time-use keys that grant one owner a license to play the game on his machine.' Also at Kotaku, the source for the Wired article (which is the source for the IGN article)."&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a href="http://twitter.com/home?status=Xbox+720+Might+Reject+Used+Games%3A+http%3A%2F%2Fbit.ly%2FwtwhEH"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fgames.slashdot.org%2Fstory%2F12%2F01%2F26%2F1829232%2Fxbox-720-might-reject-used-games%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="https://plusone.google.com/_/+1/confirm?hl=en&amp;amp;url=http://slashdot.org"&gt;&lt;img src="//a.fsdn.com/sd/googleplus_icon_large.png"&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://games.slashdot.org/story/12/01/26/1829232/xbox-720-might-reject-used-games?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2640375&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/wyuO9SFLzhM" height="1" width="1"/&gt;</description>
+<dc:creator>timothy</dc:creator>
+<dc:date>2012-01-26T18:36:00+00:00</dc:date>
+<dc:subject>microsoft</dc:subject>
+<slash:department>insert-coin-to-continue</slash:department>
+<slash:section>games</slash:section>
+<slash:comments>409</slash:comments>
+<slash:hit_parade>409,393,284,224,81,42,29</slash:hit_parade>
+<feedburner:origLink>http://games.slashdot.org/story/12/01/26/1829232/xbox-720-might-reject-used-games?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+<item rdf:about="http://yro.slashdot.org/story/12/01/26/1746202/acta-signed-by-22-eu-countries?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>ACTA Signed By 22 EU Countries</title>
+<link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/QeT4Yx8IwrA/acta-signed-by-22-eu-countries</link>
+<description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/70LbsOl57_bG_Sr4r72bap5RynY/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/70LbsOl57_bG_Sr4r72bap5RynY/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href="http://feedads.g.doubleclick.net/~at/70LbsOl57_bG_Sr4r72bap5RynY/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/70LbsOl57_bG_Sr4r72bap5RynY/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;First time accepted submitter azrael29a writes "22 EU members signed the controversial ACTA treaty today in Tokyo. However, the signatures of the EU member states and the EU itself will count for nothing unless the European Parliament gives its approval to ACTA in June."&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a href="http://twitter.com/home?status=ACTA+Signed+By+22+EU+Countries%3A+http%3A%2F%2Fbit.ly%2Fyqv7K2"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fyro.slashdot.org%2Fstory%2F12%2F01%2F26%2F1746202%2Facta-signed-by-22-eu-countries%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="https://plusone.google.com/_/+1/confirm?hl=en&amp;amp;url=http://slashdot.org"&gt;&lt;img src="//a.fsdn.com/sd/googleplus_icon_large.png"&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://yro.slashdot.org/story/12/01/26/1746202/acta-signed-by-22-eu-countries?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2640321&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/QeT4Yx8IwrA" height="1" width="1"/&gt;</description>
+<dc:creator>timothy</dc:creator>
+<dc:date>2012-01-26T17:54:00+00:00</dc:date>
+<dc:subject>piracy</dc:subject>
+<slash:department>bad-acta-ors</slash:department>
+<slash:section>yro</slash:section>
+<slash:comments>114</slash:comments>
+<slash:hit_parade>114,104,81,69,34,21,18</slash:hit_parade>
+<feedburner:origLink>http://yro.slashdot.org/story/12/01/26/1746202/acta-signed-by-22-eu-countries?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+<item rdf:about="http://science.slashdot.org/story/12/01/26/174249/top-google-executives-approved-illegal-drug-ads?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Top Google Executives Approved Illegal Drug Ads</title>
+<link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/MkIosIISNVc/top-google-executives-approved-illegal-drug-ads</link>
+<description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/gnupH1qByBYR4sVsKHWo-0ziWLM/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/gnupH1qByBYR4sVsKHWo-0ziWLM/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href="http://feedads.g.doubleclick.net/~at/gnupH1qByBYR4sVsKHWo-0ziWLM/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/gnupH1qByBYR4sVsKHWo-0ziWLM/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;Hugh Pickens writes "PC Magazine reports that the U.S. government used convicted con artist David Whitaker, owner of an online business selling steroids and human growth hormone to U.S. consumers, to help federal agents in a sting operation against Google when he began advertising with Google with advertisements that included the statement 'no prescription needed,' clearly violating U.S. laws. Google's settlement with the U.S. government for $500 million blamed AdWords sales by Canadian pharmacies, who allegedly were selling drugs to U.S. consumers. 'We banned the advertising of prescription drugs in the U.S. by Canadian pharmacies some time ago,' Google said then. 'However, it's obvious with hindsight that we shouldn't have allowed these ads on Google in the first place.' Peter Neronha, the U.S. attorney for Rhode Island who led the multiagency federal task force that conducted the sting, claims that chief executive Larry Page had personal knowledge of the operation, as did Sheryl Sandberg, a Google executive who now is the chief operating officer for Facebook. In 2009 Google started requiring online pharmacy advertisers to be certified by the National Association of Boards of Pharmacy's Verified Internet Pharmacy Practices Sites program and hired an outside company to detect pharmacy advertisers exploiting flaws in the Google's screening systems."&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a href="http://twitter.com/home?status=Top+Google+Executives+Approved+Illegal+Drug+Ads%3A+http%3A%2F%2Fbit.ly%2Fyx9v2v"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fscience.slashdot.org%2Fstory%2F12%2F01%2F26%2F174249%2Ftop-google-executives-approved-illegal-drug-ads%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="https://plusone.google.com/_/+1/confirm?hl=en&amp;amp;url=http://slashdot.org"&gt;&lt;img src="//a.fsdn.com/sd/googleplus_icon_large.png"&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://science.slashdot.org/story/12/01/26/174249/top-google-executives-approved-illegal-drug-ads?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2640263&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/MkIosIISNVc" height="1" width="1"/&gt;</description>
+<dc:creator>timothy</dc:creator>
+<dc:date>2012-01-26T17:12:00+00:00</dc:date>
+<dc:subject>business</dc:subject>
+<slash:department>regulations-trump-free-choice</slash:department>
+<slash:section>science</slash:section>
+<slash:comments>257</slash:comments>
+<slash:hit_parade>257,255,194,171,42,29,15</slash:hit_parade>
+<feedburner:origLink>http://science.slashdot.org/story/12/01/26/174249/top-google-executives-approved-illegal-drug-ads?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+<item rdf:about="http://tech.slashdot.org/story/12/01/26/1550212/wikileaks-cable-nasdaq-folded-to-chinese-pressure?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>WikiLeaks Cable: NASDAQ Folded To Chinese Pressure</title>
+<link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/1vWLpB1-jP0/wikileaks-cable-nasdaq-folded-to-chinese-pressure</link>
+<description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/yWT-sXM8WYKw93uoQJeySDoQljE/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/yWT-sXM8WYKw93uoQJeySDoQljE/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href="http://feedads.g.doubleclick.net/~at/yWT-sXM8WYKw93uoQJeySDoQljE/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/yWT-sXM8WYKw93uoQJeySDoQljE/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;jjp9999 writes "A WikiLeaks cable reveals that the NASDAQ folded to pressure from the Chinese regime and kicked out a U.S.-based Chinese TV network, NTD TV. The Chinese Communist Party has been trying to block this station for years now, since it's one of the few major Chinese media that refuses to censor its content. Although they're blocked in Mainland China, they broadcast in with satellites. The timing of the incident aligns well with other actions launched by the CCP against the TV station. They used to broadcast into China through French satellite company Eutelsat, but their connection was cut. Reporters Without Borders investigated and found the Chinese regime was behind it. They now use a Taiwanese satellite."&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a href="http://twitter.com/home?status=WikiLeaks+Cable%3A+NASDAQ+Folded+To+Chinese+Pressure%3A+http%3A%2F%2Fbit.ly%2FAp7k3l"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Ftech.slashdot.org%2Fstory%2F12%2F01%2F26%2F1550212%2Fwikileaks-cable-nasdaq-folded-to-chinese-pressure%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="https://plusone.google.com/_/+1/confirm?hl=en&amp;amp;url=http://slashdot.org"&gt;&lt;img src="//a.fsdn.com/sd/googleplus_icon_large.png"&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://tech.slashdot.org/story/12/01/26/1550212/wikileaks-cable-nasdaq-folded-to-chinese-pressure?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2640145&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/1vWLpB1-jP0" height="1" width="1"/&gt;</description>
+<dc:creator>timothy</dc:creator>
+<dc:date>2012-01-26T16:30:00+00:00</dc:date>
+<dc:subject>censorship</dc:subject>
+<slash:department>give-that-man-a-peace-prize</slash:department>
+<slash:section>technology</slash:section>
+<slash:comments>249</slash:comments>
+<slash:hit_parade>249,247,189,161,43,23,15</slash:hit_parade>
+<feedburner:origLink>http://tech.slashdot.org/story/12/01/26/1550212/wikileaks-cable-nasdaq-folded-to-chinese-pressure?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+<item rdf:about="http://yro.slashdot.org/story/12/01/26/1539229/o2-fixes-accidental-leak-of-phone-numbers?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>O2 Fixes 'Accidental' Leak of Phone Numbers</title>
+<link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/1PUowmrncq8/o2-fixes-accidental-leak-of-phone-numbers</link>
+<description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/ixmM6ABWdcj7zU4AINwtX7--asY/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/ixmM6ABWdcj7zU4AINwtX7--asY/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+&lt;a href="http://feedads.g.doubleclick.net/~at/ixmM6ABWdcj7zU4AINwtX7--asY/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/ixmM6ABWdcj7zU4AINwtX7--asY/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;judgecorp writes "British mobile operator O2 says it has stopped sharing users phone numbers with all websites, and says the breach was an accident. Yesterday, users found that the operator was automatically passing their mobile numbers to any site they visited, while using O2's mobile network,"&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a href="http://twitter.com/home?status=O2+Fixes+'Accidental'+Leak+of+Phone+Numbers%3A+http%3A%2F%2Fbit.ly%2FwZ3NjR"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fyro.slashdot.org%2Fstory%2F12%2F01%2F26%2F1539229%2Fo2-fixes-accidental-leak-of-phone-numbers%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+&lt;a href="https://plusone.google.com/_/+1/confirm?hl=en&amp;amp;url=http://slashdot.org"&gt;&lt;img src="//a.fsdn.com/sd/googleplus_icon_large.png"&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://yro.slashdot.org/story/12/01/26/1539229/o2-fixes-accidental-leak-of-phone-numbers?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2640131&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/1PUowmrncq8" height="1" width="1"/&gt;</description>
+<dc:creator>timothy</dc:creator>
+<dc:date>2012-01-26T16:09:00+00:00</dc:date>
+<dc:subject>privacy</dc:subject>
+<slash:department>take-this-leak-and-shove-it</slash:department>
+<slash:section>yro</slash:section>
+<slash:comments>41</slash:comments>
+<slash:hit_parade>41,40,34,31,11,1,1</slash:hit_parade>
+<feedburner:origLink>http://yro.slashdot.org/story/12/01/26/1539229/o2-fixes-accidental-leak-of-phone-numbers?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+<textinput rdf:about="http://slashdot.org/search.pl">
+<title>Search Slashdot</title>
+<description>Search Slashdot stories</description>
+<name>query</name>
+<link>http://slashdot.org/search.pl</link>
+</textinput>
+</rdf:RDF>

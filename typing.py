@@ -1,19 +1,19 @@
-# TYPER COMBAT  : A ramshackly designed typing game
+# TYPER COMBAT  : A 2d typing game inspired by Typing of the Dead
 # Travis J. Grathwell, Started August 8th, 2006
 
 # Most all the graphics in this game are ripped from the game 'Gunstar Heroes' for the Sega Genesis. Used without permission.
 # Other graphics have been purloined from Super Mario Bros., Pac-Man, Legend of Zelda.
 
-import pygame, sys, random, math, time, string, os
+import pygame, sys, time, string
 from pygame.locals import *
-from feeder import GetFeeder
+from feeder import getFeeder
 from general import *
 from scene import MainGameScene, TitleScreen, InstructionsScreen, OptionsScreen, GameOverScreen, ChallengeScreen, LoadingScreen
 from opponents import Soldier, Copter, Ghost, Commando
 from controller import Controller
 
 # Show options screen when DEBUG is there
-DEBUG = 1
+DEBUG = 0
 
 if not pygame.font:
     print "Couldn't load font library, crashing hard"
@@ -80,20 +80,20 @@ def main(argv=sys.argv):
         player_movement = False
         
         if DEBUG:
-            feed_sources = [GetFeeder(x) for x in options_screen.getFeedOptions()]
+            feed_sources = [getFeeder(x) for x in options_screen.getFeedOptions()]
             # Eval a string like 'Copter' into its class object (brittle, refactor)
             spawners = [eval(enemy) for enemy in options_screen.getEnemyOptions()]
         else:
-            feed_sources = [GetFeeder('Google'), GetFeeder('Slashdot'), GetFeeder('Digg')]
+            feed_sources = [getFeeder('Google'), getFeeder('Slashdot'), getFeeder('Digg')]
             spawners = [Soldier, Copter, Ghost]
 
         # need at least one feed
         if feed_sources == []:
-            feed_sources = [GetFeeder()]
+            feed_sources = [getFeeder()]
             
         # vv TODO: fix these up, man what's going on here vv
-        word_list = sum([feeder.getWords() for feeder in feed_sources],[])
-        sentence_list = sum([feeder.getSentences() for feeder in feed_sources],[])
+        word_list = sum([feeder.words for feeder in feed_sources],[])
+        sentence_list = sum([feeder.sentences for feeder in feed_sources],[])
 
         words = WordMaker(word_list)
         sentences = WordMaker(sentence_list)
