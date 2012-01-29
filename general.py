@@ -57,11 +57,27 @@ def flippedframes(surfaces):
 def loadframes(directory, filenames):
     return [pygame.image.load(os.path.join('.', 'data', directory, filename)).convert_alpha() for filename in filenames]
     
-class Anim(pygame.sprite.Sprite):
+class WrappedSprite(pygame.sprite.Sprite):
+    """ Wrapper around pygame.sprite.Sprite to consolidate methods specific to this game """
+
+    def __init__(self):
+        try:
+            getattr(self, 'images_loaded')
+        except AttributeError:
+            self.loadImages()
+
+        super(WrappedSprite, self).__init__()
+
+    @classmethod
+    def loadImages(cls):
+        cls.images_loaded = True
+
+class Anim(WrappedSprite):
     """ Collection of frames meant to be displayed sequentially through time """
 
     def __init__(self, images, framecounts, delay = 0, ends = False, offset = (0, 0)):
-        pygame.sprite.Sprite.__init__(self)
+        super(Anim, self).__init__()
+
         self.offset = offset
         self.ends = ends
         self.delay = delay
@@ -111,14 +127,15 @@ class Anim(pygame.sprite.Sprite):
     def total_time(self):
         return sum(self.framecounts) + self.delay
             
-class Box(pygame.sprite.Sprite):
+class Box(WrappedSprite):
     """ A boundary rect that can draw itself to the screen when given a camera position """
     def __init__(self, x, y, w, h):
-        pygame.sprite.Sprite.__init__(self)
+        super(Box, self).__init__()
         self.rect = pygame.rect.Rect((x, y, w, h))
 
     @classmethod
     def loadImages(cls):
+        super(Box, cls).loadImages()
         cls.images_smbas = loadframes('platforms', ('smbas.png',))[0]
         cls.images_smbas_edge = loadframes('platforms', ('smbas_edge.png',))[0]
         
@@ -136,7 +153,7 @@ class Circle(pygame.sprite.Sprite):
     """ A drawable circle that purports to store its boundary rect, but doesn't because I can't figure it out. """
 
     def __init__(self, center, radius):
-        pygame.sprite.Sprite.__init__(self)
+        super(Circle, self).__init__()
         self.rect = pygame.rect.Rect(0, 0, radius, radius)
         self.rect.center = center
         self.center = center
@@ -196,7 +213,7 @@ class Score(pygame.sprite.Sprite):
 
     font = None
     def __init__(self, surface, color = Color.score_color):
-        pygame.sprite.Sprite.__init__(self)
+        super(Score, self).__init__()
         self.color = color
         self.score = 0.0
         self.misses = 0
@@ -305,10 +322,12 @@ class Word(pygame.sprite.Sprite):
 
     font = None
     def __init__(self, text, font = None):
+        super(Word, self).__init__()
+
         if not font: font = self.font
         self.font = font
         self.borderwidth = font.get_height() / 5
-        pygame.sprite.Sprite.__init__(self)
+
         self.string = text
         self.rect = None
         self.lastrect = pygame.rect.Rect(0, 0, 0, 0)
@@ -384,8 +403,6 @@ def n_of(format_string, n):
     
 def loadImagesForAnimations():
     """ Load all the images in the game from files into surfaces as class members. """
-    from player import Player
-    from opponents import Soldier, Copter, Ghost, Commando, Assorted
-    from powerup import Heart, Shotgun
+    from opponents import Assorted
     
-    [cls.loadImages() for cls in [Player, Ghost, Soldier, Copter, Commando, Assorted, Heart, Shotgun, Box]]
+    [cls.loadImages() for cls in [Assorted]]

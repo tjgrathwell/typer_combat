@@ -1,6 +1,6 @@
 import pygame, math, random
 from pygame.locals import *
-from general import Anim, game_constants, RenderUpdatesDraw, loadframes, flippedframes, n_of
+from general import Anim, game_constants, RenderUpdatesDraw, loadframes, flippedframes, n_of, WrappedSprite
 from collision import distfromground, distfromceiling
 
 class Weapons:
@@ -20,7 +20,7 @@ class Bullet(pygame.sprite.Sprite):
     """
 
     def __init__(self, shooter, weapon, start, vector, opponent, ttl):
-        pygame.sprite.Sprite.__init__(self)
+        super(Bullet, self).__init__()
         self.ttl = ttl # time to live
         self.shooter = shooter
         self.weapon = weapon # What weapon type did this bullet come from?
@@ -28,8 +28,9 @@ class Bullet(pygame.sprite.Sprite):
         self.vector = vector
         self.next = start[0] - vector[0] * game_constants.bulletspeed, start[1] - vector[1] * game_constants.bulletspeed
         self.opponent = opponent
+
         self.campos = None
-        self.rect = None # Calculated at draw-time. I don't know why this works?
+        self.rect = None # Calculated at draw-time
 
     def move(self):
         self.ttl -= 1
@@ -54,11 +55,11 @@ class Bullet(pygame.sprite.Sprite):
         self.rect = pygame.draw.line(surface, Weapons.colors[self.weapon], start_screenpos, next_screenpos, 2).inflate(2, 2)
         return self.rect
         
-class Player(pygame.sprite.Sprite):
+class Player(WrappedSprite):
     """ Logic, graphics and methods for a game protagonist """
 
     def __init__(self, position):
-        pygame.sprite.Sprite.__init__(self)
+        super(Player, self).__init__()
         
         self.state = States.falling
         self.colliders = None
@@ -79,6 +80,8 @@ class Player(pygame.sprite.Sprite):
         
     @classmethod
     def loadImages(cls):
+        super(Player, cls).loadImages()
+
         cls.images_upright       = loadframes("gunstar", ["gunup1.png", "gunup2.png"])
         cls.images_upleft        = flippedframes(cls.images_upright)
         cls.images_upsideright   = loadframes("gunstar", ["gunupside1.png", "gunupside2.png"])

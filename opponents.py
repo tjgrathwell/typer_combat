@@ -1,17 +1,17 @@
 import pygame, random, math
-from general import RenderUpdatesDraw, game_constants, Color, Anim, loadframes, flippedframes, n_of
+from general import RenderUpdatesDraw, game_constants, Color, Anim, loadframes, flippedframes, n_of, WrappedSprite
 from player import Weapons, States
 from collision import distfromground, clearshot
 
 def rand_offset(value):
     return (random.randint(-value, value), random.randint(-value, value))
     
-class Opponent(pygame.sprite.Sprite):
+class Opponent(WrappedSprite):
     """ A holder of a word, along with the game logic for moving around the screen and such. """
 
     name = "Nothing"
     def __init__(self, word, (x, y), statics, speed = 2.0):
-        pygame.sprite.Sprite.__init__(self)
+        super(Opponent, self).__init__()
         self.statics = statics
         self.word = word
         self.typing = False
@@ -83,7 +83,7 @@ class Ghost(Opponent):
 
     name = "Ghost"
     def __init__(self, word, (x, y), statics, speed = 2.2):
-        Opponent.__init__(self, word, (x, y), statics, speed)
+        super(Ghost, self).__init__(word, (x, y), statics, speed)
         self.loadanims()
         self.current_anim = self.left
         self.rect = self.current_anim.get_rect()
@@ -178,7 +178,7 @@ class Copter(Opponent):
 
     name = "Copter"
     def __init__(self, word, (x, y), statics, speed = 2.5):
-        Opponent.__init__(self, word, (x, y), statics, speed)
+        super(Copter, self).__init__(word, (x, y), statics, speed)
         self.loadanims()
         self.current_anim = self.fly_anim
         self.rect = self.current_anim.get_rect()
@@ -295,7 +295,7 @@ class Commando(Opponent):
     name = "Commando"
     """ Sits still waiting for the player to arrive """
     def __init__(self, word, (x, y), statics = None, speed = 2.2):
-        Opponent.__init__(self, word, (x, y), statics, speed)
+        super(Commando, self).__init__(word, (x, y), statics, speed)
         self.loadanims()
         self.current_anim = self.idleleft
         self.rect = self.current_anim.get_rect()
@@ -339,7 +339,7 @@ class Soldier(Opponent):
 
     name = "Soldier"
     def __init__(self, word, (x, y), statics, speed = 2.2):
-        Opponent.__init__(self, word, (x, y), statics, speed)
+        super(Soldier, self).__init__(word, (x, y), statics, speed)
         self.jumpspeed = 4.5
         self.loadanims()
         self.current_anim = self.runleft

@@ -1,13 +1,14 @@
 import pygame
 from collision import distfromground
-from general import Anim, game_constants, loadframes
+from general import Anim, game_constants, loadframes, WrappedSprite
 from player import Weapons
 
-class Powerup(pygame.sprite.Sprite):
+class Powerup(WrappedSprite):
     """ A non-moving object that sits on a platform waiting to be consumed. """
 
     def __init__(self, position, statics):
-        pygame.sprite.Sprite.__init__(self)
+        super(Powerup, self).__init__()
+
         self.x, self.y = position
         self.rect = pygame.rect.Rect(0, 0, 0, 0)
         self.rect.centerx, self.rect.bottom = self.x, self.y
@@ -38,6 +39,7 @@ class Powerup(pygame.sprite.Sprite):
 class Shotgun(Powerup):
     @classmethod
     def loadImages(cls):
+        super(Shotgun, cls).loadImages()
         cls.images_shotgun = loadframes("assorted", ("shotgun1.gif",))
     
     def loadanims(self):
@@ -52,6 +54,7 @@ class Shotgun(Powerup):
 class Heart(Powerup):
     @classmethod
     def loadImages(cls):
+        super(Heart, cls).loadImages()
         cls.images_heart = loadframes("assorted", ["heart%d.gif" % i for i in [1, 2, 3, 4, 5, 4, 3, 2]])
     
     def loadanims(self):
