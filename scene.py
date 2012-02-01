@@ -1,11 +1,11 @@
 import pygame, random
 from pygame.locals import *
+from general import game_constants, RenderUpdatesDraw, Box, Platform, Score, Word, GetFont, loadframes, Color
 from player import Player
-from general import game_constants, SpecialChars, RenderUpdatesDraw, Box, Platform, Score, Word, GetFont, loadframes, Color
 from opponents import Soldier, Copter, Ghost, Commando
 
 def is_reachable(object, player_rect, statics):
-    """ Is it possible for the player to jump to this platform in the concievable future """
+    """ Is it possible for the player to jump to this platform in the concievable future? """
     # Test 1: the platform must be within jumping height
     if player_rect.bottom - game_constants.maxjump_height < object.rect.top < player_rect.bottom:
         # Test 2: the player cannot be under the platform
@@ -34,6 +34,24 @@ def is_reachable(object, player_rect, statics):
                     if collider.rect.contains(testrect):
                         return True
 
+class SpecialChars:
+    """ Keeps track of what ASCII special keys are in use by current platforms, so that dupilicate keys are not used. """
+
+    def __init__(self):
+        self.keys = "1234567890[]\;',./!@#$%^&*(){}|:\"<>?"
+        self.inuse = []
+
+    def new(self):
+        if len(self.inuse) == len(self.keys): return False
+        while True:
+            key = random.choice(self.keys)
+            if key not in self.inuse:
+                self.inuse.append(key)
+                return key
+
+    def release(self, char):
+        self.inuse.remove(char)
+
 class Health:
     """ Show hearts in a corner of the screen """
 
@@ -50,8 +68,10 @@ class Health:
         self.redraw = True
 
     def clear(self, screen, background):
-        if self.redraw: # The line below is way slow, why?!
+        if self.redraw:
+            # The line below is way slow, why?!
             screen.blit(background, self.rect)
+
     def draw(self, screen):
         if self.redraw:
             lastx = 5
@@ -68,6 +88,7 @@ class Health:
             return dirty
         else:
             return []
+
     def fill(self):
         self.current_hearts = self.max_hearts
         self.redraw = True
@@ -89,7 +110,11 @@ class Health:
     def value(self):
         return self.current_hearts
              
-class LoadingScreen:
+class BaseScreen(object):
+    def showMe(self):
+        return self.showing
+
+class LoadingScreen(BaseScreen):
     def __init__(self, screen):
         self.dirty = True
         self.screen = screen
@@ -103,7 +128,7 @@ class LoadingScreen:
         
         self.dirty = False
                         
-class GameOverScreen:
+class GameOverScreen(BaseScreen):
     def __init__(self, screen):
         self.dirty = True
         self.screen = screen
@@ -122,11 +147,8 @@ class GameOverScreen:
     def handleEvent(self, event_key):
         if event_key == K_RETURN:
             self.showing = False
-        
-    def showMe(self):
-        return self.showing
                    
-class TitleScreen:
+class TitleScreen(BaseScreen):
     def __init__(self, screen):
         self.dirty = True
         self.screen = screen
@@ -171,12 +193,9 @@ class TitleScreen:
                 return InstructionsScreen(self.screen)
             if (selected_op == 'options'):
                 return OptionsScreen(self.screen)
-        return None
-        
-    def showMe(self):
-        return self.showing
+        return None        
                  
-class InstructionsScreen:
+class InstructionsScreen(BaseScreen):
     def __init__(self, screen):
         self.dirty = True
         self.screen = screen
@@ -192,33 +211,37 @@ class InstructionsScreen:
 
     def draw(self):
         self.screen.fill((50, 50, 50))
-
-        enemy_list_text = """SOLDIERS are constrained by the laws of gravity.
-COPTERS can fly, but won't go through platforms.
-GHOSTS can phase through platforms."""
-        enemy_list = [GetFont(16).render(text, 1, Color.MOSTLY_WHITE) for text in reversed(enemy_list_text.split("\n"))] 
         
+        enemies = [
+            (self.soldier, "SOLDIERS are constrained by the laws of gravity."),
+            (self.chopper, "COPTERS can fly, but won't go through platforms."),
+            (self.ghost,   "GHOSTS can float anywhere they like."),
+        ]
+
         instructions_text = """Type the words that appear over enemies to defeat them.
 Type the character that appears on a platform to jump to it.
 Press CTRL to deselect a word.
 Press space to turn around.
 Press return to continue."""
-        instructions = [GetFont(16).render(text, 1, Color.MOSTLY_WHITE) for text in reversed(instructions_text.split("\n"))] 
         
-        last = game_constants.h
-        for text in (instructions):
-            this = last - text.get_height()
-            self.screen.blit(text, text.get_rect(centerx = game_constants.w / 2, centery = this))
-            last = this
+        last_y = game_constants.h
+        for text in reversed(instructions_text.split("\n")):
+            rendered_text = GetFont(16).render(text, 1, Color.MOSTLY_WHITE)
+
+            cur_y = last_y - rendered_text.get_height()
+            self.screen.blit(rendered_text, rendered_text.get_rect(centerx = game_constants.w / 2, centery = cur_y))
+            last_y = cur_y
             
-        for text, image in zip(enemy_list, (self.ghost, self.chopper, self.soldier)):
-            this = last - text.get_height() - 20
-            rect = text.get_rect(centerx = game_constants.w / 2, centery = this)
-            self.screen.blit(text, rect)
-            self.screen.blit(image, image.get_rect(centerx = rect.left - image.get_width() - 10, centery = this))
-            last = this
+        for image, text in reversed(enemies):
+            rendered_text = GetFont(16).render(text, 1, Color.MOSTLY_WHITE)
+
+            cur_y = last_y - rendered_text.get_height() - 20
+            rect = rendered_text.get_rect(centerx = game_constants.w / 2, centery = cur_y)
+            self.screen.blit(rendered_text, rect)
+            self.screen.blit(image, image.get_rect(centerx = rect.left - image.get_width() - 10, centery = cur_y))
+            last_y = cur_y
        
-        gunstar_top = (last) / 2 - self.image.get_height() / 2
+        gunstar_top = last_y / 2 - self.image.get_height() / 2
         self.screen.blit(self.image, self.image.get_rect(centerx = game_constants.w / 2, top = gunstar_top))     
        
         pygame.display.update()
@@ -226,10 +249,7 @@ Press return to continue."""
         
     def handleEvent(self, event_key):
         if event_key == K_RETURN:
-            self.showing = False
-        
-    def showMe(self):
-        return self.showing
+            return TitleScreen(self.screen)
         
 class Option:
     def __init__(self, screen, value, checked = False, active = False):
@@ -310,7 +330,7 @@ class OptionGroup:
     def get_checked(self):
         return [opt for opt in self.options if opt.is_checked()]
         
-class OptionsScreen:
+class OptionsScreen(BaseScreen):
     def __init__(self, screen, word_sources = [], enemy_types = []):
         self.dirty = True
         self.screen = screen
@@ -330,14 +350,16 @@ class OptionsScreen:
         
     def draw(self):
         self.screen.fill((50, 50, 50))
-        text_line = GetFont(16).render("INTENSE OPTIONS SCREEN", 1, Color.MOSTLY_WHITE)
-        text_line_rect = text_line.get_rect(centerx = game_constants.w / 2, top = 0)
+
+        text_line = GetFont(32).render("INTENSE OPTIONS SCREEN", 1, Color.MOSTLY_WHITE)
+        text_line_rect = text_line.get_rect(centerx = game_constants.w / 2, top = 20)
+
         self.screen.blit(text_line, text_line_rect)
         
         [group.draw() for group in self.option_groups] 
         
         text_line = GetFont(16).render("(Space to select, return to continue)", 1, Color.MOSTLY_WHITE)
-        text_line_rect = text_line.get_rect(centerx = game_constants.w / 2, bottom = game_constants.h)
+        text_line_rect = text_line.get_rect(centerx = game_constants.w / 2, bottom = game_constants.h - 20)
         self.screen.blit(text_line, text_line_rect)
         
         pygame.display.update()
@@ -345,37 +367,36 @@ class OptionsScreen:
 
     def handleEvent(self, event_key):
         if event_key == K_RETURN:
-            self.showing = False
+            return TitleScreen(self.screen)
         elif event_key == K_DOWN:
             self.option_groups[self.groupnum].down()
         elif event_key == K_UP:
             self.option_groups[self.groupnum].up()
         elif event_key == K_LEFT:
-            if self.groupnum > 0:
-                self.option_groups[self.groupnum].deactivate()
-                self.groupnum -= 1
-                self.option_groups[self.groupnum].activate()
+            if self.groupnum == 0: return
+
+            self.option_groups[self.groupnum].deactivate()
+            self.groupnum -= 1
+            self.option_groups[self.groupnum].activate()
         elif event_key == K_RIGHT:
-            if self.groupnum < len(self.option_groups) - 1:
-                self.option_groups[self.groupnum].deactivate()
-                self.groupnum += 1
-                self.option_groups[self.groupnum].activate()
+            if self.groupnum == len(self.option_groups) - 1: return
+
+            self.option_groups[self.groupnum].deactivate()
+            self.groupnum += 1
+            self.option_groups[self.groupnum].activate()
             self.option_groups[self.groupnum].activate()
         elif event_key == K_SPACE:
             self.option_groups[self.groupnum].select()
         self.dirty = True
 
-    def showMe(self):
-        return self.showing
-    
     def getFeedOptions(self):
         return [opt.value for opt in self.feeds_group.get_checked()]
     
     def getEnemyOptions(self):
         return [opt.value for opt in self.enemy_group.get_checked()]
                         
-class MainGameScene:
-    """ Overarching, badly-structured class controlling the current game environment, mostly. """
+class MainGameScene(BaseScreen):
+    """ Class for the main playable game environment. """
     def __init__(self, screen):
         self.headersize = 30
     
@@ -391,7 +412,10 @@ class MainGameScene:
         self.playergroup = RenderUpdatesDraw(self.player)
 
         self.challenge = False # Draw "TYPING CHALLENGE" screen
-        self.platforms = {game_constants.h - 80 : [Box(-10000, game_constants.h - 80, 20000, 16)]}
+
+        self.platforms = {}
+        self.platforms[game_constants.h - 80] = [Box(-10000, game_constants.h - 80, 20000, 16)]
+
         self.statics = RenderUpdatesDraw()
         self.statics.add(self.platforms.values()[0])
         self.screenstatics = RenderUpdatesDraw()
@@ -530,7 +554,7 @@ class MainGameScene:
                         self.screenstatics.add(platform)
                         # If it's a platform (has the attribute'word') give it an identifying word while it's onscreen
                         if hasattr(platform, 'word'):
-                            platform.word = Word(self.special_chars.new(), Platform.font)
+                            platform.word = Word(self.special_chars.new(), platform.font)
                 else: # This platform is on the screen: is it gone now?
                     if not platform.rect.colliderect(self.camera):
                         self.screenstatics.remove(platform)
@@ -572,6 +596,7 @@ class MainGameScene:
                     if platform.reachable and self.camera.colliderect(platform.rect):
                         if key == platform.contents():
                             return platform       
+
     def showMe(self):
         return self.health.value() != 0
         
@@ -579,10 +604,10 @@ class MainGameScene:
         self.challenging = False
         self.screen.blit(self.background, (0, 0))
         
-class ChallengeScreen:
+class ChallengeScreen(BaseScreen):
     def __init__(self, screen, sentence):
         self.screen = screen
-        self.font = pygame.font.Font('freesansbold.ttf', 40)
+        self.font = GetFont(40)
         self.challenge_message = self.font.render("TYPING CHALLENGE!", 0, Color.MOSTLY_WHITE)
         self.rect = None
         self.screen.fill((10, 10, 0))
@@ -598,9 +623,6 @@ class ChallengeScreen:
         sentence.draw(screen, (game_constants.w / 2, game_constants.h / 2))
         
         self.showing = True
-
-    def showMe(self):
-        return self.showing
 
     def draw(self):
         self.frames += 1

@@ -2,39 +2,41 @@ import pygame, os, random
 
 class Color:
     """ A set of colors used in this game """
-    word_unselect = (200, 40, 200)
-    word_select = (250, 10, 30)
+    word_unselect        = (200, 40, 200)
+    word_select          = (250, 10, 30)
     platform_unreachable = (40, 40, 40)
-    platform_reachable = (230, 230, 230)
-    platform_selected = (230, 230, 0)
-    text_normal = (255, 255, 255)
-    text_typed = (50, 50, 50)
-    score_color = (200, 200, 100)
+    platform_reachable   = (230, 230, 230)
+    platform_selected    = (230, 230, 0)
+    text_normal          = (255, 255, 255)
+    text_typed           = (50, 50, 50)
+    score_color          = (200, 200, 100)
 
-    YELLOW = (230, 230, 0)
+    YELLOW               = (230, 230, 0)
 
-    BLACK = (0, 0, 0)
-    DARK_GRAY = (50, 50, 50)
-    GRAY = (150, 150, 150)
-    LIGHT_GRAY = (200, 200, 200)
-    MOSTLY_WHITE = (250, 250, 250)
-    WHITE = (255, 255, 255)
+    BLACK                = (0, 0, 0)
+    DARK_GRAY            = (50, 50, 50)
+    GRAY                 = (150, 150, 150)
+    LIGHT_GRAY           = (200, 200, 200)
+    MOSTLY_WHITE         = (250, 250, 250)
+    WHITE                = (255, 255, 255)
 
 class game_constants:
     """ A set of constants used in this game, that should probably go elsewhere """
-    speed = 2.0
-    bulletspeed = 25
+    speed             = 2.0
+    bulletspeed       = 25
     terminal_velocity = -10
-    jumpspeed = 2.0
-    jumpframes = 45
-    hitframes = 10
-    big_distance = 9999999
-    maxjump_height = speed * jumpframes
-    maxjump_width = jumpspeed * jumpframes / 5 # Super temporary stupid hack. Calculate this per-class to calculate proper jumps.
-    max_enemies = 10
-    max_powerups = 5
-    w, h = (800, 600)
-    line_char_limit = 40
+    jumpspeed         = 2.0
+    jumpframes        = 45
+    hitframes         = 10
+    big_distance      = 9999999
+    maxjump_height    = speed * jumpframes
+
+    # Stupid hack. Calculate this per-class to calculate proper jumps.
+    maxjump_width     = jumpspeed * jumpframes / 5
+    max_enemies       = 10
+    max_powerups      = 5
+    w, h              = (800, 600)
+    line_char_limit   = 40
     
 Fonts = {}
 def GetFont(pointSize):
@@ -51,13 +53,20 @@ class RenderUpdatesDraw(pygame.sprite.RenderClear):
         # "Dirty" will be a list of rects to send to pygame.display.update()
         dirty = self.lostsprites # Rects that have been deleted since last draw
         self.lostsprites = []
-        for s, r in self.spritedict.items(): # sprite, rectangle for all sprites still active
-            newrect = s.draw(surface, campos) # Use the sprite's draw function, which should return a rect
-            if r is 0: # This sprite wasn't onscreen last frame
-                dirty.append(newrect) # Need to draw over where the sprite was
+
+        for sprite, rect in self.spritedict.items():
+            newrect = sprite.draw(surface, campos)
+
+            if rect is 0:
+                # This sprite wasn't onscreen last frame, draw over where the sprite was
+                dirty.append(newrect)
             else:
-                dirty.append(newrect.union(r)) # Assumes that last and current rects will always overlap. If not, faster to do a collide check first. See sprite.py.
-            self.spritedict[s] = newrect
+                # Assumes that last and current rects will always overlap.
+                # If not, faster to do a collide check first. See sprite.py.
+                dirty.append(newrect.union(rect))
+
+            self.spritedict[sprite] = newrect
+
         return dirty
     
 def flippedframes(surfaces):
@@ -138,6 +147,7 @@ class Anim(WrappedSprite):
             
 class Box(WrappedSprite):
     """ A boundary rect that can draw itself to the screen when given a camera position """
+
     def __init__(self, x, y, w, h):
         super(Box, self).__init__()
         self.rect = pygame.rect.Rect((x, y, w, h))
@@ -158,29 +168,15 @@ class Box(WrappedSprite):
                 surface.blit(Box.images_smbas, (moved.left + i * 16, moved.top))
         return moved
         
-class Circle(pygame.sprite.Sprite):
-    """ A drawable circle that purports to store its boundary rect, but doesn't because I can't figure it out. """
-
-    def __init__(self, center, radius):
-        super(Circle, self).__init__()
-        self.rect = pygame.rect.Rect(0, 0, radius, radius)
-        self.rect.center = center
-        self.center = center
-        self.radius = radius
-
-    def draw(self, surface, (x, y)):
-        moved = (self.center[0] - x, self.center[1] - y)
-        pygame.draw.circle(surface, (100, 30, 200), moved, 12)
-        
 class Platform(Box):
     """ A Box with a bunch of collision rules used in the game """
 
-    font = None
     def __init__(self, x, y, w, h):
         Box.__init__(self, x, y, w, h)
         self.word = None
         self.reachable = False
         self.selected = False
+        self.font = GetFont(16)
 
     def draw(self, surface, campos):
         box = Box.draw(self, surface, campos)
@@ -197,32 +193,15 @@ class Platform(Box):
         return self.word.string
 
     def setword(self, text):
-        if not self.word: self.word = Word(text, Platform.font)
-             
-class SpecialChars:
-    """ Keeps track of what ASCII special keys are in use by current platforms, so that dupilicate keys are not used. """
-
-    def __init__(self):
-        self.keys = "1234567890[]\;',./!@#$%^&*(){}|:\"<>?"
-        self.inuse = []
-
-    def new(self):
-        if len(self.inuse) == len(self.keys): return False
-        while True:
-            key = random.choice(self.keys)
-            if key not in self.inuse:
-                self.inuse.append(key)
-                return key
-
-    def release(self, char):
-        self.inuse.remove(char)
+        if not self.word: self.word = Word(text, self.font)
           
 class Score(pygame.sprite.Sprite):
     """ Displays score in the upper-right of screen. Draw function requires total elapsed time since game start. """
 
-    font = None
     def __init__(self, surface, color = Color.score_color):
         super(Score, self).__init__()
+
+        self.font = GetFont(14)
         self.color = color
         self.score = 0.0
         self.misses = 0
@@ -233,9 +212,9 @@ class Score(pygame.sprite.Sprite):
         self.drawn_once = False
 
     def render_initial(self, surface):
-        self.rendered_score =  Score.font.render("Score: %.2f" % self.score,  1, self.color)
-        self.rendered_misses = Score.font.render("Misses: %i"  % self.misses, 1, self.color)
-        self.rendered_wpm =    Score.font.render("WPM: %3i"    % 0,           1, self.color)
+        self.rendered_score =  self.font.render("Score: %.2f" % self.score,  1, self.color)
+        self.rendered_misses = self.font.render("Misses: %i"  % self.misses, 1, self.color)
+        self.rendered_wpm =    self.font.render("WPM: %3i"    % 0,           1, self.color)
 
         left_edge = surface.get_rect().right - self.rendered_wpm.get_rect().width * 1.5
         self.wpm_rect = self.rendered_wpm.get_rect(top = 5, left = left_edge)
@@ -246,12 +225,12 @@ class Score(pygame.sprite.Sprite):
 
     def increase(self, value):
         self.score += value
-        self.rendered_score = Score.font.render("Score: %.2f" % self.score, 1, self.color)
+        self.rendered_score = self.font.render("Score: %.2f" % self.score, 1, self.color)
         self.drawscore = True
 
     def miss(self):
         self.misses += 1
-        self.rendered_misses = Score.font.render("Misses: %i" % self.misses, 1, self.color)
+        self.rendered_misses = self.font.render("Misses: %i" % self.misses, 1, self.color)
         self.drawmiss = True
 
     def clear(self, surface, background):
@@ -268,7 +247,7 @@ class Score(pygame.sprite.Sprite):
         self.frames += 1
        
         if self.frames > 60: # Choose whether to draw wpm next frame
-            self.rendered_wpm = Score.font.render("WPM: %3i" % (self.score / (elapsed / 60)), 1, self.color)
+            self.rendered_wpm = self.font.render("WPM: %3i" % (self.score / (elapsed / 60)), 1, self.color)
             self.drawwpm = True
             self.frames = 0        
         
@@ -325,17 +304,16 @@ def split_sentence(sentence, offset = 0):
     return result
             
 class Word(pygame.sprite.Sprite):
-    """ A string that keeps track of how much of it has been completed, as well as its current rendered image
+    """ A string that keeps track of how much of it has been completed,
+          as well as its current rendered image.
         A word can be drawn to the screen or 'typed on'
     """
 
-    font = None
     def __init__(self, text, font = None):
         super(Word, self).__init__()
 
-        if not font: font = self.font
-        self.font = font
-        self.borderwidth = font.get_height() / 5
+        self.font = font or GetFont(24)
+        self.borderwidth = self.font.get_height() / 5
 
         self.string = text
         self.rect = None
@@ -375,7 +353,8 @@ class Word(pygame.sprite.Sprite):
         for i, line in enumerate(self.rtext[1:]):
             rtext_rects.append(line.get_rect(centerx = x, top = rtext_rects[i].bottom))
 
-        if ltext_rects and rtext_rects: # Perform correction  on edge
+        # Perform correction on edge
+        if ltext_rects and rtext_rects:
             w = ltext_rects[-1].width + rtext_rects[0].width
             ltext_rects[-1].left = x - w / 2
             rtext_rects[0].right = x + w / 2
@@ -395,7 +374,8 @@ class Word(pygame.sprite.Sprite):
             surface.blit(line, rect)
 
         self.lastrect = screen_rect
-        return screen_rect.inflate(self.borderwidth + 1, self.borderwidth + 1) # HACK? or bug in pygame
+        # HACK? or bug in pygame (i assume I meant the +1...)
+        return screen_rect.inflate(self.borderwidth + 1, self.borderwidth + 1)
 
     def typeon(self, char):
         if char == self.string[self.strpos]:
