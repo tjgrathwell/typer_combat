@@ -1,23 +1,25 @@
-import pygame
+import pygame, general
 from collision import distfromground
-from general import Anim, game_constants, loadframes, WrappedSprite
+from general import game_constants, loadframes
 from player import Weapons
 
-class Powerup(WrappedSprite):
+class Powerup(general.WrappedSprite):
     """ A non-moving object that sits on a platform waiting to be consumed. """
 
     def __init__(self, position, statics):
         super(Powerup, self).__init__()
 
         self.x, self.y = position
-        self.rect = pygame.rect.Rect(0, 0, 0, 0)
-        self.rect.centerx, self.rect.bottom = self.x, self.y
-        self.statics = statics
+        self.rect      = pygame.rect.Rect(0, 0, 0, 0)
+        self.statics   = statics
+        self.rect.centerx, self.rect.bottom = position
 
-        while distfromground(self.rect, self.statics) > 0: # Ensure this thing is on the ground
+        while distfromground(self.rect, self.statics) > 0:
+            # Ensure this thing is on the ground
             self.y += 1
             self.rect.bottom = self.y
-            if distfromground(self.rect, self.statics) == game_constants.big_distance: # magic numbers bad
+            if distfromground(self.rect, self.statics) == game_constants.big_distance:
+                # fallen off the screen
                 self.kill()
                 break
 
@@ -43,7 +45,7 @@ class Shotgun(Powerup):
         cls.images_shotgun = loadframes("assorted", ("shotgun1.gif",))
     
     def loadanims(self):
-        self.image = Anim(Shotgun.images_shotgun, ([200]))
+        self.image = general.Anim(Shotgun.images_shotgun, ([200]))
         self.rect = self.image.get_rect()
         self.rect.centerx, self.rect.bottom = self.x, self.y
 
@@ -55,10 +57,11 @@ class Heart(Powerup):
     @classmethod
     def loadImages(cls):
         super(Heart, cls).loadImages()
-        cls.images_heart = loadframes("assorted", ["heart%d.gif" % i for i in [1, 2, 3, 4, 5, 4, 3, 2]])
+        heart_frames = [1, 2, 3, 4, 5, 4, 3, 2]
+        cls.images_heart = loadframes("assorted", ["heart%d.gif" % i for i in heart_frames])
     
     def loadanims(self):
-        self.image = Anim(Heart.images_heart, (5, 5) * 4)
+        self.image = general.Anim(Heart.images_heart, (5, 5) * 4)
         self.rect = self.image.get_rect()
         self.rect.centerx, self.rect.bottom = self.x, self.y
 

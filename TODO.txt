@@ -2,6 +2,9 @@ Refactorings:
   Instead of random-assed properties on a class, classes should have hashes called "images" and "anims"
   Maybe a common base class starts those as {} and autoloads loadImages for that class on first instantiation.
 
+Easy stuff:
+  Static feeders and dictionary powerups that temporarily switch to those wordsets
+
 Quick Fixes:
   That weird hop when you fall down from a height.
   Powerup fall animation

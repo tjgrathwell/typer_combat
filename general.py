@@ -11,6 +11,7 @@ class Color:
     text_typed           = (50, 50, 50)
     score_color          = (200, 200, 100)
 
+    BLACK_YELLOW         = (10, 10, 0)
     YELLOW               = (230, 230, 0)
 
     BLACK                = (0, 0, 0)
@@ -37,7 +38,7 @@ class game_constants:
     max_powerups      = 5
     w, h              = (800, 600)
     line_char_limit   = 40
-    
+
 Fonts = {}
 def GetFont(pointSize):
     if Fonts.has_key(pointSize):
@@ -68,13 +69,13 @@ class RenderUpdatesDraw(pygame.sprite.RenderClear):
             self.spritedict[sprite] = newrect
 
         return dirty
-    
+
 def flippedframes(surfaces):
     return [pygame.transform.flip(image, True, False) for image in surfaces]
-    
+
 def loadframes(directory, filenames):
     return [pygame.image.load(os.path.join('.', 'data', directory, filename)).convert_alpha() for filename in filenames]
-    
+
 class WrappedSprite(pygame.sprite.Sprite):
     """ Wrapper around pygame.sprite.Sprite to consolidate methods specific to this game """
 
@@ -102,9 +103,9 @@ class Anim(WrappedSprite):
 
         self.total_frames = len(images)
         self.framecounts = framecounts
-        
+
         self.images = images
-        self.reset() # Reset current frame 
+        self.reset() # Reset current frame
 
     def reset(self):
         self.frames = 0
@@ -133,7 +134,7 @@ class Anim(WrappedSprite):
             self.delay -= 1
             return
         self.frames += 1
-         
+
         if self.frames % self.framecounts[self.current_frame] == 0:
             if self.ends and self.images[self.current_frame] == self.images[-1]: # Stop animation on last frame
                 self.kill()
@@ -144,7 +145,7 @@ class Anim(WrappedSprite):
 
     def total_time(self):
         return sum(self.framecounts) + self.delay
-            
+
 class Box(WrappedSprite):
     """ A boundary rect that can draw itself to the screen when given a camera position """
 
@@ -157,7 +158,7 @@ class Box(WrappedSprite):
         super(Box, cls).loadImages()
         cls.images_smbas = loadframes('platforms', ('smbas.png',))[0]
         cls.images_smbas_edge = loadframes('platforms', ('smbas_edge.png',))[0]
-        
+
     def draw(self, surface, campos):
         moved = self.rect.move(-campos[0], -campos[1])
         w = moved.width
@@ -167,34 +168,7 @@ class Box(WrappedSprite):
             else:
                 surface.blit(Box.images_smbas, (moved.left + i * 16, moved.top))
         return moved
-        
-class Platform(Box):
-    """ A Box with a bunch of collision rules used in the game """
 
-    def __init__(self, x, y, w, h):
-        Box.__init__(self, x, y, w, h)
-        self.word = None
-        self.reachable = False
-        self.selected = False
-        self.font = GetFont(16)
-
-    def draw(self, surface, campos):
-        box = Box.draw(self, surface, campos)
-        # It feels like maybe this label code should go elsewhere
-        if self.word:
-            if self.selected: color = Color.platform_selected
-            elif self.reachable: color = Color.platform_reachable
-            else: color = Color.platform_unreachable
-            left = self.word.draw(surface, (self.rect.left - campos[0] + 10, self.rect[1] - campos[1] + 5), color)
-            right = self.word.draw(surface, (self.rect.right - campos[0] - 10, self.rect[1] - campos[1] + 5), color)
-        return box.union(left.union(right)) # HACK
-
-    def contents(self):
-        return self.word.string
-
-    def setword(self, text):
-        if not self.word: self.word = Word(text, self.font)
-          
 class Score(pygame.sprite.Sprite):
     """ Displays score in the upper-right of screen. Draw function requires total elapsed time since game start. """
 
@@ -235,7 +209,7 @@ class Score(pygame.sprite.Sprite):
 
     def clear(self, surface, background):
         if not self.drawn_once: return
-        
+
         if self.drawscore:
             surface.blit(background, self.score_rect)
         if self.drawmiss:
@@ -245,29 +219,29 @@ class Score(pygame.sprite.Sprite):
 
     def draw(self, surface, elapsed):
         self.frames += 1
-       
+
         if self.frames > 60: # Choose whether to draw wpm next frame
             self.rendered_wpm = self.font.render("WPM: %3i" % (self.score / (elapsed / 60)), 1, self.color)
             self.drawwpm = True
-            self.frames = 0        
-        
+            self.frames = 0
+
         dirty = []
         if self.drawwpm:
             dirty += [surface.blit(self.rendered_wpm, self.wpm_rect)]
-            self.drawwpm = True        
-        
+            self.drawwpm = True
+
         if self.drawmiss:
             dirty += [surface.blit(self.rendered_misses, self.miss_rect)]
-            self.drawmiss = True        
-        
+            self.drawmiss = True
+
         if self.drawscore:
             dirty += [surface.blit(self.rendered_score, self.score_rect)]
             self.drawscore = True
-        
+
         self.drawn_once = True
-        
+
         return dirty
-         
+
 # WordMaker:
 # this could possibly be folded into Word, or extended to keep better track of what
 # words are in play.
@@ -282,7 +256,7 @@ class WordMaker:
 
     def next_word(self):
         return Word(random.choice(self.word_array))
-            
+
 def split_sentence(sentence, offset = 0):
     def str_len_line(line):
         return sum([len(x) for x in line])
@@ -302,7 +276,7 @@ def split_sentence(sentence, offset = 0):
     if line:
         result.append(" ".join(line))
     return result
-            
+
 class Word(pygame.sprite.Sprite):
     """ A string that keeps track of how much of it has been completed,
           as well as its current rendered image.
@@ -345,7 +319,7 @@ class Word(pygame.sprite.Sprite):
         else:
             ltext_rects = []
         for i, line in enumerate(self.ltext[1:]):
-            ltext_rects.append(line.get_rect(centerx = x, centery = y+self.ltext_rects[i].height))
+            ltext_rects.append(line.get_rect(centerx = x, centery = y + self.ltext_rects[i].height))
         if self.ltext:
             rtext_rects = [self.rtext[0].get_rect(left = ltext_rects[-1].right, centery = ltext_rects[-1].centery)]
         else:
@@ -358,7 +332,7 @@ class Word(pygame.sprite.Sprite):
             w = ltext_rects[-1].width + rtext_rects[0].width
             ltext_rects[-1].left = x - w / 2
             rtext_rects[0].right = x + w / 2
-            
+
         allrects = ltext_rects + rtext_rects
         if len(allrects) == 1:
             self.rect = allrects[0].inflate(8, 3)
@@ -374,6 +348,7 @@ class Word(pygame.sprite.Sprite):
             surface.blit(line, rect)
 
         self.lastrect = screen_rect
+
         # HACK? or bug in pygame (i assume I meant the +1...)
         return screen_rect.inflate(self.borderwidth + 1, self.borderwidth + 1)
 
@@ -386,12 +361,12 @@ class Word(pygame.sprite.Sprite):
 
     def done(self):
         return self.strpos == len(self.string)
- 
+
 def n_of(format_string, n):
-    return [format_string % i for i in xrange(1, n + 1)] 
-    
+    return [format_string % i for i in xrange(1, n + 1)]
+
 def loadImagesForAnimations():
     """ Load all the images in the game from files into surfaces as class members. """
     from opponents import Assorted
-    
+
     [cls.loadImages() for cls in [Assorted]]

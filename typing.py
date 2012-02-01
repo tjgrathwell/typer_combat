@@ -54,14 +54,8 @@ def game_loop(screen):
     main_game_scene = MainGameScene(screen)
     
     starttime = time.time()
-    player_movement = False
 
     # TODO: dynamically choose which feeds based on options        
-    # if DEBUG:
-    #     feed_sources = [getFeeder(x) for x in options_screen.getFeedOptions()]
-    #     # Eval a string like 'Copter' into its class object (brittle, refactor)
-    #     spawners = [eval(enemy) for enemy in options_screen.getEnemyOptions()]
-
     feed_sources = [getFeeder('Google'), getFeeder('Slashdot'), getFeeder('Digg')]
     spawners = [Soldier, Copter, Ghost]
 
@@ -75,7 +69,7 @@ def game_loop(screen):
 
     words = WordMaker(word_list)
     sentences = WordMaker(sentence_list)
-    controller = Controller(main_game_scene,words,sentences)
+    controller = Controller(main_game_scene, words, sentences,spawners)
     
     main_game_scene.redraw()
     pygame.display.update()
@@ -101,32 +95,36 @@ def game_loop(screen):
         # Input Events for main game scene
         for event in processEventsForKillSignal(pygame.event.get()):
             if event.type == KEYDOWN:
-                if event.key in (K_LCTRL,K_RCTRL): # Release selected object
+                if event.key in (K_LCTRL,K_RCTRL):
+                    # Release selected object
                     controller.unselect()
-                elif event.key in (K_LSHIFT,K_RSHIFT): # Note that shift is being pressed
+                elif event.key in (K_LSHIFT,K_RSHIFT):
+                    # shift is being held
                     KeyState.shifting += 1
-                elif event.key == K_SPACE: # Jump
-                    if player_movement: main_game_scene.player.jump()
-                    else: controller.change_direction()
-                elif event.key in directions: # Directional pad movement
-                    if player_movement: main_game_scene.movelist.append(event.key)
-                elif event.key == K_END: # Toggle player control (for debugging)
-                    player_movement = not player_movement
-                elif event.key in range(256): # Typing an ASCII character
+                elif event.key == K_SPACE:
+                    controller.key_space()
+                elif event.key in directions:
+                    controller.keydown_direction(event.key)
+                elif event.key == K_END: # Toggle player free movement
+                    controller.toggle_free_movement()
+                elif event.key in range(256): # ASCII character
                     if chr(event.key) in string.lowercase: # Typing a word
                         controller.type_normal(chr(event.key))
                     elif chr(event.key) in specials+shifted_specials: # Typing a special character
-                        if not KeyState.shifting: controller.type_special(chr(event.key))
-                        else: controller.type_special(chr(event.key).translate(special_keys_trans_table))
+                        if not KeyState.shifting:
+                            special_key = chr(event.key)
+                        else:
+                            special_key = chr(event.key).translate(special_keys_trans_table)
+                        controller.type_special(special_key)
+
             elif event.type == KEYUP:
                 if event.key in directions:
-                    if player_movement: main_game_scene.movelist.remove(event.key)
+                    controller.keyup_direction(event.key)
                 elif event.key in (K_LSHIFT,K_RSHIFT):
                     KeyState.shifting -= 1
 
-        # Timekeeping
-        if not player_movement: controller.tick()
-        controller.tock(spawners) # This function spawns enemies every random-interval-or-so.
+        controller.tick()
+
         main_game_scene.tick(elapsed)
         
         #Drawing

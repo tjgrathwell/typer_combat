@@ -1,67 +1,39 @@
-import pygame, random
+import pygame, random, general
 from pygame.locals import *
-from general import game_constants, RenderUpdatesDraw, Box, Platform, Score, Word, GetFont, loadframes, Color
+from general import game_constants, loadframes, GetFont, Color, RenderUpdatesDraw, Score, Word
 from player import Player
 from opponents import Soldier, Copter, Ghost, Commando
-
-def is_reachable(object, player_rect, statics):
-    """ Is it possible for the player to jump to this platform in the concievable future? """
-    # Test 1: the platform must be within jumping height
-    if player_rect.bottom - game_constants.maxjump_height < object.rect.top < player_rect.bottom:
-        # Test 2: the player cannot be under the platform
-        if (player_rect.right < object.rect.left):
-            # Test 3: the path from the player position to the optimal jump position must be contiguous
-            jumpdist = object.rect.left - player_rect.right
-            if jumpdist < game_constants.maxjump_width: # Maximum distance that can be jumped
-                return True
-            else:
-                start = (player_rect.right, player_rect.bottom)
-                size = (jumpdist - game_constants.maxjump_width, 1)
-                testrect = pygame.rect.Rect(start, size)
-                for collider in statics:
-                    if collider.rect.contains(testrect):
-                        return True
-        elif (player_rect.left > object.rect.right):
-            # Test 3: the path from the player position to the optimal jump position must be contiguous
-            jumpdist = player_rect.left - object.rect.right
-            if jumpdist < game_constants.maxjump_width: # Maximum distance that can be jumped
-                return True
-            else:
-                start = (object.rect.right + game_constants.maxjump_width, player_rect.bottom)
-                size = (jumpdist - game_constants.maxjump_width, 1)
-                testrect = pygame.rect.Rect(start, size)
-                for collider in statics:
-                    if collider.rect.contains(testrect):
-                        return True
 
 class SpecialChars:
     """ Keeps track of what ASCII special keys are in use by current platforms, so that dupilicate keys are not used. """
 
     def __init__(self):
         self.keys = "1234567890[]\;',./!@#$%^&*(){}|:\"<>?"
-        self.inuse = []
+        self.in_use = []
 
     def new(self):
-        if len(self.inuse) == len(self.keys): return False
-        while True:
-            key = random.choice(self.keys)
-            if key not in self.inuse:
-                self.inuse.append(key)
-                return key
+        if len(self.in_use) == len(self.keys): return False
+
+        not_in_use = list(set(self.keys) - set(self.in_use))
+
+        key = random.choice(not_in_use)
+        self.in_use.append(key)
+
+        return key
 
     def release(self, char):
-        self.inuse.remove(char)
+        self.in_use.remove(char)
 
 class Health:
     """ Show hearts in a corner of the screen """
 
     def __init__(self, max_hearts):
         import os
-        self.full = pygame.image.load(os.path.join('.', 'data', 'assorted', 'heartfull.gif')).convert_alpha()
+        self.full = loadframes('assorted', ['heartfull.gif'])[0]
         self.full = pygame.transform.scale(self.full, (self.full.get_width() * 2, self.full.get_height() * 2))
-        self.empty = pygame.image.load(os.path.join('.', 'data', 'assorted', 'heartempty.gif')).convert_alpha()
+        self.empty = loadframes('assorted', ['heartempty.gif'])[0]
         self.empty = pygame.transform.scale(self.empty, (self.empty.get_width() * 2, self.empty.get_height() * 2))
-        
+
         self.rect = pygame.rect.Rect((0, 0), (0, 0))
         self.max_hearts = max_hearts
         self.current_hearts = max_hearts
@@ -82,7 +54,7 @@ class Health:
             for _ in xrange(self.current_hearts, self.max_hearts): # Empty hearts
                 dirty += [screen.blit(self.empty, self.empty.get_rect(left = lastx, top = 5))]
                 lastx = lastx + self.empty.get_width() + 2
-                
+
             self.rect = dirty[0].unionall(dirty[1:])
             self.redraw = False
             return dirty
@@ -109,7 +81,37 @@ class Health:
 
     def value(self):
         return self.current_hearts
-             
+
+class Platform(general.Box):
+    """ A Box with a bunch of collision rules used in the game """
+
+    def __init__(self, x, y, w, h):
+        super(Platform, self).__init__(x, y, w, h)
+
+        self.word = None
+        self.reachable = False
+        self.selected = False
+        self.font = GetFont(16)
+
+    def draw(self, surface, campos):
+        box =  super(Platform, self).draw(surface, campos)
+
+        # It feels like maybe this label code should go elsewhere
+        if self.word:
+            if self.selected: color = Color.platform_selected
+            elif self.reachable: color = Color.platform_reachable
+            else: color = Color.platform_unreachable
+            left = self.word.draw(surface, (self.rect.left - campos[0] + 10, self.rect[1] - campos[1] + 5), color)
+            right = self.word.draw(surface, (self.rect.right - campos[0] - 10, self.rect[1] - campos[1] + 5), color)
+
+        return box.union(left.union(right)) # HACK
+
+    def contents(self):
+        return self.word.string
+
+    def setword(self, text):
+        if not self.word: self.word = Word(text, self.font)
+
 class BaseScreen(object):
     def showMe(self):
         return self.showing
@@ -125,9 +127,9 @@ class LoadingScreen(BaseScreen):
         message = GetFont(72).render("Loading...", 1, Color.MOSTLY_WHITE)
         self.screen.blit(message, message.get_rect(centerx = self.screen.get_width() / 2, centery = self.screen.get_height() * .25))
         pygame.display.update()
-        
+
         self.dirty = False
-                        
+
 class GameOverScreen(BaseScreen):
     def __init__(self, screen):
         self.dirty = True
@@ -135,19 +137,19 @@ class GameOverScreen(BaseScreen):
         self.showing = True
 
     def draw(self):
-        self.screen.fill((0, 0, 0))
+        self.screen.fill(Color.BLACK)
         message = GetFont(72).render("GAME OVER", 1, Color.MOSTLY_WHITE)
         instr = GetFont(32).render("Return to restart, Esc to quit.", 1, Color.MOSTLY_WHITE)
         self.screen.blit(message, message.get_rect(centerx = self.screen.get_width() / 2, centery = self.screen.get_height() * .25))
         self.screen.blit(instr, instr.get_rect(centerx = self.screen.get_width() / 2, centery = self.screen.get_height() * .75))
         pygame.display.update()
-        
+
         self.dirty = False
-        
+
     def handleEvent(self, event_key):
         if event_key == K_RETURN:
             self.showing = False
-                   
+
 class TitleScreen(BaseScreen):
     def __init__(self, screen):
         self.dirty = True
@@ -157,10 +159,10 @@ class TitleScreen(BaseScreen):
         self.selected_option = 0
 
     def draw(self):
-        self.screen.fill((50, 50, 50))
+        self.screen.fill(Color.DARK_GRAY)
         title = GetFont(50).render("TYPER COMBAT", 1, Color.MOSTLY_WHITE)
         title_rect = title.get_rect(centerx = game_constants.w / 2, top = 0)
-        self.screen.blit(title, title_rect) 
+        self.screen.blit(title, title_rect)
 
         options_texts = []
         for i, option_str in enumerate(self.options_order):
@@ -177,7 +179,7 @@ class TitleScreen(BaseScreen):
 
         pygame.display.update()
         self.dirty = False
-        
+
     def handleEvent(self, event_key):
         if event_key == K_UP:
             self.selected_option = max(self.selected_option - 1, 0)
@@ -193,8 +195,8 @@ class TitleScreen(BaseScreen):
                 return InstructionsScreen(self.screen)
             if (selected_op == 'options'):
                 return OptionsScreen(self.screen)
-        return None        
-                 
+        return None
+
 class InstructionsScreen(BaseScreen):
     def __init__(self, screen):
         self.dirty = True
@@ -202,7 +204,7 @@ class InstructionsScreen(BaseScreen):
 
         self.image = loadframes('gunstar',   ('gunside1.png',))[0]
         self.image = pygame.transform.scale2x(pygame.transform.scale2x(self.image)) # x4!
-        
+
         self.soldier = loadframes('soldier', ('rest1.gif',))[0]
         self.chopper = loadframes('copter',  ('fly1.gif',))[0]
         self.ghost   = loadframes('ghost',   ('right1.gif',))[0]
@@ -210,8 +212,8 @@ class InstructionsScreen(BaseScreen):
         self.showing = True
 
     def draw(self):
-        self.screen.fill((50, 50, 50))
-        
+        self.screen.fill(Color.DARK_GRAY)
+
         enemies = [
             (self.soldier, "SOLDIERS are constrained by the laws of gravity."),
             (self.chopper, "COPTERS can fly, but won't go through platforms."),
@@ -223,7 +225,7 @@ Type the character that appears on a platform to jump to it.
 Press CTRL to deselect a word.
 Press space to turn around.
 Press return to continue."""
-        
+
         last_y = game_constants.h
         for text in reversed(instructions_text.split("\n")):
             rendered_text = GetFont(16).render(text, 1, Color.MOSTLY_WHITE)
@@ -231,7 +233,7 @@ Press return to continue."""
             cur_y = last_y - rendered_text.get_height()
             self.screen.blit(rendered_text, rendered_text.get_rect(centerx = game_constants.w / 2, centery = cur_y))
             last_y = cur_y
-            
+
         for image, text in reversed(enemies):
             rendered_text = GetFont(16).render(text, 1, Color.MOSTLY_WHITE)
 
@@ -240,17 +242,17 @@ Press return to continue."""
             self.screen.blit(rendered_text, rect)
             self.screen.blit(image, image.get_rect(centerx = rect.left - image.get_width() - 10, centery = cur_y))
             last_y = cur_y
-       
+
         gunstar_top = last_y / 2 - self.image.get_height() / 2
-        self.screen.blit(self.image, self.image.get_rect(centerx = game_constants.w / 2, top = gunstar_top))     
-       
+        self.screen.blit(self.image, self.image.get_rect(centerx = game_constants.w / 2, top = gunstar_top))
+
         pygame.display.update()
         self.dirty = False
-        
+
     def handleEvent(self, event_key):
         if event_key == K_RETURN:
             return TitleScreen(self.screen)
-        
+
 class Option:
     def __init__(self, screen, value, checked = False, active = False):
         self.screen = screen
@@ -274,22 +276,26 @@ class Option:
         text_line = GetFont(16).render(self.value, 1, Color.MOSTLY_WHITE)
         text_line_rect = text_line.get_rect(left = x + 30, top = y)
         self.screen.blit(text_line, text_line_rect)
-        
+
         outer_rect = Rect(x, y, 25, 25)
         inner_rect = outer_rect.inflate(-8, -8)
-        
+
         if self.checked:
-            if self.active: # Selected with cursor: box with box in it
+            if self.active:
+                # Selected with cursor: box with box in it
                 pygame.draw.rect(self.screen, Color.LIGHT_GRAY, outer_rect, 0)
                 pygame.draw.rect(self.screen, Color.GRAY, inner_rect, 0)
-            else: # Selected without cursor: tiny box
+            else:
+                # Selected without cursor: tiny box
                 pygame.draw.rect(self.screen, Color.BLACK, outer_rect, 0)
                 pygame.draw.rect(self.screen, Color.GRAY, inner_rect, 0)
         else:
-            if self.active: # Unselected with cursor: empty box
+            if self.active:
+                # Unselected with cursor: empty box
                 pygame.draw.rect(self.screen, Color.LIGHT_GRAY, outer_rect, 0)
                 pygame.draw.rect(self.screen, Color.BLACK, inner_rect, 0)
-            else: # Unselected without cursor: blank
+            else:
+                # Unselected without cursor: blank
                 pygame.draw.rect(self.screen, Color.DARK_GRAY, outer_rect, 0)
 
 class OptionGroup:
@@ -303,7 +309,7 @@ class OptionGroup:
         if self.selected > 0:
             self.options[self.selected].deactivate()
             self.selected -= 1
-            self.options[self.selected].activate() 
+            self.options[self.selected].activate()
 
     def down(self):
         if self.selected < len(self.options) - 1:
@@ -329,7 +335,7 @@ class OptionGroup:
 
     def get_checked(self):
         return [opt for opt in self.options if opt.is_checked()]
-        
+
 class OptionsScreen(BaseScreen):
     def __init__(self, screen, word_sources = [], enemy_types = []):
         self.dirty = True
@@ -339,29 +345,29 @@ class OptionsScreen(BaseScreen):
         # TODO does this belong somewhere else?
         self.word_sources = ['Google','Digg','Slashdot']
         self.enemy_types = [Soldier, Copter, Ghost, Commando]
-        
+
         self.options = self.word_sources + [x.name for x in self.enemy_types]
         self.feeds_group = OptionGroup((100, 100), [Option(self.screen, word) for word in self.word_sources])
         self.enemy_group = OptionGroup((300, 100), [Option(self.screen, x.name) for x in self.enemy_types])
         self.option_groups = [self.feeds_group, self.enemy_group]
         self.feeds_group.activate()
-        
+
         self.groupnum = 0
-        
+
     def draw(self):
-        self.screen.fill((50, 50, 50))
+        self.screen.fill(Color.DARK_GRAY)
 
         text_line = GetFont(32).render("INTENSE OPTIONS SCREEN", 1, Color.MOSTLY_WHITE)
         text_line_rect = text_line.get_rect(centerx = game_constants.w / 2, top = 20)
 
         self.screen.blit(text_line, text_line_rect)
-        
-        [group.draw() for group in self.option_groups] 
-        
+
+        [group.draw() for group in self.option_groups]
+
         text_line = GetFont(16).render("(Space to select, return to continue)", 1, Color.MOSTLY_WHITE)
         text_line_rect = text_line.get_rect(centerx = game_constants.w / 2, bottom = game_constants.h - 20)
         self.screen.blit(text_line, text_line_rect)
-        
+
         pygame.display.update()
         self.dirty = False
 
@@ -391,21 +397,21 @@ class OptionsScreen(BaseScreen):
 
     def getFeedOptions(self):
         return [opt.value for opt in self.feeds_group.get_checked()]
-    
+
     def getEnemyOptions(self):
         return [opt.value for opt in self.enemy_group.get_checked()]
-                        
+
 class MainGameScene(BaseScreen):
     """ Class for the main playable game environment. """
     def __init__(self, screen):
         self.headersize = 30
-    
+
         self.camera = pygame.rect.Rect(0, 0, game_constants.w, game_constants.h)
         self.screen = screen
         self.special_chars = SpecialChars()
         self.movelist = []
         self.time_elapsed = 0
-        
+
         self.health = Health(5)
         self.score = Score(screen)
         self.player = Player((screen.get_width() / 2, screen.get_height() / 2 - 30))
@@ -414,7 +420,7 @@ class MainGameScene(BaseScreen):
         self.challenge = False # Draw "TYPING CHALLENGE" screen
 
         self.platforms = {}
-        self.platforms[game_constants.h - 80] = [Box(-10000, game_constants.h - 80, 20000, 16)]
+        self.platforms[game_constants.h - 80] = [general.Box(-10000, game_constants.h - 80, 20000, 16)]
 
         self.statics = RenderUpdatesDraw()
         self.statics.add(self.platforms.values()[0])
@@ -424,10 +430,10 @@ class MainGameScene(BaseScreen):
 
         self.place_platforms()
         self.player.colliders = self.screenstatics
-        
+
         self.header = pygame.Surface((screen.get_width(), self.headersize))
-        self.header.fill((0, 0, 0))
-        
+        self.header.fill(Color.BLACK)
+
         self.background = pygame.Surface(screen.get_size()).convert()
 
         gradiation = 128.0
@@ -441,19 +447,19 @@ class MainGameScene(BaseScreen):
         # fixme: rearchitect this
         self.challenging = False
         self.showing = True
-        
+
     def place_platforms(self):
         def fill_level(height, camera):
             platform_level = self.platforms.setdefault(height, [])
 
             max_right = camera.right + game_constants.w
             min_left = camera.left - game_constants.w
-        
+
             # cull platforms that have gone too far -- TODO this doesn't work yet
             bad_platforms = [p for p in platform_level if p.rect.left > max_right or p.rect.right < min_left]
             [platform_level.remove(p) for p in bad_platforms]
             [self.statics.remove(p) for p in bad_platforms]
-            
+
             # add on platforms until the limit is reached
             if not len(platform_level):
                 leftmost = random.randint(-game_constants.w, game_constants.w)
@@ -478,19 +484,19 @@ class MainGameScene(BaseScreen):
                 platform_level.append(new_p)
                 self.statics.add(new_p)
                 leftmost = new_start - new_width
-    
+
         # Generate platforms based on camera position: Make sure there are always platforms extending at least as far as +-4*game_constants.w, +-4*game_constants.h from the player
         max_height = self.camera.top - 2 * game_constants.h
         lowest = max(self.platforms.keys())
         highest = min(self.platforms.keys())
-            
+
         for h in range(highest, lowest, 80):
             fill_level(h, self.camera)
 
         while highest > max_height:
             highest -= 80
             fill_level(highest, self.camera)
-        
+
     def redraw(self): # Re-blit the background
         self.screen.blit(self.background, (0, 0))
         self.screen.blit(self.header, (0, 0))
@@ -506,30 +512,35 @@ class MainGameScene(BaseScreen):
 
     def draw(self):
         self.camshift()
-        
+
         header_dirty = self.draw_header()
-        
+
         dirty = []
-        self.screen.set_clip(0, self.headersize, game_constants.w, game_constants.h) # Don't draw over header
-        # Clear phase
-        self.screenstatics.clear(self.screen, self.background)
-        self.powerups.clear(self.screen, self.background)
-        self.actives.clear(self.screen, self.background)
-        self.player.bullets.clear(self.screen, self.background)
-        self.playergroup.clear(self.screen, self.background)
-        
-        # Draw phase
-        dirty += self.screenstatics.draw(self.screen, self.camera)
-        dirty += self.powerups.draw(self.screen, self.camera)
-        dirty += self.actives.draw(self.screen, self.camera)
-        dirty += self.playergroup.draw(self.screen, self.camera)
-        dirty += self.player.bullets.draw(self.screen, self.camera)
-        if self.player.selected_opponent: # cute little hack: repaint selected_opponent to make sure it's visible
-            self.player.selected_opponent.draw(self.screen, self.camera)
-        
+
+        # Don't draw over header
+        self.screen.set_clip(0, self.headersize, game_constants.w, game_constants.h)
+
+        rect_sources = [
+            self.screenstatics,
+            self.powerups,
+            self.actives,
+            self.playergroup,
+            self.player.bullets,
+        ]
+
+        for rect_source in rect_sources:
+            rect_source.clear(self.screen, self.background)
+
+        for rect_source in rect_sources:
+            dirty += rect_source.draw(self.screen, self.camera)
+
+        # hack: repaint selected_opponent to make sure it's visible
+        if self.player.selected_opponent:
+            dirty += [self.player.selected_opponent.draw(self.screen, self.camera)]
+
         # Constrain all dirty rectangles in main game area to main game area.
         dirty = [dirty_rect.clip(self.screen.get_clip()) for dirty_rect in dirty]
-        
+
         return header_dirty + dirty
 
     def camshift(self):
@@ -546,19 +557,25 @@ class MainGameScene(BaseScreen):
             self.camera = self.camera.move(0, newpos.top - bounds.top)
         self.screencheck()
 
-    def screencheck(self): # Classify objects by whether they are on the screen
+    def screencheck(self):
+        """Classify objects by whether they are on the screen"""
+
         for platform_level in self.platforms.values():
             for platform in platform_level:
-                if platform not in self.screenstatics: # This platform wasn't on the screen: is it now?
+                if platform not in self.screenstatics:
+                    # This platform wasn't on the screen: is it now?
                     if platform.rect.colliderect(self.camera):
                         self.screenstatics.add(platform)
-                        # If it's a platform (has the attribute'word') give it an identifying word while it's onscreen
+                        # If it's a platform (has the attribute'word') give it an
+                        #   identifying word while it's onscreen
                         if hasattr(platform, 'word'):
                             platform.word = Word(self.special_chars.new(), platform.font)
-                else: # This platform is on the screen: is it gone now?
+                else:
+                    # This platform is on the screen: is it gone now?
                     if not platform.rect.colliderect(self.camera):
                         self.screenstatics.remove(platform)
-                        # If it's a platform (has the attribute'word') and it's out of camera, free up its symbol for later use
+                        # If it's a platform (has the attribute'word')
+                        #  and it's out of camera, free up its symbol for later use
                         if hasattr(platform, 'word'):
                             self.special_chars.release(platform.word.string)
                             platform.word = None
@@ -572,21 +589,56 @@ class MainGameScene(BaseScreen):
                     self.player.selected_opponent = None
                 sprite.kill()
 
+    def is_reachable(self, platform):
+        player_rect = self.player.rect
+        """ Is it possible for the player to jump to this platform in the concievable future? """
+        # Test 1: the platform must be within jumping height
+        if player_rect.bottom - game_constants.maxjump_height < platform.rect.top < player_rect.bottom:
+            # Test 2: the player cannot be under the platform
+            if (player_rect.right < platform.rect.left):
+                # Test 3: the path from the player position to the optimal jump position must be contiguous
+                jumpdist = platform.rect.left - player_rect.right
+                if jumpdist < game_constants.maxjump_width: # Maximum distance that can be jumped
+                    return True
+                else:
+                    start = (player_rect.right, player_rect.bottom)
+                    size = (jumpdist - game_constants.maxjump_width, 1)
+                    testrect = pygame.rect.Rect(start, size)
+                    for collider in self.screenstatics:
+                        if collider.rect.contains(testrect):
+                            return True
+            elif (player_rect.left > platform.rect.right):
+                # Test 3: the path from the player position to the optimal jump position must be contiguous
+                jumpdist = player_rect.left - platform.rect.right
+                if jumpdist < game_constants.maxjump_width: # Maximum distance that can be jumped
+                    return True
+                else:
+                    start = (platform.rect.right + game_constants.maxjump_width, player_rect.bottom)
+                    size = (jumpdist - game_constants.maxjump_width, 1)
+                    testrect = pygame.rect.Rect(start, size)
+                    for collider in self.screenstatics:
+                        if collider.rect.contains(testrect):
+                            return True
+
     def tick(self, elapsed):
         self.place_platforms()
-    
+
         self.time_elapsed = elapsed
+
         for direction in self.movelist:
             self.player.direct(direction)
+
         for active_obj in self.actives:
             active_obj.tick(self.player.rect.center)
+
         for powerup in self.powerups:
             powerup.tick()
+
         for screenstatic in self.screenstatics: # Objects on the screen
             # Only platforms have a 'word' attribute
             if hasattr(screenstatic, 'word'):
                 # Will it be possible to get to this object without having to walk on air
-                screenstatic.reachable = is_reachable(screenstatic, self.player.rect, self.screenstatics)
+                screenstatic.reachable = self.is_reachable(screenstatic)
         self.player.tick()
 
     def type_special(self, key): # Typing a special character
@@ -595,22 +647,22 @@ class MainGameScene(BaseScreen):
                 if hasattr(platform, 'word'): # HACK to ignore bottom platform
                     if platform.reachable and self.camera.colliderect(platform.rect):
                         if key == platform.contents():
-                            return platform       
+                            return platform
 
     def showMe(self):
         return self.health.value() != 0
-        
-    def exitChallenge(self):                            
+
+    def exitChallenge(self):
         self.challenging = False
         self.screen.blit(self.background, (0, 0))
-        
+
 class ChallengeScreen(BaseScreen):
     def __init__(self, screen, sentence):
         self.screen = screen
         self.font = GetFont(40)
         self.challenge_message = self.font.render("TYPING CHALLENGE!", 0, Color.MOSTLY_WHITE)
         self.rect = None
-        self.screen.fill((10, 10, 0))
+        self.screen.fill(Color.BLACK_YELLOW)
         self.frames = 0
 
         pygame.draw.rect(screen, (100, 30, 200), (-10000, game_constants.h - 80, 20000, 10), 0)
@@ -621,12 +673,12 @@ class ChallengeScreen(BaseScreen):
         commando.idleleft.draw(screen, (game_constants.w * (7 / 8.0), game_constants.h - 80 - 35))
 
         sentence.draw(screen, (game_constants.w / 2, game_constants.h / 2))
-        
+
         self.showing = True
 
     def draw(self):
         self.frames += 1
-        
+
         if self.frames < 100:
             percent = self.frames / 100.0
             xpos = percent * game_constants.w / 2
@@ -637,12 +689,12 @@ class ChallengeScreen(BaseScreen):
             xpos = game_constants.w / 2
 
         message_rectangle = self.challenge_message.get_rect(centerx = xpos, centery = game_constants.h / 4)
-            
+
         if 200 < self.frames < 455: # Transparent fadeout of text
             self.challenge_message.set_alpha(255 - (self.frames - 200))
-        
+
         if self.rect:
-            self.screen.fill((10, 10, 0), self.rect)
+            self.screen.fill(Color.BLACK_YELLOW, self.rect)
         self.screen.blit(self.challenge_message, message_rectangle)
-        
+
         self.rect = message_rectangle
