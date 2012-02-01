@@ -8,12 +8,9 @@ import pygame, sys, time, string
 from pygame.locals import *
 from feeder import getFeeder
 from general import *
-from scene import MainGameScene, TitleScreen, InstructionsScreen, OptionsScreen, GameOverScreen, ChallengeScreen, LoadingScreen
+from scene import MainGameScene, TitleScreen, GameOverScreen, ChallengeScreen, LoadingScreen
 from opponents import Soldier, Copter, Ghost, Commando
 from controller import Controller
-
-# Show options screen when DEBUG is there
-DEBUG = 0
 
 if not pygame.font:
     print "Couldn't load font library, crashing hard"
@@ -56,9 +53,6 @@ def main(argv=sys.argv):
     while True: # The Full Game Loop
         screen.set_clip()
         intro_screens = [TitleScreen(screen)]
-        if DEBUG:
-            options_screen = OptionsScreen(screen,['Google','Digg','Slashdot'], [Soldier, Copter, Ghost, Commando])
-            intro_screens.append(options_screen)
         for basic_screen in intro_screens:
             event = None
             while basic_screen.showMe(): # Splashscreen Phase
@@ -78,14 +72,15 @@ def main(argv=sys.argv):
         
         starttime = time.time()
         player_movement = False
-        
-        if DEBUG:
-            feed_sources = [getFeeder(x) for x in options_screen.getFeedOptions()]
-            # Eval a string like 'Copter' into its class object (brittle, refactor)
-            spawners = [eval(enemy) for enemy in options_screen.getEnemyOptions()]
-        else:
-            feed_sources = [getFeeder('Google'), getFeeder('Slashdot'), getFeeder('Digg')]
-            spawners = [Soldier, Copter, Ghost]
+
+        # TODO: dynamically choose which feeds based on options        
+        # if DEBUG:
+        #     feed_sources = [getFeeder(x) for x in options_screen.getFeedOptions()]
+        #     # Eval a string like 'Copter' into its class object (brittle, refactor)
+        #     spawners = [eval(enemy) for enemy in options_screen.getEnemyOptions()]
+
+        feed_sources = [getFeeder('Google'), getFeeder('Slashdot'), getFeeder('Digg')]
+        spawners = [Soldier, Copter, Ghost]
 
         # need at least one feed
         if feed_sources == []:

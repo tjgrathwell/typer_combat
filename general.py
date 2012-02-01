@@ -11,6 +11,15 @@ class Color:
     text_typed = (50, 50, 50)
     score_color = (200, 200, 100)
 
+    YELLOW = (230, 230, 0)
+
+    BLACK = (0, 0, 0)
+    DARK_GRAY = (50, 50, 50)
+    GRAY = (150, 150, 150)
+    LIGHT_GRAY = (200, 200, 200)
+    MOSTLY_WHITE = (250, 250, 250)
+    WHITE = (255, 255, 255)
+
 class game_constants:
     """ A set of constants used in this game, that should probably go elsewhere """
     speed = 2.0

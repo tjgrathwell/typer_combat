@@ -1,7 +1,8 @@
 import pygame, random
 from pygame.locals import *
 from player import Player
-from general import game_constants, SpecialChars, RenderUpdatesDraw, Box, Platform, Score, Word, GetFont, loadframes
+from general import game_constants, SpecialChars, RenderUpdatesDraw, Box, Platform, Score, Word, GetFont, loadframes, Color
+from opponents import Soldier, Copter, Ghost, Commando
 
 def is_reachable(object, player_rect, statics):
     """ Is it possible for the player to jump to this platform in the concievable future """
@@ -96,7 +97,7 @@ class LoadingScreen:
 
     def draw(self):
         self.screen.fill((0, 0, 0))
-        message = GetFont(72).render("Loading...", 1, (250, 250, 250))
+        message = GetFont(72).render("Loading...", 1, Color.MOSTLY_WHITE)
         self.screen.blit(message, message.get_rect(centerx = self.screen.get_width() / 2, centery = self.screen.get_height() * .25))
         pygame.display.update()
         
@@ -110,8 +111,8 @@ class GameOverScreen:
 
     def draw(self):
         self.screen.fill((0, 0, 0))
-        message = GetFont(72).render("GAME OVER", 1, (250, 250, 250))
-        instr = GetFont(32).render("Return to restart, Esc to quit.", 1, (250, 250, 250))
+        message = GetFont(72).render("GAME OVER", 1, Color.MOSTLY_WHITE)
+        instr = GetFont(32).render("Return to restart, Esc to quit.", 1, Color.MOSTLY_WHITE)
         self.screen.blit(message, message.get_rect(centerx = self.screen.get_width() / 2, centery = self.screen.get_height() * .25))
         self.screen.blit(instr, instr.get_rect(centerx = self.screen.get_width() / 2, centery = self.screen.get_height() * .75))
         pygame.display.update()
@@ -130,20 +131,46 @@ class TitleScreen:
         self.dirty = True
         self.screen = screen
         self.showing = True
+        self.options_order = ['play', 'instructions', 'options']
+        self.selected_option = 0
 
     def draw(self):
         self.screen.fill((50, 50, 50))
-        title = GetFont(50).render("TYPER COMBAT", 1, (250, 250, 250))
+        title = GetFont(50).render("TYPER COMBAT", 1, Color.MOSTLY_WHITE)
         title_rect = title.get_rect(centerx = game_constants.w / 2, top = 0)
         self.screen.blit(title, title_rect) 
 
+        options_texts = []
+        for i, option_str in enumerate(self.options_order):
+            color = Color.MOSTLY_WHITE
+            if (i == self.selected_option):
+                color = Color.YELLOW
+            options_texts.append(GetFont(24).render(option_str.upper(), 1, color))
+
+        draw_h = game_constants.h / 2
+        for option in options_texts:
+            rect = option.get_rect(centerx = game_constants.w / 2, top = draw_h)
+            self.screen.blit(option, rect)
+            draw_h += rect.height
 
         pygame.display.update()
         self.dirty = False
         
     def handleEvent(self, event_key):
+        if event_key == K_UP:
+            self.selected_option = max(self.selected_option - 1, 0)
+            self.dirty = True
+        if event_key == K_DOWN:
+            self.selected_option = min(self.selected_option + 1, len(self.options_order))
+            self.dirty = True
         if event_key == K_RETURN:
-            return InstructionsScreen(self.screen)
+            selected_op = self.options_order[self.selected_option]
+            if (selected_op == 'play'):
+                self.showing = False
+            if (selected_op == 'instructions'):
+                return InstructionsScreen(self.screen)
+            if (selected_op == 'options'):
+                return OptionsScreen(self.screen)
         return None
         
     def showMe(self):
@@ -169,14 +196,14 @@ class InstructionsScreen:
         enemy_list_text = """SOLDIERS are constrained by the laws of gravity.
 COPTERS can fly, but won't go through platforms.
 GHOSTS can phase through platforms."""
-        enemy_list = [GetFont(16).render(text, 1, (250, 250, 250)) for text in reversed(enemy_list_text.split("\n"))] 
+        enemy_list = [GetFont(16).render(text, 1, Color.MOSTLY_WHITE) for text in reversed(enemy_list_text.split("\n"))] 
         
         instructions_text = """Type the words that appear over enemies to defeat them.
 Type the character that appears on a platform to jump to it.
 Press CTRL to deselect a word.
 Press space to turn around.
 Press return to continue."""
-        instructions = [GetFont(16).render(text, 1, (250, 250, 250)) for text in reversed(instructions_text.split("\n"))] 
+        instructions = [GetFont(16).render(text, 1, Color.MOSTLY_WHITE) for text in reversed(instructions_text.split("\n"))] 
         
         last = game_constants.h
         for text in (instructions):
@@ -224,7 +251,7 @@ class Option:
         self.active = False
 
     def draw(self, (x, y)):
-        text_line = GetFont(16).render(self.value, 1, (250, 250, 250))
+        text_line = GetFont(16).render(self.value, 1, Color.MOSTLY_WHITE)
         text_line_rect = text_line.get_rect(left = x + 30, top = y)
         self.screen.blit(text_line, text_line_rect)
         
@@ -233,17 +260,17 @@ class Option:
         
         if self.checked:
             if self.active: # Selected with cursor: box with box in it
-                pygame.draw.rect(self.screen, (200, 200, 200), outer_rect, 0)
-                pygame.draw.rect(self.screen, (150, 150, 150), inner_rect, 0)
+                pygame.draw.rect(self.screen, Color.LIGHT_GRAY, outer_rect, 0)
+                pygame.draw.rect(self.screen, Color.GRAY, inner_rect, 0)
             else: # Selected without cursor: tiny box
-                pygame.draw.rect(self.screen, (0, 0, 0), outer_rect, 0)
-                pygame.draw.rect(self.screen, (150, 150, 150), inner_rect, 0)
+                pygame.draw.rect(self.screen, Color.BLACK, outer_rect, 0)
+                pygame.draw.rect(self.screen, Color.GRAY, inner_rect, 0)
         else:
             if self.active: # Unselected with cursor: empty box
-                pygame.draw.rect(self.screen, (200, 200, 200), outer_rect, 0)
-                pygame.draw.rect(self.screen, (0, 0, 0), inner_rect, 0)
+                pygame.draw.rect(self.screen, Color.LIGHT_GRAY, outer_rect, 0)
+                pygame.draw.rect(self.screen, Color.BLACK, inner_rect, 0)
             else: # Unselected without cursor: blank
-                pygame.draw.rect(self.screen, (50, 50, 50), outer_rect, 0)
+                pygame.draw.rect(self.screen, Color.DARK_GRAY, outer_rect, 0)
 
 class OptionGroup:
     def __init__(self, (x, y), options = []):
@@ -288,8 +315,10 @@ class OptionsScreen:
         self.dirty = True
         self.screen = screen
         self.showing = True
-        self.word_sources = word_sources
-        self.enemy_types = enemy_types
+
+        # TODO does this belong somewhere else?
+        self.word_sources = ['Google','Digg','Slashdot']
+        self.enemy_types = [Soldier, Copter, Ghost, Commando]
         
         self.options = self.word_sources + [x.name for x in self.enemy_types]
         self.feeds_group = OptionGroup((100, 100), [Option(self.screen, word) for word in self.word_sources])
@@ -301,13 +330,13 @@ class OptionsScreen:
         
     def draw(self):
         self.screen.fill((50, 50, 50))
-        text_line = GetFont(16).render("INTENSE OPTIONS SCREEN", 1, (250, 250, 250))
+        text_line = GetFont(16).render("INTENSE OPTIONS SCREEN", 1, Color.MOSTLY_WHITE)
         text_line_rect = text_line.get_rect(centerx = game_constants.w / 2, top = 0)
         self.screen.blit(text_line, text_line_rect)
         
         [group.draw() for group in self.option_groups] 
         
-        text_line = GetFont(16).render("(Space to select, return to continue)", 1, (250, 250, 250))
+        text_line = GetFont(16).render("(Space to select, return to continue)", 1, Color.MOSTLY_WHITE)
         text_line_rect = text_line.get_rect(centerx = game_constants.w / 2, bottom = game_constants.h)
         self.screen.blit(text_line, text_line_rect)
         
@@ -554,7 +583,7 @@ class ChallengeScreen:
     def __init__(self, screen, sentence):
         self.screen = screen
         self.font = pygame.font.Font('freesansbold.ttf', 40)
-        self.challenge_message = self.font.render("TYPING CHALLENGE!", 0, (250, 250, 250))
+        self.challenge_message = self.font.render("TYPING CHALLENGE!", 0, Color.MOSTLY_WHITE)
         self.rect = None
         self.screen.fill((10, 10, 0))
         self.frames = 0
