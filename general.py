@@ -259,8 +259,8 @@ class WordMaker:
     def next_word(self, not_starting_with = None):
         while True:
             new_word = Word(random.choice(self.word_array))
-            if (not_starting_with and new_word.string[0] in not_starting_with):
-                next
+            if (not_starting_with and (new_word.string[0] in not_starting_with)):
+                continue
             return new_word
 
 class Word(pygame.sprite.Sprite):

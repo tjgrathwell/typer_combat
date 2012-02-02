@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # TYPER COMBAT  : A 2d typing game inspired by Typing of the Dead
 # Travis J. Grathwell, Started August 8th, 2006
 

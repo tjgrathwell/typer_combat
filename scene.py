@@ -198,7 +198,7 @@ class TitleScreen(BaseScreen):
             if (selected_op == 'options'):
                 return OptionsScreen(self.screen)
 
-        if chr(event_key) == 'd':
+        if event_key in range(256) and  chr(event_key) == 'd':
             return DebugScreen(self.screen)
 
         return None
