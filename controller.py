@@ -133,23 +133,13 @@ class Controller:
             return
 
         self.spawncount = 0
-        def word_check(word):
-            """
-            Does this new word have the same starting letter of
-            any of the words we're currently using?
-            """
-
-            for enemy in self.scene.actives:
-                if enemy.word.string[0] == word.string[0]:
-                    return False
-            return True
 
         if len(self.scene.actives) > game_constants.max_enemies:
             return
     
-        next_word = self.words.next_word()
-        while not word_check(next_word):
-            next_word = self.words.next_word()
+        characters_in_use = list(set([enemy.word.string[0] for enemy in self.scene.actives]))
+
+        next_word = self.words.next_word(characters_in_use)
 
         if self.player.state in (States.idle, States.shooting):
             # Player is standing still: Spawn equally likely to each side

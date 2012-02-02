@@ -184,9 +184,11 @@ class TitleScreen(BaseScreen):
         if event_key == K_UP:
             self.selected_option = max(self.selected_option - 1, 0)
             self.dirty = True
+
         if event_key == K_DOWN:
             self.selected_option = min(self.selected_option + 1, len(self.options_order))
             self.dirty = True
+
         if event_key == K_RETURN:
             selected_op = self.options_order[self.selected_option]
             if (selected_op == 'play'):
@@ -195,7 +197,81 @@ class TitleScreen(BaseScreen):
                 return InstructionsScreen(self.screen)
             if (selected_op == 'options'):
                 return OptionsScreen(self.screen)
+
+        if chr(event_key) == 'd':
+            return DebugScreen(self.screen)
+
         return None
+
+class DebugScreen(BaseScreen):
+    def __init__(self, screen):
+        self.dirty = True
+        self.screen = screen
+
+        self.options_order = ['single word', 'back']
+        self.selected_option = 0
+
+        self.showing = True
+
+    def draw(self):
+        self.screen.fill(Color.DARK_GRAY)
+
+        text_line = GetFont(32).render("Debugging Options", 1, Color.MOSTLY_WHITE)
+        text_line_rect = text_line.get_rect(centerx = game_constants.w / 2, top = 20)
+
+        options_texts = []
+        for i, option_str in enumerate(self.options_order):
+            color = Color.MOSTLY_WHITE
+            if (i == self.selected_option):
+                color = Color.YELLOW
+            options_texts.append(GetFont(24).render(option_str.upper(), 1, color))
+
+        draw_h = game_constants.h / 2
+        for option in options_texts:
+            rect = option.get_rect(centerx = game_constants.w / 2, top = draw_h)
+            self.screen.blit(option, rect)
+            draw_h += rect.height
+
+        self.screen.blit(text_line, text_line_rect)
+
+        pygame.display.update()
+        self.dirty = False
+
+    def handleEvent(self, event_key):
+        if event_key == K_UP:
+            self.selected_option = max(self.selected_option - 1, 0)
+            self.dirty = True
+
+        if event_key == K_DOWN:
+            self.selected_option = min(self.selected_option + 1, len(self.options_order))
+            self.dirty = True
+
+        if event_key == K_RETURN:
+            selected_op = self.options_order[self.selected_option]
+            if (selected_op == 'single word'):
+                return SingleWordDebugScreen(self.screen)
+            if (selected_op == 'back'):
+                return TitleScreen(self.screen)
+
+class SingleWordDebugScreen(BaseScreen):
+    def __init__(self, screen):
+        self.dirty = True
+        self.screen = screen
+        self.words = general.WordMaker(word_list)        
+
+        self.showing = True
+
+    def draw(self):
+        self.screen.fill(Color.DARK_GRAY)
+
+        self.words.next_word()
+
+        pygame.display.update()
+        self.dirty = False
+
+    def handleEvent(self, event_key):
+        if event_key == K_RETURN:
+            return TitleScreen(self.screen)
 
 class InstructionsScreen(BaseScreen):
     def __init__(self, screen):

@@ -11,6 +11,8 @@ class Color:
     text_typed           = (50, 50, 50)
     score_color          = (200, 200, 100)
 
+    WORD_BACKGROUND      = (40, 30, 200)
+
     BLACK_YELLOW         = (10, 10, 0)
     YELLOW               = (230, 230, 0)
 
@@ -254,28 +256,12 @@ class WordMaker:
     def __init__(self, words):
         self.word_array = words
 
-    def next_word(self):
-        return Word(random.choice(self.word_array))
-
-def split_sentence(sentence, offset = 0):
-    def str_len_line(line):
-        return sum([len(x) for x in line])
-
-    result = []
-    line = []
-    splitwords = sentence.split(" ")
-    for word in splitwords:
-        if (str_len_line(line) + len(word)) > game_constants.line_char_limit:
-            result.append(" ".join(line))
-            line = []
-        elif (str_len_line(line) + len(word) + offset) > game_constants.line_char_limit:
-            offset = 0
-            result.append(" ".join(line))
-            line = []
-        line.append(word)
-    if line:
-        result.append(" ".join(line))
-    return result
+    def next_word(self, not_starting_with = None):
+        while True:
+            new_word = Word(random.choice(self.word_array))
+            if (not_starting_with and new_word.string[0] in not_starting_with):
+                next
+            return new_word
 
 class Word(pygame.sprite.Sprite):
     """ A string that keeps track of how much of it has been completed,
@@ -294,10 +280,30 @@ class Word(pygame.sprite.Sprite):
         self.lastrect = pygame.rect.Rect(0, 0, 0, 0)
         self.reset()
 
+    def split_sentence(self, sentence, offset = 0):
+        def str_len_line(line):
+            return sum([len(x) for x in line])
+
+        result = []
+        line = []
+        splitwords = sentence.split(" ")
+        for word in splitwords:
+            if (str_len_line(line) + len(word)) > game_constants.line_char_limit:
+                result.append(" ".join(line))
+                line = []
+            elif (str_len_line(line) + len(word) + offset) > game_constants.line_char_limit:
+                offset = 0
+                result.append(" ".join(line))
+                line = []
+            line.append(word)
+        if line:
+            result.append(" ".join(line))
+        return result
+
     def reset(self):
         self.strpos = 0
         self.ltext = []
-        right_side_string = split_sentence(self.string)
+        right_side_string = self.split_sentence(self.string)
         self.rtext = [self.font.render(line, 1, Color.text_normal) for line in right_side_string]
 
     def rerender(self):
@@ -306,11 +312,11 @@ class Word(pygame.sprite.Sprite):
             self.rtext = [self.font.render(self.string[self.strpos:], 1, Color.text_normal)]
         else:
             if self.strpos > 0:
-                left_side_string = split_sentence(self.string[:self.strpos])
+                left_side_string = self.split_sentence(self.string[:self.strpos])
                 self.ltext = [self.font.render(line, 1, Color.text_typed) for line in left_side_string]
-                right_side_string = split_sentence(self.string[self.strpos:], len(left_side_string[-1]))
+                right_side_string = self.split_sentence(self.string[self.strpos:], len(left_side_string[-1]))
             else:
-                right_side_string = split_sentence(self.string)
+                right_side_string = self.split_sentence(self.string)
             self.rtext = [self.font.render(line, 1, Color.text_normal) for line in right_side_string]
 
     def draw(self, surface, (x, y), border_color = Color.word_unselect):
@@ -334,12 +340,13 @@ class Word(pygame.sprite.Sprite):
             rtext_rects[0].right = x + w / 2
 
         allrects = ltext_rects + rtext_rects
+        rect_inflation = (8 + self.borderwidth, 5 + self.borderwidth)
         if len(allrects) == 1:
-            self.rect = allrects[0].inflate(8, 3)
+            self.rect = allrects[0].inflate(rect_inflation)
         else:
-            self.rect = allrects[0].unionall(allrects[1:]).inflate(8, 3)
+            self.rect = allrects[0].unionall(allrects[1:]).inflate(rect_inflation)
 
-        surface.fill((40, 30, 200), self.rect)
+        surface.fill(Color.WORD_BACKGROUND, self.rect)
         screen_rect = pygame.draw.rect(surface, border_color, self.rect, self.borderwidth)
 
         for line, rect in zip(self.ltext, ltext_rects):

@@ -63,13 +63,15 @@ def game_loop(screen):
     if feed_sources == []:
         feed_sources = [getFeeder()]
         
-    # vv TODO: fix these up, man what's going on here vv
-    word_list = sum([feeder.words for feeder in feed_sources],[])
-    sentence_list = sum([feeder.sentences for feeder in feed_sources],[])
+
+    word_list = [word for feeder in feed_sources for word in feeder.words]
+
+    # broken for now...
+    # sentence_list = sum([feeder.sentences for feeder in feed_sources],[])
 
     words = WordMaker(word_list)
-    sentences = WordMaker(sentence_list)
-    controller = Controller(main_game_scene, words, sentences,spawners)
+    sentences = WordMaker([])
+    controller = Controller(main_game_scene, words, sentences, spawners)
     
     main_game_scene.redraw()
     pygame.display.update()
