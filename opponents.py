@@ -24,8 +24,11 @@ class Opponent(WrappedSprite):
 
     def draw(self, surface, camera):
         drawx, drawy = self.x - camera[0], self.y - camera[1]
-        if self.typing: color = Color.word_select
-        else: color = Color.word_unselect
+        if self.typing:
+            color = Color.word_select
+        else:
+            color = Color.word_unselect
+
         wordrect = self.word.draw(surface, (drawx, drawy - 10), color)
         opprect = pygame.draw.circle(surface, (200, 200, 200), (int(drawx), int(drawy)), 3).inflate(3, 3)
         return wordrect.union(opprect)
@@ -38,7 +41,8 @@ class Opponent(WrappedSprite):
 
     def typeon(self, char):
         if not self.word.done():
-            if char == self.word.string[0]: self.typing = True
+            if char == self.word.string[0]:
+                self.typing = True
             success = self.word.typeon(char)
             return success
 

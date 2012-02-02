@@ -146,7 +146,7 @@ class GameOverScreen(BaseScreen):
 
         self.dirty = False
 
-    def handleEvent(self, event_key):
+    def handleKeydown(self, event_key):
         if event_key == K_RETURN:
             self.showing = False
 
@@ -180,7 +180,7 @@ class TitleScreen(BaseScreen):
         pygame.display.update()
         self.dirty = False
 
-    def handleEvent(self, event_key):
+    def handleKeydown(self, event_key):
         if event_key == K_UP:
             self.selected_option = max(self.selected_option - 1, 0)
             self.dirty = True
@@ -237,7 +237,7 @@ class DebugScreen(BaseScreen):
         pygame.display.update()
         self.dirty = False
 
-    def handleEvent(self, event_key):
+    def handleKeydown(self, event_key):
         if event_key == K_UP:
             self.selected_option = max(self.selected_option - 1, 0)
             self.dirty = True
@@ -257,19 +257,29 @@ class SingleWordDebugScreen(BaseScreen):
     def __init__(self, screen):
         self.dirty = True
         self.screen = screen
-        self.words = general.WordMaker(word_list)        
+        self.words = general.WordMaker(['catmandu'])
+        self.word = None
 
         self.showing = True
 
     def draw(self):
         self.screen.fill(Color.DARK_GRAY)
 
-        self.words.next_word()
+        if not self.word or self.word.done():
+            self.word = self.words.next_word()
+
+        drawx, drawy = game_constants.w / 2, game_constants.h / 2
+        wordrect = self.word.draw(self.screen, (drawx, drawy - 10), Color.text_normal)
 
         pygame.display.update()
         self.dirty = False
 
-    def handleEvent(self, event_key):
+    def handleKeydown(self, event_key):
+        if event_key in range(256):
+            success = self.word.typeon(chr(event_key))
+            if success:
+                self.dirty = True
+
         if event_key == K_RETURN:
             return TitleScreen(self.screen)
 
@@ -325,7 +335,7 @@ Press return to continue."""
         pygame.display.update()
         self.dirty = False
 
-    def handleEvent(self, event_key):
+    def handleKeydown(self, event_key):
         if event_key == K_RETURN:
             return TitleScreen(self.screen)
 
@@ -447,7 +457,7 @@ class OptionsScreen(BaseScreen):
         pygame.display.update()
         self.dirty = False
 
-    def handleEvent(self, event_key):
+    def handleKeydown(self, event_key):
         if event_key == K_RETURN:
             return TitleScreen(self.screen)
         elif event_key == K_DOWN:

@@ -277,7 +277,6 @@ class Word(pygame.sprite.Sprite):
 
         self.string = text
         self.rect = None
-        self.lastrect = pygame.rect.Rect(0, 0, 0, 0)
         self.reset()
 
     def split_sentence(self, sentence, offset = 0):
@@ -306,18 +305,21 @@ class Word(pygame.sprite.Sprite):
         right_side_string = self.split_sentence(self.string)
         self.rtext = [self.font.render(line, 1, Color.text_normal) for line in right_side_string]
 
+    def _rerender_sentence(self):
+        if self.strpos > 0:
+            left_side_string = self.split_sentence(self.string[:self.strpos])
+            self.ltext = [self.font.render(line, 1, Color.text_typed) for line in left_side_string]
+            right_side_string = self.split_sentence(self.string[self.strpos:], len(left_side_string[-1]))
+        else:
+            right_side_string = self.split_sentence(self.string)
+            self.rtext = [self.font.render(line, 1, Color.text_normal) for line in right_side_string]
+
     def rerender(self):
-        if self.string < game_constants.line_char_limit:
+        if len(self.string) < game_constants.line_char_limit:
             self.ltext = [self.font.render(self.string[:self.strpos], 1, Color.text_typed)]
             self.rtext = [self.font.render(self.string[self.strpos:], 1, Color.text_normal)]
         else:
-            if self.strpos > 0:
-                left_side_string = self.split_sentence(self.string[:self.strpos])
-                self.ltext = [self.font.render(line, 1, Color.text_typed) for line in left_side_string]
-                right_side_string = self.split_sentence(self.string[self.strpos:], len(left_side_string[-1]))
-            else:
-                right_side_string = self.split_sentence(self.string)
-            self.rtext = [self.font.render(line, 1, Color.text_normal) for line in right_side_string]
+            self._rerender_sentence()
 
     def draw(self, surface, (x, y), border_color = Color.word_unselect):
         if self.ltext:
@@ -340,6 +342,7 @@ class Word(pygame.sprite.Sprite):
             rtext_rects[0].right = x + w / 2
 
         allrects = ltext_rects + rtext_rects
+
         rect_inflation = (8 + self.borderwidth, 5 + self.borderwidth)
         if len(allrects) == 1:
             self.rect = allrects[0].inflate(rect_inflation)
@@ -353,8 +356,6 @@ class Word(pygame.sprite.Sprite):
             surface.blit(line, rect)
         for line, rect in zip(self.rtext, rtext_rects):
             surface.blit(line, rect)
-
-        self.lastrect = screen_rect
 
         # HACK? or bug in pygame (i assume I meant the +1...)
         return screen_rect.inflate(self.borderwidth + 1, self.borderwidth + 1)

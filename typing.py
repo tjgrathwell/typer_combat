@@ -44,7 +44,7 @@ def game_loop(screen):
         if event:
             processEventsForKillSignal([event])
             if event.type == KEYDOWN:
-                new_screen = basic_screen.handleEvent(event.key)
+                new_screen = basic_screen.handleKeydown(event.key)
                 if new_screen: basic_screen = new_screen
         if basic_screen.dirty:
             basic_screen.draw()
@@ -145,7 +145,7 @@ def game_loop(screen):
             processEventsForKillSignal([event])
             if event.type == KEYDOWN:
                 if event.key == K_RETURN: # Choose whether to restart
-                    game_over_screen.handleEvent(event.key)
+                    game_over_screen.handleKeydown(event.key)
         if game_over_screen.dirty:
             game_over_screen.draw() # Updates full screen, also
         event = pygame.event.wait()
