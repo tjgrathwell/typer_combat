@@ -1,9 +1,15 @@
 import pygame
+import string
 from general import *
 from opponents import Commando
 from pygame.locals import *
 from player import States
 from powerup import Heart, Shotgun
+
+directions = (K_UP, K_DOWN, K_LEFT, K_RIGHT)
+specials =         "1234567890[]\;',./"
+shifted_specials = "!@#$%^&*(){}|:\"<>?"
+special_keys_trans_table = string.maketrans(specials,shifted_specials)
 
 class Controller:
     """ Event and game status handler for main game. """
@@ -21,6 +27,33 @@ class Controller:
         self.spawncount        = 0     # Frame tick counter for spawn event
         self.jumpsoon          = False # Has a jump been scheduled by the player?
         self.selected_platform = None  # What platform are we scheduled to jump to
+
+    def handleKeydown(self, key, shifting):
+        if (self.scene.challenging):
+            pass # do some other stuff with ChallengeScreen
+
+        if key in (K_LCTRL,K_RCTRL):
+            # Release selected object
+            self.unselect()
+        elif key == K_SPACE:
+            self.key_space()
+        elif key in directions:
+            self.keydown_direction(key)
+        elif key == K_END: # Toggle player free movement
+            self.toggle_free_movement()
+        elif key in range(256): # ASCII character
+            key_chr = chr(key)
+            if key_chr in string.lowercase: # Typing a word
+                self.type_normal(key_chr)
+            elif key_chr in specials+shifted_specials: # Typing a special character
+                if not shifting:
+                    self.type_special(key_chr)
+                else:
+                    self.type_special(key_chr.translate(special_keys_trans_table))
+
+    def handleKeyup(self, key):
+        if key in directions:
+            self.keyup_direction(key)
 
     def auto_move_player(self):
         if self.player.state not in (States.shooting, States.jumping):
