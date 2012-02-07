@@ -42,10 +42,10 @@ class Shotgun(Powerup):
     @classmethod
     def loadImages(cls):
         super(Shotgun, cls).loadImages()
-        cls.images_shotgun = loadframes("assorted", ("shotgun1.gif",))
+        cls.images['shotgun'] = loadframes("assorted", ("shotgun1.gif",))
     
     def loadanims(self):
-        self.image = general.Anim(Shotgun.images_shotgun, ([200]))
+        self.image = general.Anim(self.images['shotgun'], ([200]))
         self.rect = self.image.get_rect()
         self.rect.centerx, self.rect.bottom = self.x, self.y
 
@@ -58,10 +58,10 @@ class Heart(Powerup):
     def loadImages(cls):
         super(Heart, cls).loadImages()
         heart_frames = [1, 2, 3, 4, 5, 4, 3, 2]
-        cls.images_heart = loadframes("assorted", ["heart%d.gif" % i for i in heart_frames])
+        cls.images['heart'] = loadframes("assorted", ["heart%d.gif" % i for i in heart_frames])
     
     def loadanims(self):
-        self.image = general.Anim(Heart.images_heart, (5, 5) * 4)
+        self.image = general.Anim(self.images['heart'], (5, 5) * 4)
         self.rect = self.image.get_rect()
         self.rect.centerx, self.rect.bottom = self.x, self.y
 

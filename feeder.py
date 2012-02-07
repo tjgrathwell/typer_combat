@@ -11,9 +11,9 @@ def getFeeder(string = "Google"):
         return SlashdotFeeder()
     else:
         return GoogleFeeder()
-    
+
 class Feeder:
-    def __init__(self):            
+    def __init__(self):
         stale = False
         try: # Try to get the last modified date of the retrieved XML file, if it exists
             lastmod = os.stat(self.filename)[8]
@@ -89,14 +89,14 @@ class Feeder:
                 # Need to do a little dance to get a file-like object out of a gzipped file.
                 page = gzip.GzipFile(fileobj = StringIO(f.read()))
                 return StringIO(page.read())
-        return f 
-        
+        return f
+
     def save_words(self, textblob):
         words = textblob.split(' ')
         self.sentences = [self.fudge_sentence(sentence) for sentence in textblob.split('. ')]
         self.words = [word.lower() for word in words if self.word_is_good(word)]
         print self.type + " returned " + str(len(self.words)) + " words."
-        
+
 class GoogleFeeder(Feeder):
     def __init__(self):
         self.type = "Google"
@@ -124,7 +124,7 @@ class SlashdotFeeder(Feeder):
         # Most articles in slashdot are enclosed within blocks of the style: User Writes, "blah blah blah"
         texts = [entry['description'] for entry in parsed_feed['entries']]
         cleantexts = [self.strip_tags(text) for text in texts]
-            
+
         writes = re.compile(r"writes &quot")
         inquotes = re.compile(r"&quot;(.*?)&quot;")
         justtexts = []
@@ -135,7 +135,7 @@ class SlashdotFeeder(Feeder):
             else:
                 justtexts.append(text)
         return ' '.join(justtexts)
-    
+
 class DiggFeeder(Feeder):
     def __init__(self):
         self.type = "Digg"

@@ -95,6 +95,7 @@ class WrappedSprite(pygame.sprite.Sprite):
 
     @classmethod
     def loadImages(cls):
+        cls.images = {}
         cls.images_loaded = True
 
 class Anim(WrappedSprite):
@@ -162,17 +163,17 @@ class Box(WrappedSprite):
     @classmethod
     def loadImages(cls):
         super(Box, cls).loadImages()
-        cls.images_smbas = loadframes('platforms', ('smbas.png',))[0]
-        cls.images_smbas_edge = loadframes('platforms', ('smbas_edge.png',))[0]
+        cls.images['smbas']      = loadframes('platforms', ('smbas.png',))[0]
+        cls.images['smbas_edge'] = loadframes('platforms', ('smbas_edge.png',))[0]
 
     def draw(self, surface, campos):
         moved = self.rect.move(-campos[0], -campos[1])
         w = moved.width
         for i in xrange(w / 16):
             if i == 0 or i == (w / 16 - 1):
-                surface.blit(Box.images_smbas_edge, (moved.left + i * 16, moved.top))
+                surface.blit(self.images['smbas_edge'], (moved.left + i * 16, moved.top))
             else:
-                surface.blit(Box.images_smbas, (moved.left + i * 16, moved.top))
+                surface.blit(self.images['smbas'], (moved.left + i * 16, moved.top))
         return moved
 
 class Score(pygame.sprite.Sprite):
@@ -376,9 +377,3 @@ class Word(pygame.sprite.Sprite):
 
 def n_of(format_string, n):
     return [format_string % i for i in xrange(1, n + 1)]
-
-def loadImagesForAnimations():
-    """ Load all the images in the game from files into surfaces as class members. """
-    from opponents import Assorted
-
-    [cls.loadImages() for cls in [Assorted]]

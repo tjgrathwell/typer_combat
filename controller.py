@@ -16,9 +16,9 @@ class Controller:
     """ Event and game status handler for main game. """
 
     def __init__(self, screen):
-        from scene import LoadingScreen, PlatformingScene
+        from scene import LoadingScene, PlatformingScene
 
-        loading_scene = LoadingScreen(screen)
+        loading_scene = LoadingScene(screen)
         loading_scene.draw()
         pygame.display.update()
 
@@ -45,7 +45,7 @@ class Controller:
         shifting = (pygame.key.get_mods() & KMOD_SHIFT)
 
         if (self.scene.challenging):
-            pass # do some other stuff with ChallengeScreen
+            pass # do some other stuff with ChallengeScene
 
         if key in (K_LCTRL,K_RCTRL):
             self.unselect() # Release selected object

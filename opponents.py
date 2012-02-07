@@ -105,30 +105,32 @@ class Ghost(Opponent):
         
     @classmethod
     def loadImages(cls):
-        cls.images_left      = loadframes("ghost", ("left1.gif", "left2.gif"))
-        cls.images_right     = loadframes("ghost", ("right1.gif", "right2.gif"))
-        cls.images_up        = loadframes("ghost", ("up1.gif", "up2.gif"))
-        cls.images_down      = loadframes("ghost", ("down1.gif", "down2.gif"))
+        super(Ghost, cls).loadImages()
+
+        cls.images['left']      = loadframes("ghost", ("left1.gif", "left2.gif"))
+        cls.images['right']     = loadframes("ghost", ("right1.gif", "right2.gif"))
+        cls.images['up']        = loadframes("ghost", ("up1.gif", "up2.gif"))
+        cls.images['down']      = loadframes("ghost", ("down1.gif", "down2.gif"))
         
-        cls.images_blue      = loadframes("ghost", ("blue1.gif", "blue2.gif"))
+        cls.images['blue']      = loadframes("ghost", ("blue1.gif", "blue2.gif"))
         
-        cls.images_eyesright = loadframes("ghost", ("eyesright.gif",))
-        cls.images_eyesleft  = loadframes("ghost", ("eyesleft.gif",))
-        cls.images_eyesup    = loadframes("ghost", ("eyesup.gif",))
-        cls.images_eyesdown  = loadframes("ghost", ("eyesdown.gif",))
+        cls.images['eyesright'] = loadframes("ghost", ("eyesright.gif",))
+        cls.images['eyesleft']  = loadframes("ghost", ("eyesleft.gif",))
+        cls.images['eyesup']    = loadframes("ghost", ("eyesup.gif",))
+        cls.images['eyesdown']  = loadframes("ghost", ("eyesdown.gif",))
 
     def loadanims(self):
-        self.left      = Anim(Ghost.images_left,      (10, 10))
-        self.right     = Anim(Ghost.images_right,     (10, 10))
-        self.up        = Anim(Ghost.images_up,        (10, 10))
-        self.down      = Anim(Ghost.images_down,      (10, 10))
+        self.left      = Anim(self.images['left'],      (10, 10))
+        self.right     = Anim(self.images['right'],     (10, 10))
+        self.up        = Anim(self.images['up'],        (10, 10))
+        self.down      = Anim(self.images['down'],      (10, 10))
         
-        self.blue      = Anim(Ghost.images_blue,      (10, 10))
+        self.blue      = Anim(self.images['blue'],      (10, 10))
         
-        self.eyesright = Anim(Ghost.images_eyesright, (100,))
-        self.eyesleft  = Anim(Ghost.images_eyesleft,  (100,))
-        self.eyesup    = Anim(Ghost.images_eyesup,    (100,))
-        self.eyesdown  = Anim(Ghost.images_eyesdown,  (100,))
+        self.eyesright = Anim(self.images['eyesright'], (100,))
+        self.eyesleft  = Anim(self.images['eyesleft'],  (100,))
+        self.eyesup    = Anim(self.images['eyesup'],    (100,))
+        self.eyesdown  = Anim(self.images['eyesdown'],  (100,))
 
     def draw(self, surface, camera):
         if self.ttl:
@@ -205,11 +207,14 @@ class Copter(Opponent):
 
     @classmethod
     def loadImages(cls):
-        cls.images_fly = loadframes("copter", ["fly%s.gif" % i for i in xrange(1, 7)])
+        super(Copter, cls).loadImages()
+
+        cls.images['explosion']  = loadframes("assorted", n_of("explosion%02.f.gif", 10))       
+        cls.images['fly']        = loadframes("copter", ["fly%s.gif" % i for i in xrange(1, 7)])
 
     def loadanims(self):
-        self.fly_anim = Anim(Copter.images_fly, (10, 10, 10, 10, 10, 10))
-        self.explosion = Anim(Assorted.images_explosion, (4, 4) * 5, ends = True)
+        self.fly_anim = Anim(self.images['fly'], (10, 10, 10, 10, 10, 10))
+        self.explosion = Anim(self.images['explosion'], (4, 4) * 5, ends = True)
         self.explosions = RenderUpdatesDraw([self.explosion.clone(newdelay = i * 5, newoffset = rand_offset(20)) for i in xrange(3)])
 
     def draw(self, surface, camera):
@@ -327,12 +332,14 @@ class Commando(Opponent):
 
     @classmethod
     def loadImages(cls):
-        cls.images_idleright = loadframes("commando", ("rest1.gif", "rest2.gif"))
-        cls.images_idleleft = flippedframes(cls.images_idleright)
+        super(Commando, cls).loadImages()
+
+        cls.images['idleright'] = loadframes("commando", ("rest1.gif", "rest2.gif"))
+        cls.images['idleleft']  = flippedframes(cls.images['idleright'])
 
     def loadanims(self):
-        self.idleright = Anim(Commando.images_idleright, (30, 60))
-        self.idleleft  = Anim(Commando.images_idleleft,  (30, 60))
+        self.idleright = Anim(self.images['idleright'], (30, 60))
+        self.idleleft  = Anim(self.images['idleleft'],  (30, 60))
     def setanim(self):
         if self.direction == 'l':
             self.current_anim = self.idleleft
@@ -365,29 +372,32 @@ class Soldier(Opponent):
 
     @classmethod
     def loadImages(cls):
-        cls.images_idleright = loadframes("soldier", ("rest1.gif", "rest2.gif"))
-        cls.images_idleleft  = flippedframes(cls.images_idleright)
-        cls.images_runright  = loadframes("soldier", n_of("run%i.gif", 4))
-        cls.images_runleft   = flippedframes(cls.images_runright)
-        cls.images_fallright = loadframes("soldier", ("fall1.gif", "fall2.gif"))
-        cls.images_fallleft  = flippedframes(cls.images_fallright)
-        cls.images_jumpright = loadframes("soldier", ("flip1.gif", "flip2.gif"))
-        cls.images_jumpleft  = flippedframes(cls.images_jumpright)
+        super(Opponent, cls).loadImages()
+
+        cls.images['explosion'] = loadframes("assorted", n_of("explosion%02.f.gif", 10))       
+        cls.images['idleright'] = loadframes("soldier", ("rest1.gif", "rest2.gif"))
+        cls.images['idleleft']  = flippedframes(cls.images['idleright'])
+        cls.images['runright']  = loadframes("soldier", n_of("run%i.gif", 4))
+        cls.images['runleft']   = flippedframes(cls.images['runright'])
+        cls.images['fallright'] = loadframes("soldier", ("fall1.gif", "fall2.gif"))
+        cls.images['fallleft']  = flippedframes(cls.images['fallright'])
+        cls.images['jumpright'] = loadframes("soldier", ("flip1.gif", "flip2.gif"))
+        cls.images['jumpleft']  = flippedframes(cls.images['jumpright'])
 
     def loadanims(self):
-        self.idleright  = Anim(Soldier.images_idleright,  (30, 60))
-        self.idleleft   = Anim(Soldier.images_idleleft,   (30, 60))
+        self.idleright  = Anim(self.images['idleright'],  (30, 60))
+        self.idleleft   = Anim(self.images['idleleft'],   (30, 60))
         
-        self.runright   = Anim(Soldier.images_runright,   (15, 15, 15, 15))
-        self.runleft    = Anim(Soldier.images_runleft,    (15, 15, 15, 15))
+        self.runright   = Anim(self.images['runright'],   (15, 15, 15, 15))
+        self.runleft    = Anim(self.images['runleft'],    (15, 15, 15, 15))
         
-        self.fallright  = Anim(Soldier.images_fallright,  (20, 400))
-        self.fallleft   = Anim(Soldier.images_fallleft,   (20, 400))
+        self.fallright  = Anim(self.images['fallright'],  (20, 400))
+        self.fallleft   = Anim(self.images['fallleft'],   (20, 400))
         
-        self.jumpright  = Anim(Soldier.images_jumpright,  (5, 5))
-        self.jumpleft   = Anim(Soldier.images_jumpright,  (5, 5))
+        self.jumpright  = Anim(self.images['jumpright'],  (5, 5))
+        self.jumpleft   = Anim(self.images['jumpright'],  (5, 5))
         
-        self.explosion  = Anim(Assorted.images_explosion, (4, 4) * 5, ends = True)
+        self.explosion  = Anim(self.images['explosion'], (4, 4) * 5, ends = True)
         self.explosions = RenderUpdatesDraw([self.explosion.clone(newdelay = i * 5, newoffset = rand_offset(20)) for i in xrange(5)])
 
     def setanim(self):
@@ -401,7 +411,8 @@ class Soldier(Opponent):
     def draw(self, surface, camera):
         if self.ttl:
             [explosion.tick() for explosion in self.explosions]
-            exprects = self.explosions.draw(surface, self.rect.move(-camera[0], -camera[1])) # Need to merge into one rect
+            exprects = self.explosions.draw(surface, self.rect.move(-camera[0], -camera[1]))
+            # Need to merge into one rect
             return exprects[0].unionall(exprects[1:])
         else:
             drawx, drawy = self.x - camera[0], self.y - camera[1]
@@ -451,48 +462,48 @@ class Soldier(Opponent):
             if self.ttl == 0:
                 self.kill()
                 return
-        else:
-            dist = distfromground(self.rect, self.statics)
-            if dist > 0:
-                if dist > game_constants.jumpspeed: # Far from the ground
-                    self.y += game_constants.jumpspeed
-                    if self.state == States.running:
-                        self.state = States.falling
-                        self.runright.reset()
-                        self.runleft.reset()
-                else: # Hitting the ground
-                    self.y += dist
-                    self.state = States.running
-            self.rect = self.current_anim.get_rect()
-            self.rect.centerx, self.rect.bottom = (self.x, self.y)
 
-            if self.state == States.running:
-                jumped = False
-                # FIXME: this is 80% correct, but maxjump_width/height are for the player, and their math
-                # doesn't work out for soldier speed and bounding box.
-                for platform in self.statics:
-                    if self.y - game_constants.maxjump_height < platform.rect.top < self.y:
-                        if self.direction == 'l':
-                            if platform.rect.right < self.x:
-                                dist = self.x - platform.rect.right
-                                if game_constants.maxjump_width >= dist >= 0:
-                                    self.jump()
-                                    jumped = True
-                        elif self.direction == 'r':
-                            if self.x < platform.rect.left:
-                                dist = platform.rect.left - self.x
-                                if game_constants.maxjump_width >= dist >= 0:
-                                    self.jump()
-                                    jumped = True
-                if not jumped:
-                    change_direction = random.randint(0, 100)
-                    if change_direction == 0:
-                        if self.direction == 'l': self.direction = 'r'
-                        elif self.direction == 'r': self.direction = 'l'
-            
-            self.move((xt, yt)) # a little buggy but better than fixing everything else up
-            
-            self.setanim()
+        dist = distfromground(self.rect, self.statics)
+        if dist > 0:
+            if dist > game_constants.jumpspeed: # Far from the ground
+                self.y += game_constants.jumpspeed
+                if self.state == States.running:
+                    self.state = States.falling
+                    self.runright.reset()
+                    self.runleft.reset()
+            else: # Hitting the ground
+                self.y += dist
+                self.state = States.running
+        self.rect = self.current_anim.get_rect()
+        self.rect.centerx, self.rect.bottom = (self.x, self.y)
+
+        if self.state == States.running:
+            jumped = False
+            # FIXME: this is 80% correct, but maxjump_width/height are for the player,
+            # and their math doesn't work out for soldier speed and bounding box.
+            for platform in self.statics:
+                if self.y - game_constants.maxjump_height < platform.rect.top < self.y:
+                    if self.direction == 'l':
+                        if platform.rect.right < self.x:
+                            dist = self.x - platform.rect.right
+                            if game_constants.maxjump_width >= dist >= 0:
+                                self.jump()
+                                jumped = True
+                    elif self.direction == 'r':
+                        if self.x < platform.rect.left:
+                            dist = platform.rect.left - self.x
+                            if game_constants.maxjump_width >= dist >= 0:
+                                self.jump()
+                                jumped = True
+            if not jumped:
+                change_direction = random.randint(0, 100)
+                if change_direction == 0:
+                    if self.direction == 'l': self.direction = 'r'
+                    elif self.direction == 'r': self.direction = 'l'
+        
+        self.move((xt, yt)) # a little buggy but better than fixing everything else up
+        
+        self.setanim()
 
     def collision(self):
         for static in self.statics:
@@ -510,10 +521,3 @@ class Soldier(Opponent):
 
     def destroy(self):
         self.ttl = max([explosion.total_time() for explosion in self.explosions])
-       
-class Assorted: # assorted image holder
-    @classmethod
-    def loadImages(cls):
-        cls.images_explosion  = loadframes("assorted", n_of("explosion%02.f.gif", 10))                        
-        cls.images_heartfull  = loadframes("assorted", ("heartfull.gif",))
-        cls.images_heartempty = loadframes("assorted", ("heartempty.gif",))

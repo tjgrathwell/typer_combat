@@ -9,8 +9,8 @@
 
 import pygame, sys, time
 from pygame.locals import *
-from general import game_constants, loadImagesForAnimations
-from scene import TitleScreen
+from general import game_constants
+from scene import TitleScene
 
 if not pygame.font:
     print "Couldn't load font library, crashing hard"
@@ -18,30 +18,29 @@ if not pygame.font:
 
 clock = pygame.time.Clock()
 
-def processEventsForKillSignal(events):
+def process_events(events, scene):
     for event in events:
         if event.type == QUIT:
             sys.exit()
-        if event.type == KEYDOWN and event.key == K_ESCAPE:
+        elif event.type == KEYDOWN and event.key == K_ESCAPE:
             sys.exit()
-    return events
+        elif event.type == KEYDOWN:
+            scene.handleKeydown(event.key)
+        elif event.type == KEYUP:
+            scene.handleKeyup(event.key)
 
 def game_loop(screen):
     events = []
     last_frame_time = None
 
-    scene = TitleScreen(screen)
+    scene = TitleScene(screen)
 
     while True:
         if not scene.lazy_redraw():
             clock.tick(60)
             events = pygame.event.get()
 
-        for event in processEventsForKillSignal(events):
-            if event.type == KEYDOWN:
-                scene.handleKeydown(event.key)
-            elif event.type == KEYUP:
-                scene.handleKeyup(event.key)
+        process_events(events, scene)
 
         if scene.lazy_redraw():
             if scene.dirty:
@@ -74,8 +73,6 @@ def main(argv=sys.argv):
     pygame.display.set_caption('Typer Combat')
     pygame.mouse.set_visible(0)
     pygame.event.set_blocked(MOUSEMOTION)
-
-    loadImagesForAnimations()
 
     game_loop(screen)
 

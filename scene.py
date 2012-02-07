@@ -129,7 +129,7 @@ class Platform(general.Box):
     def setword(self, text):
         if not self.word: self.word = Word(text, self.font)
 
-class BaseScreen(object):
+class BaseScene(object):
     def __init__(self, screen):
         self.screen = screen
         self.dirty = True
@@ -144,7 +144,7 @@ class BaseScreen(object):
     def switchToScene(self):
         return self.switch_to
 
-class LoadingScreen(BaseScreen):
+class LoadingScene(BaseScene):
     def draw(self):
         self.screen.fill((0, 0, 0))
         message = GetFont(72).render("Loading...", 1, Color.MOSTLY_WHITE)
@@ -157,7 +157,7 @@ class LoadingScreen(BaseScreen):
 
         self.dirty = False
 
-class GameOverScreen(BaseScreen):
+class GameOverScene(BaseScene):
     def draw(self):
         self.screen.fill(Color.BLACK)
         message = GetFont(72).render("GAME OVER", 1, Color.MOSTLY_WHITE)
@@ -178,11 +178,11 @@ class GameOverScreen(BaseScreen):
 
     def handleKeydown(self, event_key):
         if event_key == K_RETURN:
-            self.switch_to = TitleScreen(self.screen)
+            self.switch_to = TitleScene(self.screen)
 
-class TitleScreen(BaseScreen):
+class TitleScene(BaseScene):
     def __init__(self, screen):
-        super(TitleScreen, self).__init__(screen)
+        super(TitleScene, self).__init__(screen)
         self.options_order = ['play', 'instructions', 'options']
         self.selected_option = 0
 
@@ -222,16 +222,16 @@ class TitleScreen(BaseScreen):
             if (selected_op == 'play'):
                 self.switch_to = Controller(self.screen)
             if (selected_op == 'instructions'):
-                self.switch_to = InstructionsScreen(self.screen)
+                self.switch_to = InstructionsScene(self.screen)
             if (selected_op == 'options'):
-                self.switch_to = OptionsScreen(self.screen)
+                self.switch_to = OptionsScene(self.screen)
 
         if event_key in range(256) and  chr(event_key) == 'd':
-            self.switch_to = DebugScreen(self.screen)
+            self.switch_to = DebugScene(self.screen)
 
-class DebugScreen(BaseScreen):
+class DebugScene(BaseScene):
     def __init__(self, screen):
-        super(DebugScreen, self).__init__(screen)
+        super(DebugScene, self).__init__(screen)
 
         self.options_order = ['single word', 'back']
         self.selected_option = 0
@@ -272,13 +272,13 @@ class DebugScreen(BaseScreen):
         if event_key == K_RETURN:
             selected_op = self.options_order[self.selected_option]
             if (selected_op == 'single word'):
-                self.switch_to = SingleWordDebugScreen(self.screen)
+                self.switch_to = SingleWordDebugScene(self.screen)
             if (selected_op == 'back'):
-                self.switch_to = TitleScreen(self.screen)
+                self.switch_to = TitleScene(self.screen)
 
-class SingleWordDebugScreen(BaseScreen):
+class SingleWordDebugScene(BaseScene):
     def __init__(self, screen):
-        super(SingleWordDebugScreen, self).__init__(screen)
+        super(SingleWordDebugScene, self).__init__(screen)
         self.words = general.WordMaker(['catmandu'])
         self.word = None
 
@@ -300,11 +300,11 @@ class SingleWordDebugScreen(BaseScreen):
                 self.dirty = True
 
         if event_key == K_RETURN:
-            self.switch_to = TitleScreen(self.screen)
+            self.switch_to = TitleScene(self.screen)
 
-class InstructionsScreen(BaseScreen):
+class InstructionsScene(BaseScene):
     def __init__(self, screen):
-        super(InstructionsScreen, self).__init__(screen)
+        super(InstructionsScene, self).__init__(screen)
 
         self.image = loadframes('gunstar',   ('gunside1.png',))[0]
         self.image = pygame.transform.scale2x(pygame.transform.scale2x(self.image)) # x4!
@@ -359,7 +359,7 @@ Press return to continue."""
 
     def handleKeydown(self, event_key):
         if event_key == K_RETURN:
-            self.switch_to = TitleScreen(self.screen)
+            self.switch_to = TitleScene(self.screen)
 
 class Option:
     def __init__(self, screen, value, checked = False, active = False):
@@ -444,9 +444,9 @@ class OptionGroup:
     def get_checked(self):
         return [opt for opt in self.options if opt.is_checked()]
 
-class OptionsScreen(BaseScreen):
+class OptionsScene(BaseScene):
     def __init__(self, screen, word_sources = [], enemy_types = []):
-        super(OptionsScreen, self).__init__(screen)
+        super(OptionsScene, self).__init__(screen)
 
         # TODO does this belong somewhere else?
         self.word_sources = ['Google','Digg','Slashdot']
@@ -485,7 +485,7 @@ class OptionsScreen(BaseScreen):
 
     def handleKeydown(self, event_key):
         if event_key == K_RETURN:
-            self.switch_to = TitleScreen(self.screen)
+            self.switch_to = TitleScene(self.screen)
         elif event_key == K_DOWN:
             self.option_groups[self.groupnum].down()
         elif event_key == K_UP:
@@ -513,11 +513,12 @@ class OptionsScreen(BaseScreen):
     def getEnemyOptions(self):
         return [opt.value for opt in self.enemy_group.get_checked()]
 
-class PlatformingScene(BaseScreen):
+class PlatformingScene(BaseScene):
     """ Class for the main playable game environment. """
     def __init__(self, screen):
         super(PlatformingScene, self).__init__(screen)
 
+        self.background_drawn = False
         self.headersize = 30
 
         self.camera = pygame.rect.Rect(0, 0, game_constants.w, game_constants.h)
@@ -529,8 +530,6 @@ class PlatformingScene(BaseScreen):
         self.score = Score(screen)
         self.player = Player((screen.get_width() / 2, screen.get_height() / 2 - 30))
         self.playergroup = RenderUpdatesDraw(self.player)
-
-        self.challenge = False # Draw "TYPING CHALLENGE" screen
 
         self.platforms = {}
         self.platforms[game_constants.h - 80] = [general.Box(-10000, game_constants.h - 80, 20000, 16)]
@@ -555,10 +554,8 @@ class PlatformingScene(BaseScreen):
             rect = (0, i * game_constants.h / gradiation, game_constants.w, game_constants.h / gradiation + 1)
             self.background.fill(color, rect)
 
-        self.screencheck() # Move sprites into or out of 'screenstatics' group based on whether they're in camera
-
-        self.redraw()
-        pygame.display.update()
+        # Move sprites into or out of 'screenstatics' group based on whether they're in camera
+        self.screencheck()
 
         # fixme: rearchitect this
         self.challenging = False
@@ -566,58 +563,60 @@ class PlatformingScene(BaseScreen):
     def lazy_redraw(self):
         return False
 
+    def fill_level(self, height):
+        platform_level = self.platforms.setdefault(height, [])
+
+        max_right = self.camera.right + game_constants.w
+        min_left = self.camera.left - game_constants.w
+
+        # cull platforms that have gone too far -- TODO this doesn't work yet
+        bad_platforms = [p for p in platform_level if p.rect.left > max_right or p.rect.right < min_left]
+        [platform_level.remove(p) for p in bad_platforms]
+        [self.statics.remove(p) for p in bad_platforms]
+
+        # add on platforms until the limit is reached
+        if not len(platform_level):
+            leftmost = random.randint(-game_constants.w, game_constants.w)
+            rightmost = leftmost = random.randint(-game_constants.w, game_constants.w)
+        else:
+            leftmost = min([p.rect.left for p in platform_level])
+            rightmost = max([p.rect.right for p in platform_level])
+
+        while rightmost < max_right:
+            new_start = rightmost + random.randint(150, 300)
+            new_width = random.randint(200, 1000)
+            new_width = new_width - new_width % 16 # Cut off to the nearest multiple of 16
+            new_p = Platform(new_start, height, new_width, 16)
+            platform_level.append(new_p)
+            self.statics.add(new_p)
+            rightmost = new_start + new_width
+        while leftmost > min_left:
+            new_start = leftmost - random.randint(150, 300)
+            new_width = random.randint(200, 1000)
+            new_width = new_width - new_width % 16 # Cut off to the nearest multiple of 16
+            new_p = Platform(new_start - new_width, height, new_width, 16)
+            platform_level.append(new_p)
+            self.statics.add(new_p)
+            leftmost = new_start - new_width
+
     def place_platforms(self):
-        def fill_level(height, camera):
-            platform_level = self.platforms.setdefault(height, [])
-
-            max_right = camera.right + game_constants.w
-            min_left = camera.left - game_constants.w
-
-            # cull platforms that have gone too far -- TODO this doesn't work yet
-            bad_platforms = [p for p in platform_level if p.rect.left > max_right or p.rect.right < min_left]
-            [platform_level.remove(p) for p in bad_platforms]
-            [self.statics.remove(p) for p in bad_platforms]
-
-            # add on platforms until the limit is reached
-            if not len(platform_level):
-                leftmost = random.randint(-game_constants.w, game_constants.w)
-                rightmost = leftmost = random.randint(-game_constants.w, game_constants.w)
-            else:
-                leftmost = min([p.rect.left for p in platform_level])
-                rightmost = max([p.rect.right for p in platform_level])
-
-            while rightmost < max_right:
-                new_start = rightmost + random.randint(150, 300)
-                new_width = random.randint(200, 1000)
-                new_width = new_width - new_width % 16 # Cut off to the nearest multiple of 16
-                new_p = Platform(new_start, height, new_width, 16)
-                platform_level.append(new_p)
-                self.statics.add(new_p)
-                rightmost = new_start + new_width
-            while leftmost > min_left:
-                new_start = leftmost - random.randint(150, 300)
-                new_width = random.randint(200, 1000)
-                new_width = new_width - new_width % 16 # Cut off to the nearest multiple of 16
-                new_p = Platform(new_start - new_width, height, new_width, 16)
-                platform_level.append(new_p)
-                self.statics.add(new_p)
-                leftmost = new_start - new_width
-
         # Generate platforms based on camera position: Make sure there are always platforms extending at least as far as +-4*game_constants.w, +-4*game_constants.h from the player
         max_height = self.camera.top - 2 * game_constants.h
         lowest = max(self.platforms.keys())
         highest = min(self.platforms.keys())
 
         for h in range(highest, lowest, 80):
-            fill_level(h, self.camera)
+            self.fill_level(h)
 
         while highest > max_height:
             highest -= 80
-            fill_level(highest, self.camera)
+            self.fill_level(highest)
 
-    def redraw(self): # Re-blit the background
+    def draw_background(self):
         self.screen.blit(self.background, (0, 0))
         self.screen.blit(self.header, (0, 0))
+        pygame.display.update()
+        self.background_drawn = True
 
     def draw_header(self):
         dirty = []
@@ -629,6 +628,9 @@ class PlatformingScene(BaseScreen):
         return dirty
 
     def draw(self):
+        if not self.background_drawn:
+            self.draw_background()
+
         self.camshift()
 
         header_dirty = self.draw_header()
@@ -760,7 +762,7 @@ class PlatformingScene(BaseScreen):
         self.player.tick()
 
         if (self.health.value() <= 0):
-            self.switch_to = GameOverScreen(self.screen)
+            self.switch_to = GameOverScene(self.screen)
 
     def type_special(self, key): # Typing a special character
         for platform_level in self.platforms.values():
@@ -770,11 +772,7 @@ class PlatformingScene(BaseScreen):
                         if key == platform.contents():
                             return platform
 
-    def exitChallenge(self):
-        self.challenging = False
-        self.screen.blit(self.background, (0, 0))
-
-class ChallengeScreen(BaseScreen):
+class ChallengeScene(BaseScene):
     def __init__(self, screen, sentence):
         self.screen = screen
         self.font = GetFont(40)
