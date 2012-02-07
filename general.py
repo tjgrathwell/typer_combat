@@ -23,6 +23,10 @@ class Color:
     MOSTLY_WHITE         = (250, 250, 250)
     WHITE                = (255, 255, 255)
 
+class Options:
+    selected_feeds     = ['Google', 'Slashdot', 'Digg']
+    selected_opponents = ['Soldier', 'Copter', 'Ghost']
+
 class game_constants:
     """ A set of constants used in this game, that should probably go elsewhere """
     speed             = 2.0

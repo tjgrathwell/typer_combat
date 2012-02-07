@@ -1,10 +1,11 @@
 import pygame
 import string
 from general import *
-from opponents import Commando
+from opponents import getOpponent, Commando
 from pygame.locals import *
 from player import States
 from powerup import Heart, Shotgun
+from feeder import getFeeder
 
 directions = (K_UP, K_DOWN, K_LEFT, K_RIGHT)
 specials =         "1234567890[]\;',./"
@@ -14,12 +15,21 @@ special_keys_trans_table = string.maketrans(specials,shifted_specials)
 class Controller:
     """ Event and game status handler for main game. """
 
-    def __init__(self, scene, words, sentences, spawners):
-        self.scene     = scene
-        self.player    = scene.player
-        self.words     = words
-        self.sentences = sentences
-        self.spawners  = spawners
+    def __init__(self, screen):
+        from scene import LoadingScreen, PlatformingScene
+
+        loading_scene = LoadingScreen(screen)
+        loading_scene.draw()
+        pygame.display.update()
+
+        self.scene    = PlatformingScene(screen)
+        self.player   = self.scene.player
+
+        self.spawners = [getOpponent(opp_name) for opp_name in Options.selected_opponents]
+
+        feed_sources = [getFeeder(feed_name) for feed_name in Options.selected_feeds]
+        word_list    = [word for feeder in feed_sources for word in feeder.words]
+        self.words   = WordMaker(word_list)
 
         self.free_movement = False
         
@@ -28,13 +38,17 @@ class Controller:
         self.jumpsoon          = False # Has a jump been scheduled by the player?
         self.selected_platform = None  # What platform are we scheduled to jump to
 
-    def handleKeydown(self, key, shifting):
+    def switchToScene(self):
+        return self.scene.switch_to
+
+    def handleKeydown(self, key):
+        shifting = (pygame.key.get_mods() & KMOD_SHIFT)
+
         if (self.scene.challenging):
             pass # do some other stuff with ChallengeScreen
 
         if key in (K_LCTRL,K_RCTRL):
-            # Release selected object
-            self.unselect()
+            self.unselect() # Release selected object
         elif key == K_SPACE:
             self.key_space()
         elif key in directions:
@@ -43,9 +57,9 @@ class Controller:
             self.toggle_free_movement()
         elif key in range(256): # ASCII character
             key_chr = chr(key)
-            if key_chr in string.lowercase: # Typing a word
+            if key_chr in string.lowercase: # Word character
                 self.type_normal(key_chr)
-            elif key_chr in specials+shifted_specials: # Typing a special character
+            elif key_chr in specials+shifted_specials: # Special character (,.@# etc)
                 if not shifting:
                     self.type_special(key_chr)
                 else:
@@ -78,7 +92,10 @@ class Controller:
             elif self.direction == 'l':
                 self.player.direct(K_LEFT)
 
-    def tick(self):
+    def lazy_redraw(self):
+        return self.scene.lazy_redraw()
+
+    def tick(self, elapsed):
         if not self.free_movement:
             self.auto_move_player()
 
@@ -87,6 +104,11 @@ class Controller:
         self.collide_player_with_powerups()
 
         self.spawn_enemies()
+
+        self.scene.tick(elapsed)
+
+    def draw(self):
+        return self.scene.draw()
 
     def key_space(self):
         if (self.free_movement):

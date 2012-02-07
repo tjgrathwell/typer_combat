@@ -1,11 +1,13 @@
 import pygame, random, general
 from pygame.locals import *
+from controller import Controller
 from general import game_constants, loadframes, GetFont, Color, RenderUpdatesDraw, Score, Word
 from player import Player
 from opponents import Soldier, Copter, Ghost, Commando
 
 class SpecialChars:
-    """ Keeps track of what ASCII special keys are in use by current platforms, so that dupilicate keys are not used. """
+    """ Keeps track of what ASCII special keys are in use by current platforms,
+        so that dupilicate keys are not used. """
 
     def __init__(self):
         self.keys = "1234567890[]\;',./!@#$%^&*(){}|:\"<>?"
@@ -30,9 +32,13 @@ class Health:
     def __init__(self, max_hearts):
         import os
         self.full = loadframes('assorted', ['heartfull.gif'])[0]
-        self.full = pygame.transform.scale(self.full, (self.full.get_width() * 2, self.full.get_height() * 2))
+        self.full = pygame.transform.scale(
+            self.full,
+            (self.full.get_width() * 2, self.full.get_height() * 2))
         self.empty = loadframes('assorted', ['heartempty.gif'])[0]
-        self.empty = pygame.transform.scale(self.empty, (self.empty.get_width() * 2, self.empty.get_height() * 2))
+        self.empty = pygame.transform.scale(
+            self.empty,
+            (self.empty.get_width() * 2, self.empty.get_height() * 2))
 
         self.rect = pygame.rect.Rect((0, 0), (0, 0))
         self.max_hearts = max_hearts
@@ -41,25 +47,30 @@ class Health:
 
     def clear(self, screen, background):
         if self.redraw:
-            # The line below is way slow, why?!
             screen.blit(background, self.rect)
 
     def draw(self, screen):
-        if self.redraw:
-            lastx = 5
-            dirty = []
-            for _ in xrange(self.current_hearts): # Full hearts
-                dirty += [screen.blit(self.full, self.full.get_rect(left = lastx, top = 5))]
-                lastx = lastx + self.full.get_width() + 2
-            for _ in xrange(self.current_hearts, self.max_hearts): # Empty hearts
-                dirty += [screen.blit(self.empty, self.empty.get_rect(left = lastx, top = 5))]
-                lastx = lastx + self.empty.get_width() + 2
-
-            self.rect = dirty[0].unionall(dirty[1:])
-            self.redraw = False
-            return dirty
-        else:
+        if not self.redraw:
             return []
+
+        lastx = 5
+        dirty = []
+        for _ in xrange(self.fullHearts()):
+            dirty += [screen.blit(self.full, self.full.get_rect(left = lastx, top = 5))]
+            lastx = lastx + self.full.get_width() + 2
+        for _ in xrange(self.emptyHearts()):
+            dirty += [screen.blit(self.empty, self.empty.get_rect(left = lastx, top = 5))]
+            lastx = lastx + self.empty.get_width() + 2
+
+        self.rect = dirty[0].unionall(dirty[1:])
+        self.redraw = False
+        return dirty
+
+    def fullHearts(self):
+        return self.current_hearts
+
+    def emptyHearts(self):
+        return self.max_hearts - self.current_hearts
 
     def fill(self):
         self.current_hearts = self.max_hearts
@@ -101,8 +112,14 @@ class Platform(general.Box):
             if self.selected: color = Color.platform_selected
             elif self.reachable: color = Color.platform_reachable
             else: color = Color.platform_unreachable
-            left = self.word.draw(surface, (self.rect.left - campos[0] + 10, self.rect[1] - campos[1] + 5), color)
-            right = self.word.draw(surface, (self.rect.right - campos[0] - 10, self.rect[1] - campos[1] + 5), color)
+            left = self.word.draw(
+                surface,
+                (self.rect.left - campos[0] + 10, self.rect[1] - campos[1] + 5),
+                color)
+            right = self.word.draw(
+                surface,
+                (self.rect.right - campos[0] - 10, self.rect[1] - campos[1] + 5),
+                color)
 
         return box.union(left.union(right)) # HACK
 
@@ -113,48 +130,59 @@ class Platform(general.Box):
         if not self.word: self.word = Word(text, self.font)
 
 class BaseScreen(object):
-    def showMe(self):
-        return self.showing
+    def __init__(self, screen):
+        self.screen = screen
+        self.dirty = True
+        self.switch_to = None
+
+    def handleKeyup(self, key):
+        pass
+
+    def lazy_redraw(self):
+        return True
+
+    def switchToScene(self):
+        return self.switch_to
 
 class LoadingScreen(BaseScreen):
-    def __init__(self, screen):
-        self.dirty = True
-        self.screen = screen
-        self.showing = True
-
     def draw(self):
         self.screen.fill((0, 0, 0))
         message = GetFont(72).render("Loading...", 1, Color.MOSTLY_WHITE)
-        self.screen.blit(message, message.get_rect(centerx = self.screen.get_width() / 2, centery = self.screen.get_height() * .25))
+        self.screen.blit(
+            message,
+            message.get_rect(
+                centerx = self.screen.get_width() / 2,
+                centery = self.screen.get_height() * .25))
         pygame.display.update()
 
         self.dirty = False
 
 class GameOverScreen(BaseScreen):
-    def __init__(self, screen):
-        self.dirty = True
-        self.screen = screen
-        self.showing = True
-
     def draw(self):
         self.screen.fill(Color.BLACK)
         message = GetFont(72).render("GAME OVER", 1, Color.MOSTLY_WHITE)
         instr = GetFont(32).render("Return to restart, Esc to quit.", 1, Color.MOSTLY_WHITE)
-        self.screen.blit(message, message.get_rect(centerx = self.screen.get_width() / 2, centery = self.screen.get_height() * .25))
-        self.screen.blit(instr, instr.get_rect(centerx = self.screen.get_width() / 2, centery = self.screen.get_height() * .75))
+        self.screen.blit(
+            message,
+            message.get_rect(
+                centerx = self.screen.get_width() / 2,
+                centery = self.screen.get_height() * .25))
+        self.screen.blit(
+            instr,
+            instr.get_rect(
+                centerx = self.screen.get_width() / 2,
+                centery = self.screen.get_height() * .75))
         pygame.display.update()
 
         self.dirty = False
 
     def handleKeydown(self, event_key):
         if event_key == K_RETURN:
-            self.showing = False
+            self.switch_to = TitleScreen(self.screen)
 
 class TitleScreen(BaseScreen):
     def __init__(self, screen):
-        self.dirty = True
-        self.screen = screen
-        self.showing = True
+        super(TitleScreen, self).__init__(screen)
         self.options_order = ['play', 'instructions', 'options']
         self.selected_option = 0
 
@@ -192,26 +220,21 @@ class TitleScreen(BaseScreen):
         if event_key == K_RETURN:
             selected_op = self.options_order[self.selected_option]
             if (selected_op == 'play'):
-                self.showing = False
+                self.switch_to = Controller(self.screen)
             if (selected_op == 'instructions'):
-                return InstructionsScreen(self.screen)
+                self.switch_to = InstructionsScreen(self.screen)
             if (selected_op == 'options'):
-                return OptionsScreen(self.screen)
+                self.switch_to = OptionsScreen(self.screen)
 
         if event_key in range(256) and  chr(event_key) == 'd':
-            return DebugScreen(self.screen)
-
-        return None
+            self.switch_to = DebugScreen(self.screen)
 
 class DebugScreen(BaseScreen):
     def __init__(self, screen):
-        self.dirty = True
-        self.screen = screen
+        super(DebugScreen, self).__init__(screen)
 
         self.options_order = ['single word', 'back']
         self.selected_option = 0
-
-        self.showing = True
 
     def draw(self):
         self.screen.fill(Color.DARK_GRAY)
@@ -249,18 +272,15 @@ class DebugScreen(BaseScreen):
         if event_key == K_RETURN:
             selected_op = self.options_order[self.selected_option]
             if (selected_op == 'single word'):
-                return SingleWordDebugScreen(self.screen)
+                self.switch_to = SingleWordDebugScreen(self.screen)
             if (selected_op == 'back'):
-                return TitleScreen(self.screen)
+                self.switch_to = TitleScreen(self.screen)
 
 class SingleWordDebugScreen(BaseScreen):
     def __init__(self, screen):
-        self.dirty = True
-        self.screen = screen
+        super(SingleWordDebugScreen, self).__init__(screen)
         self.words = general.WordMaker(['catmandu'])
         self.word = None
-
-        self.showing = True
 
     def draw(self):
         self.screen.fill(Color.DARK_GRAY)
@@ -276,17 +296,15 @@ class SingleWordDebugScreen(BaseScreen):
 
     def handleKeydown(self, event_key):
         if event_key in range(256):
-            success = self.word.typeon(chr(event_key))
-            if success:
+            if self.word.typeon(chr(event_key)):
                 self.dirty = True
 
         if event_key == K_RETURN:
-            return TitleScreen(self.screen)
+            self.switch_to = TitleScreen(self.screen)
 
 class InstructionsScreen(BaseScreen):
     def __init__(self, screen):
-        self.dirty = True
-        self.screen = screen
+        super(InstructionsScreen, self).__init__(screen)
 
         self.image = loadframes('gunstar',   ('gunside1.png',))[0]
         self.image = pygame.transform.scale2x(pygame.transform.scale2x(self.image)) # x4!
@@ -294,8 +312,6 @@ class InstructionsScreen(BaseScreen):
         self.soldier = loadframes('soldier', ('rest1.gif',))[0]
         self.chopper = loadframes('copter',  ('fly1.gif',))[0]
         self.ghost   = loadframes('ghost',   ('right1.gif',))[0]
-
-        self.showing = True
 
     def draw(self):
         self.screen.fill(Color.DARK_GRAY)
@@ -317,7 +333,9 @@ Press return to continue."""
             rendered_text = GetFont(16).render(text, 1, Color.MOSTLY_WHITE)
 
             cur_y = last_y - rendered_text.get_height()
-            self.screen.blit(rendered_text, rendered_text.get_rect(centerx = game_constants.w / 2, centery = cur_y))
+            self.screen.blit(
+                rendered_text,
+                rendered_text.get_rect(centerx = game_constants.w / 2, centery = cur_y))
             last_y = cur_y
 
         for image, text in reversed(enemies):
@@ -326,18 +344,22 @@ Press return to continue."""
             cur_y = last_y - rendered_text.get_height() - 20
             rect = rendered_text.get_rect(centerx = game_constants.w / 2, centery = cur_y)
             self.screen.blit(rendered_text, rect)
-            self.screen.blit(image, image.get_rect(centerx = rect.left - image.get_width() - 10, centery = cur_y))
+            self.screen.blit(
+                image,
+                image.get_rect(centerx = rect.left - image.get_width() - 10, centery = cur_y))
             last_y = cur_y
 
         gunstar_top = last_y / 2 - self.image.get_height() / 2
-        self.screen.blit(self.image, self.image.get_rect(centerx = game_constants.w / 2, top = gunstar_top))
+        self.screen.blit(
+            self.image,
+            self.image.get_rect(centerx = game_constants.w / 2, top = gunstar_top))
 
         pygame.display.update()
         self.dirty = False
 
     def handleKeydown(self, event_key):
         if event_key == K_RETURN:
-            return TitleScreen(self.screen)
+            self.switch_to = TitleScreen(self.screen)
 
 class Option:
     def __init__(self, screen, value, checked = False, active = False):
@@ -424,17 +446,21 @@ class OptionGroup:
 
 class OptionsScreen(BaseScreen):
     def __init__(self, screen, word_sources = [], enemy_types = []):
-        self.dirty = True
-        self.screen = screen
-        self.showing = True
+        super(OptionsScreen, self).__init__(screen)
 
         # TODO does this belong somewhere else?
         self.word_sources = ['Google','Digg','Slashdot']
         self.enemy_types = [Soldier, Copter, Ghost, Commando]
 
         self.options = self.word_sources + [x.name for x in self.enemy_types]
-        self.feeds_group = OptionGroup((100, 100), [Option(self.screen, word) for word in self.word_sources])
-        self.enemy_group = OptionGroup((300, 100), [Option(self.screen, x.name) for x in self.enemy_types])
+
+        self.feeds_group = OptionGroup(
+            (100, 100),
+            [Option(self.screen, word) for word in self.word_sources])
+        self.enemy_group = OptionGroup(
+            (300, 100),
+            [Option(self.screen, x.name) for x in self.enemy_types])
+
         self.option_groups = [self.feeds_group, self.enemy_group]
         self.feeds_group.activate()
 
@@ -459,7 +485,7 @@ class OptionsScreen(BaseScreen):
 
     def handleKeydown(self, event_key):
         if event_key == K_RETURN:
-            return TitleScreen(self.screen)
+            self.switch_to = TitleScreen(self.screen)
         elif event_key == K_DOWN:
             self.option_groups[self.groupnum].down()
         elif event_key == K_UP:
@@ -487,13 +513,14 @@ class OptionsScreen(BaseScreen):
     def getEnemyOptions(self):
         return [opt.value for opt in self.enemy_group.get_checked()]
 
-class MainGameScene(BaseScreen):
+class PlatformingScene(BaseScreen):
     """ Class for the main playable game environment. """
     def __init__(self, screen):
+        super(PlatformingScene, self).__init__(screen)
+
         self.headersize = 30
 
         self.camera = pygame.rect.Rect(0, 0, game_constants.w, game_constants.h)
-        self.screen = screen
         self.special_chars = SpecialChars()
         self.movelist = []
         self.time_elapsed = 0
@@ -530,9 +557,14 @@ class MainGameScene(BaseScreen):
 
         self.screencheck() # Move sprites into or out of 'screenstatics' group based on whether they're in camera
 
+        self.redraw()
+        pygame.display.update()
+
         # fixme: rearchitect this
         self.challenging = False
-        self.showing = True
+
+    def lazy_redraw(self):
+        return False
 
     def place_platforms(self):
         def fill_level(height, camera):
@@ -709,7 +741,7 @@ class MainGameScene(BaseScreen):
     def tick(self, elapsed):
         self.place_platforms()
 
-        self.time_elapsed = elapsed
+        self.time_elapsed += elapsed
 
         for direction in self.movelist:
             self.player.direct(direction)
@@ -727,6 +759,9 @@ class MainGameScene(BaseScreen):
                 screenstatic.reachable = self.is_reachable(screenstatic)
         self.player.tick()
 
+        if (self.health.value() <= 0):
+            self.switch_to = GameOverScreen(self.screen)
+
     def type_special(self, key): # Typing a special character
         for platform_level in self.platforms.values():
             for platform in platform_level:
@@ -734,9 +769,6 @@ class MainGameScene(BaseScreen):
                     if platform.reachable and self.camera.colliderect(platform.rect):
                         if key == platform.contents():
                             return platform
-
-    def showMe(self):
-        return self.health.value() != 0
 
     def exitChallenge(self):
         self.challenging = False
@@ -760,8 +792,6 @@ class ChallengeScreen(BaseScreen):
 
         sentence.draw(screen, (game_constants.w / 2, game_constants.h / 2))
 
-        self.showing = True
-
     def draw(self):
         self.frames += 1
 
@@ -774,7 +804,8 @@ class ChallengeScreen(BaseScreen):
         else:
             xpos = game_constants.w / 2
 
-        message_rectangle = self.challenge_message.get_rect(centerx = xpos, centery = game_constants.h / 4)
+        message_rectangle = self.challenge_message.get_rect(
+            centerx = xpos, centery = game_constants.h / 4)
 
         if 200 < self.frames < 455: # Transparent fadeout of text
             self.challenge_message.set_alpha(255 - (self.frames - 200))

@@ -5,6 +5,16 @@ from collision import distfromground, clearshot
 
 def rand_offset(value):
     return (random.randint(-value, value), random.randint(-value, value))
+
+def getOpponent(name):
+    if name == 'Soldier':
+        return Soldier
+    elif name == 'Copter':
+        return Copter
+    elif name == 'Ghost':
+        return Ghost
+    elif name == 'Commando':
+        return Commando
     
 class Opponent(WrappedSprite):
     """ A holder of a word, along with the game logic for moving around the screen and such. """

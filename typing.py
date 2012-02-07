@@ -3,23 +3,18 @@
 # TYPER COMBAT  : A 2d typing game inspired by Typing of the Dead
 # Travis J. Grathwell, Started August 8th, 2006
 
-# Most all the graphics in this game are ripped from the game 'Gunstar Heroes' for the Sega Genesis. Used without permission.
-# Other graphics have been purloined from Super Mario Bros., Pac-Man, Legend of Zelda.
+# Most all the graphics in this game are ripped from the game 'Gunstar Heroes'
+#   for the Sega Genesis. Used without permission.
+# Other graphics taken from Super Mario Bros., Pac-Man, Legend of Zelda.
 
 import pygame, sys, time
 from pygame.locals import *
-from feeder import getFeeder
-from general import *
-from scene import MainGameScene, TitleScreen, GameOverScreen, ChallengeScreen, LoadingScreen
-from opponents import Soldier, Copter, Ghost, Commando
-from controller import Controller
+from general import game_constants, loadImagesForAnimations
+from scene import TitleScreen
 
 if not pygame.font:
     print "Couldn't load font library, crashing hard"
     sys.exit(1)
-
-class KeyState(object):
-    shifting = 0
 
 clock = pygame.time.Clock()
 
@@ -32,89 +27,41 @@ def processEventsForKillSignal(events):
     return events
 
 def game_loop(screen):
-    screen.set_clip()
-    basic_screen = TitleScreen(screen)
+    events = []
+    last_frame_time = None
 
-    event = None
-    while basic_screen.showMe(): # Splashscreen Phase
-        if event:
-            processEventsForKillSignal([event])
+    scene = TitleScreen(screen)
+
+    while True:
+        if not scene.lazy_redraw():
+            clock.tick(60)
+            events = pygame.event.get()
+
+        for event in processEventsForKillSignal(events):
             if event.type == KEYDOWN:
-                new_screen = basic_screen.handleKeydown(event.key)
-                if new_screen: basic_screen = new_screen
-        if basic_screen.dirty:
-            basic_screen.draw()
-        event = pygame.event.wait()
-
-    loading_scene = LoadingScreen(screen)
-    loading_scene.draw()
-    pygame.display.update()
-    main_game_scene = MainGameScene(screen)
-
-    starttime = time.time()
-
-    # TODO: dynamically choose which feeds based on options
-    feed_sources = [getFeeder('Google'), getFeeder('Slashdot'), getFeeder('Digg')]
-    spawners = [Soldier, Copter, Ghost]
-
-    # need at least one feed
-    if feed_sources == []:
-        feed_sources = [getFeeder()]
-
-    word_list = [word for feeder in feed_sources for word in feeder.words]
-
-    # broken for now...
-    # sentence_list = sum([feeder.sentences for feeder in feed_sources],[])
-
-    words = WordMaker(word_list)
-    sentences = WordMaker([])
-    controller = Controller(main_game_scene, words, sentences, spawners)
-
-    main_game_scene.redraw()
-    pygame.display.update()
-
-    # Gameplay phase
-    while main_game_scene.showMe():
-        elapsed = max(time.time() - starttime, 1)
-        clock.tick(60)
-
-        for event in processEventsForKillSignal(pygame.event.get()):
-            if event.type == KEYDOWN:
-                if event.key in (K_LSHIFT,K_RSHIFT):
-                    # shift is being held
-                    KeyState.shifting += 1
-                else:
-                    controller.handleKeydown(event.key, KeyState.shifting)
-
+                scene.handleKeydown(event.key)
             elif event.type == KEYUP:
-                if event.key in (K_LSHIFT,K_RSHIFT):
-                    KeyState.shifting -= 1
-                else:
-                    controller.handleKeyup(event.key)
+                scene.handleKeyup(event.key)
 
-        controller.tick()
+        if scene.lazy_redraw():
+            if scene.dirty:
+                scene.draw()
+            events = [pygame.event.wait()]
+        else:
+            elapsed = time.time() - last_frame_time if last_frame_time else .001
 
-        main_game_scene.tick(elapsed)
+            scene.tick(elapsed)
 
-        #Drawing
-        dirty = main_game_scene.draw()
-        pygame.display.update(dirty)
+            last_frame_time = time.time()
 
-    # Clear any clip state from main game phase
-    screen.set_clip()
+            dirty_rects = scene.draw()
+            pygame.display.update(dirty_rects)
 
-    game_over_screen = GameOverScreen(screen)
-    event = None
-    while game_over_screen.showMe(): # Endgame Screen Phase
-        if event:
-            processEventsForKillSignal([event])
-            if event.type == KEYDOWN:
-                if event.key == K_RETURN: # Choose whether to restart
-                    game_over_screen.handleKeydown(event.key)
-        if game_over_screen.dirty:
-            game_over_screen.draw() # Updates full screen, also
-        event = pygame.event.wait()
+        screen.set_clip()
 
+        new_scene = scene.switchToScene()
+        if new_scene:
+            scene = new_scene
 
 def main(argv=sys.argv):
     if len(argv) == 2 and 640 <= int(argv[1]) <= 1280:
@@ -130,8 +77,7 @@ def main(argv=sys.argv):
 
     loadImagesForAnimations()
 
-    while True:
-        game_loop(screen)
+    game_loop(screen)
 
 if __name__ == '__main__':
     main()
