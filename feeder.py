@@ -4,34 +4,44 @@ from StringIO import StringIO
 import feedparser
 import urllib2, re, gzip, time, os, string
 
+ONE_HOUR = 60 * 60
+cached_feeders = {}
+
 def getFeeder(string = "Google"):
+    if string in cached_feeders:
+        return cached_feeders[string]
+
+    new_feeder = None
     if string == "Digg":
-        return DiggFeeder()
+        new_feeder = DiggFeeder()
     elif string == "Slashdot":
-        return SlashdotFeeder()
+        new_feeder = SlashdotFeeder()
     else:
-        return GoogleFeeder()
+        new_feeder = GoogleFeeder()
+
+    cached_feeders[string] = new_feeder
+    return new_feeder
 
 class Feeder:
     def __init__(self):
-        stale = False
-        try: # Try to get the last modified date of the retrieved XML file, if it exists
-            lastmod = os.stat(self.filename)[8]
-            stale = (time.time() - lastmod) > 3600 # one hour
-        except OSError:
-            stale = True
-
-        if stale:
+        if self.needs_redownload():
             self.download_and_cache_xml()
 
-        xml = open(self.filename)
-        parsed_feed = feedparser.parse(xml)
-        textblob = self.filtered(parsed_feed)
-        self.save_words(textblob)
+        parsed_feed = feedparser.parse(self.filename)
+
+        filtered_text = self.filter(parsed_feed)
+        self.words = self.good_words(filtered_text)
+
+    def needs_redownload(self):
+        try:
+            lastmod = os.stat(self.filename)[8]
+            return (time.time() - lastmod) > ONE_HOUR
+        except OSError:
+            return True
 
     def download_and_cache_xml(self):
         try:
-            xml = self.download_xml(self.feed_url)
+            xml = self.download_xml()
         except urllib2.URLError:
             pass
         else:
@@ -39,33 +49,14 @@ class Feeder:
             out.write(xml.read())
             out.close()
 
-    def fudge_sentence(self, sentence):
-        sentence = sentence.replace("&quot;", "")
-        sentence = sentence.replace("&amp;", "and")
-        sentence = sentence.replace("nbsp;", " ")
-        sentence = sentence.replace("mdash;", "")
-        return sentence.strip() + "."
-
-    br_regex = re.compile(r'&lt;[bB][rR]&gt;|&lt;[bB][rR] /&gt;')
+    encoded_tags_regex = re.compile(r'&lt;[^&]*&gt;')
+    decoded_tags_regex = re.compile(r'<[^>]*>')
+    space_regex = re.compile(r'\s+')
     def strip_tags(self, text):
-        text = re.sub(self.br_regex, ' ', text)
-
-        finished = 0
-        parsed = []
-        while not finished:
-            finished = 1
-            # check if there is an open tag left
-            start = text.find("&lt;")
-            if start >= 0:
-                # if there is, check if the tag gets closed
-                stop = text.find("&gt;")
-                if stop >= 0:
-                    # if it does, strip it, and continue loop
-                    finished = 0
-                    parsed.append(text[:start])
-                    text = text[stop + 4:]
-        parsed.append(text)
-        return ''.join(parsed)
+        text = re.sub(self.encoded_tags_regex, ' ', text)
+        text = re.sub(self.decoded_tags_regex, ' ', text)
+        text = re.sub(self.space_regex, ' ', text)
+        return text
 
     acronym_regex = re.compile('[A-Z]{2}')
     def word_is_good(self, word):
@@ -78,9 +69,10 @@ class Feeder:
                 return False
         return True
 
-    ua_string = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.0.6) Gecko/20060728 Firefox/1.5.0.6'
-    def download_xml(self, url):
-        request = urllib2.Request(url)
+    ua_string = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.0.6) ' + \
+                'Gecko/20060728 Firefox/1.5.0.6'
+    def download_xml(self):
+        request = urllib2.Request(self.feed_url)
         request.add_header('User-Agent', self.ua_string)
         request.add_header('Accept-encoding', 'gzip')
         f = urllib2.urlopen(request)
@@ -91,57 +83,41 @@ class Feeder:
                 return StringIO(page.read())
         return f
 
-    def save_words(self, textblob):
-        words = textblob.split(' ')
-        self.sentences = [self.fudge_sentence(sentence) for sentence in textblob.split('. ')]
-        self.words = [word.lower() for word in words if self.word_is_good(word)]
-        print self.type + " returned " + str(len(self.words)) + " words."
+    def filter(self, parsed_feed):
+        articles = [entry['description'] for entry in parsed_feed['entries']]
+        return ' '.join([self.filter_article(article) for article in articles])
+
+    def filter_article(self, article):
+        return self.strip_tags(article)
+
+    def good_words(self, text):
+        raw_words = list(set(text.split(' ')))
+        return [word.lower() for word in raw_words if self.word_is_good(word)]
 
 class GoogleFeeder(Feeder):
-    def __init__(self):
-        self.type = "Google"
-        self.feed_url = "http://news.google.com/?output=rss"
-        self.filename = os.path.join('feeds', 'google.xml')
-        Feeder.__init__(self)
-
-    def filtered(self, parsed_feed):
-        # Google description texts end with '<b>...</b>', escaped.
-        texts = [entry['description'] for entry in parsed_feed['entries']]
-        choppedtext = []
-        for text in texts:
-            choppedtext.append(text[:text.find("&lt;b&gt;...")])
-        cleantexts = [self.strip_tags(text) for text in choppedtext]
-        return ' '.join(cleantexts)
+    short_name = "Google"
+    feed_url = "http://news.google.com/?output=rss"
+    filename = os.path.join('feeds', 'google.xml')
 
 class SlashdotFeeder(Feeder):
-    def __init__(self):
-        self.type = "Slashdot"
-        self.feed_url = "http://rss.slashdot.org/Slashdot/slashdot"
-        self.filename = os.path.join('feeds', 'slashdot.xml')
-        Feeder.__init__(self)
+    short_name = "Slashdot"
+    feed_url = "http://rss.slashdot.org/Slashdot/slashdot"
+    filename = os.path.join('feeds', 'slashdot.xml')
 
-    def filtered(self, parsed_feed):
-        # Most articles in slashdot are enclosed within blocks of the style: User Writes, "blah blah blah"
-        texts = [entry['description'] for entry in parsed_feed['entries']]
-        cleantexts = [self.strip_tags(text) for text in texts]
+    def filter_article(self, article):
+        text = self.strip_tags(article)
 
-        writes = re.compile(r"writes &quot")
-        inquotes = re.compile(r"&quot;(.*?)&quot;")
-        justtexts = []
-        for text in cleantexts:
-            match = writes.search(text)
-            if match:
-                justtexts.append(inquotes.search(text).groups()[0])
-            else:
-                justtexts.append(text)
-        return ' '.join(justtexts)
+        # Most articles in the slashdot feed are enclosed within blocks of the style:
+        #    user writes, "blah blah blah"
+        writes_re = re.compile(r'writes "(.*)"')
+
+        match = writes_re.search(text)
+        if match:
+            return match.groups()[0]
+        else:
+            return text
 
 class DiggFeeder(Feeder):
-    def __init__(self):
-        self.type = "Digg"
-        self.feed_url = "http://digg.com/rss/index.xml"
-        self.filename = os.path.join('feeds', 'digg.xml')
-        Feeder.__init__(self)
-
-    def filtered(self, parsed_feed):
-        return ' '.join([entry['description'] for entry in parsed_feed['entries']])
+    short_name = "Digg"
+    feed_url = "http://digg.com/rss/index.xml"
+    filename = os.path.join('feeds', 'digg.xml')
