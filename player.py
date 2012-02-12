@@ -13,7 +13,7 @@ class Weapons:
 class States:
     """ Enum for possible states that a Player object can be in """
     jumping, idle, running, falling, shooting, hit = range(6)
-        
+
 class Bullet(pygame.sprite.Sprite):
     """ A short vector on the screen that is hurtling toward an opponent.
         'Start' is the world-position of the bullet's origin, 'Vector' is a world-normalized vector toward the bullet's objective
@@ -38,32 +38,35 @@ class Bullet(pygame.sprite.Sprite):
             self.opponent.hit(self.weapon, self.shooter)
             self.kill()
             return
-            
+
         self.start = self.next
         self.next = (self.start[0] - self.vector[0] * game_constants.bulletspeed, self.start[1] - self.vector[1] * game_constants.bulletspeed)
 
     def draw(self, surface, campos):
-        # We want to be able to kill the bullet if it's out of camera, but pygame won't let us do that in draw, so we need to save it and try in move instead
-        # This is kind of a hack anyway, there shouldn't be a way for bullets to get outside the camera rect. But oh well.
+        # We want to be able to kill the bullet if it's out of camera,
+        #   but pygame won't let us do that in draw, so we need to save
+        #   it and try in move instead.
+        # This is kind of a hack anyway, there shouldn't be a way for bullets to get outside
+        #   the camera rect. But oh well.
         self.campos = campos
-        
+
         # Calculate screenpos by subtracting camerapos and draw
         start_screenpos = self.start[0] - campos[0], self.start[1] - campos[1]
         next_screenpos = self.next[0] - campos[0], self.next[1] - campos[1]
-        
+
         # HACK: I think the 'inflate' is needed because the rect returned by 'draw' doesn't respect 'width'
         self.rect = pygame.draw.line(surface, Weapons.colors[self.weapon], start_screenpos, next_screenpos, 2).inflate(2, 2)
         return self.rect
-        
+
 class Player(WrappedSprite):
     """ Logic, graphics and methods for a game protagonist """
 
     def __init__(self, position):
         super(Player, self).__init__()
-        
+
         self.state = States.falling
         self.colliders = None
-        
+
         self.loadanims()
         self.direction = 'r'
         self.jumpdir = 'u'
@@ -73,11 +76,11 @@ class Player(WrappedSprite):
         self.shots_left = 0
         self.bullets = RenderUpdatesDraw()
         self.velocity = 0
-        
+
         self.selected_opponent = None
         self.position = position
         self.setanim() # Also sets self.rect for collisions
-        
+
     @classmethod
     def loadImages(cls):
         super(Player, cls).loadImages()
@@ -102,52 +105,53 @@ class Player(WrappedSprite):
         cls.images['fallleft']      = flippedframes(cls.images['fallright'])
         cls.images['hitright']      = loadframes("gunstar", ["hit1.png", "hit2.png"])
         cls.images['hitleft']       = flippedframes(cls.images['hitright'])
-        
+
     def loadanims(self):
-        self.upright       = Anim(self.images['upright'],       (5, 5))
-        self.upleft        = Anim(self.images['upleft'],        (5, 5))
-        
-        self.upsideright   = Anim(self.images['upsideright'],   (5, 5))
-        self.upsideleft    = Anim(self.images['upsideleft'],    (5, 5))
-        
-        self.sideright     = Anim(self.images['sideright'],     (5, 5))
-        self.sideleft      = Anim(self.images['sideleft'],      (5, 5))
-        
-        self.downsideright = Anim(self.images['downsideright'], (5, 5))
-        self.downsideleft  = Anim(self.images['downsideleft'],  (5, 5))
-        
-        self.downright     = Anim(self.images['downright'],     (5, 5))
-        self.downleft      = Anim(self.images['downleft'],      (5, 5))
-        
-        self.idleright     = Anim(self.images['idleright'],     (30, 60))
-        self.idleleft      = Anim(self.images['idleleft'],      (30, 60))
-        
-        self.runright      = Anim(self.images['runright'],      (14,) * 6)
-        self.runleft       = Anim(self.images['runleft'],       (14,) * 6)
-        
-        self.jumpright     = Anim(self.images['jumpright'],     (20, 40))
-        self.jumpleft      = Anim(self.images['jumpleft'],      (20, 40))
-        
-        self.fallright     = Anim(self.images['fallright'],     (20,))
-        self.fallleft      = Anim(self.images['fallleft'],      (20,))
-        
-        self.hitright      = Anim(self.images['hitright'],      (5, 5))
-        self.hitleft       = Anim(self.images['hitleft'],       (5, 5))
+        self.anims = {
+            States.shooting : {
+                'upright'       : Anim(self.images['upright'],       (5, 5)),
+                'upleft'        : Anim(self.images['upleft'],        (5, 5)),
+
+                'upsideright'   : Anim(self.images['upsideright'],   (5, 5)),
+                'upsideleft'    : Anim(self.images['upsideleft'],    (5, 5)),
+
+                'sideright'     : Anim(self.images['sideright'],     (5, 5)),
+                'sideleft'      : Anim(self.images['sideleft'],      (5, 5)),
+
+                'downsideright' : Anim(self.images['downsideright'], (5, 5)),
+                'downsideleft'  : Anim(self.images['downsideleft'],  (5, 5)),
+
+                'downright'     : Anim(self.images['downright'],     (5, 5)),
+                'downleft'      : Anim(self.images['downleft'],      (5, 5)),
+                },
+            States.idle : {
+                'r'        : Anim(self.images['idleright'],     (30, 60)),
+                'l'        : Anim(self.images['idleleft'],      (30, 60)),
+                },
+            States.running : {
+                'r'        : Anim(self.images['runright'],      (14,) * 6),
+                'l'        : Anim(self.images['runleft'],       (14,) * 6),
+                },
+            States.jumping : {
+                'r'        : Anim(self.images['jumpright'],     (20, 40)),
+                'l'        : Anim(self.images['jumpleft'],      (20, 40)),
+                },
+            States.falling : {
+                'r'        : Anim(self.images['fallright'],     (20,)),
+                'l'        : Anim(self.images['fallleft'],      (20,)),
+                },
+            States.hit     : {
+                'r'        : Anim(self.images['hitright'],      (5, 5)),
+                'l'        : Anim(self.images['hitleft'],       (5, 5)),
+                },
+            }
 
     def draw(self, surface, campos):
         return self.current_anim.draw(surface, self.rect.move((-campos[0], -campos[1])))
 
     def setanim(self): # Set animation from state and direction
-        anims = {
-          States.jumping : {'l' : self.jumpleft, 'r' : self.jumpright},
-          States.falling : {'l' : self.fallleft, 'r' : self.fallright},
-          States.running : {'l' : self.runleft,  'r' : self.runright},
-          States.idle    : {'l' : self.idleleft, 'r' : self.idleright},
-          States.hit     : {'l' : self.hitleft,  'r' : self.hitright},
-        }
-
         if self.state != States.shooting:
-            self.current_anim = anims[self.state][self.direction]
+            self.current_anim = self.anims[self.state][self.direction]
 
         # Want to ensure that new bottom = old bottom
         self.rect = self.current_anim.get_rect()
@@ -170,11 +174,11 @@ class Player(WrappedSprite):
 
     def tick(self):
         self.delayframes += 1
-        
+
         if self.state in (States.falling, States.jumping, States.hit):
             if self.velocity > game_constants.terminal_velocity:
                 self.velocity -= .25
-        
+
         # If we're falling, check how far we are from the nearest ground. If we're further than one tick's distance,
         # move jumpspeed units. If we're closer than one tick's distance, move directly to the ground.
         if self.state in (States.falling, States.hit):
@@ -204,7 +208,7 @@ class Player(WrappedSprite):
             if newdist > 0:
                 self.state = States.falling
             if not self.moving: self.state = States.idle # Not moving but run animation is being displayed
-        
+
         if self.moving:
             jump_slow = False
             if self.state == States.jumping and self.jump_target <> None:
@@ -220,7 +224,7 @@ class Player(WrappedSprite):
                     if (self.rect.right + game_constants.speed + 5) > self.jump_target.rect.left and \
                        (self.rect.top > self.jump_target.rect.bottom):
                         jump_slow = True
-            
+
             if self.state in (States.running, States.jumping, States.falling) and not jump_slow: # Left-Right movement is allowed
                 oldpos, oldrect = self.position, self.rect
                 if self.direction == 'l':
@@ -229,7 +233,7 @@ class Player(WrappedSprite):
                     self.move_horizontal(game_constants.speed)
                 if self.collide():
                     self.position, self.rect = oldpos, oldrect
-            
+
         self.setanim()
         self.current_anim.tick()
 
@@ -258,8 +262,8 @@ class Player(WrappedSprite):
 
         self.jump_target = jump_target
         self.delayframes = 0
-        self.jumpright.reset()
-        self.jumpleft.reset()
+        self.anims[States.jumping]['r'].reset()
+        self.anims[States.jumping]['l'].reset()
         self.state = States.jumping
         self.velocity = 7
 
@@ -279,60 +283,70 @@ class Player(WrappedSprite):
         y = self.rect.center[1] - selected.y
         h = math.sqrt(x**2 + y**2)
         angle = math.degrees(math.asin(y / h))
-        
+
+        anim_name = None
         if angle > 0: # Quadrant 1 or 2
             if x < 0: # Quadrant 2: up, diag or side
                 if abs(angle) < 30:
-                    self.current_anim = self.sideright
+                    anim_name = 'sideright'
                 elif 30 < abs(angle) < 70:
-                    self.current_anim = self.upsideright
+                    anim_name = 'upsideright'
                 else:
-                    self.current_anim = self.upright
+                    anim_name = 'upright'
             else: # Quadrant 1: up, diag or side
                 if abs(angle) < 30:
-                    self.current_anim = self.sideleft
+                    anim_name = 'sideleft'
                 elif 30 < abs(angle) < 70:
-                    self.current_anim = self.upsideleft
+                    anim_name = 'upsideleft'
                 else:
-                    self.current_anim = self.upleft
+                    anim_name = 'upleft'
         else: # Quadrant 3 or 4
             if x < 0: # Quadrant 3: side, diag or down
                 if abs(angle) < 30:
-                    self.current_anim = self.sideright
+                    anim_name = 'sideright'
                 elif 30 < abs(angle) < 70:
-                    self.current_anim = self.downsideright
+                    anim_name = 'downsideright'
                 else:
-                    self.current_anim = self.downright
+                    anim_name = 'downright'
             else: # Quadrant 4: side, diag or down
                 if abs(angle) < 30:
-                    self.current_anim = self.sideleft
+                    anim_name = 'sideleft'
                 elif 30 < abs(angle) < 70:
-                    self.current_anim = self.downsideleft
+                    anim_name = 'downsideleft'
                 else:
-                    self.current_anim = self.downleft
+                    anim_name = 'downleft'
+        self.current_anim = self.anims[States.shooting][anim_name]
 
     def shoot(self, selected):
-        player = self.rect.center # Gunshots emerge from center of player... should later make this be exact gun position by dicting anims
-    
+        # Gunshots emerge from center of player...
+        #   could later make this be exact gun position by dicting anims
+        player = self.rect.center
+
         # Reset powerup weapons after 10 shots.
         if self.weapon != Weapons.normal:
             self.shots_left -= 1
             if self.shots_left < 0:
                 self.weapon = Weapons.normal
-    
+
         if self.weapon == Weapons.normal:
             shotcount = 1
         elif self.weapon == Weapons.shotgun:
             shotcount = 3
-        
+
         for _ in xrange(shotcount):
-            # "Fudge" the destination point a bit to make it look like shots are being sent out haphazardly instead of to the same point every time
+            # Fudge the destination point a bit to make it look like shots are being
+            #   sent out haphazardly instead of to the same point every time
             fudgex = selected.x + random.randint(-selected.rect.width / 2, selected.rect.width / 2)
             fudgey = selected.y + random.randint(-selected.rect.height / 2, selected.rect.height / 2)
             distx, disty = (player[0] - fudgex, player[1] - fudgey)
             hypotenuse = math.sqrt(distx**2 + disty**2)
             nx, ny = distx / hypotenuse, disty / hypotenuse
             ttl = int(hypotenuse / game_constants.bulletspeed)
-        
-            new_bullet = Bullet(self, self.weapon, (player[0] - nx * 4, player[1] - ny * 4), [nx, ny], selected, ttl)
-            self.bullets.add(new_bullet)
+
+            self.bullets.add(Bullet(
+                self,
+                self.weapon,
+                (player[0] - nx * 4, player[1] - ny * 4),
+                [nx, ny],
+                selected,
+                ttl))

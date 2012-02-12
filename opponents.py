@@ -99,7 +99,7 @@ class Ghost(Opponent):
     def __init__(self, word, (x, y), statics, speed = 2.2):
         super(Ghost, self).__init__(word, (x, y), statics, speed)
         self.loadanims()
-        self.current_anim = self.left
+        self.current_anim = self.anims['left']
         self.rect = self.current_anim.get_rect()
         self.rect.centerx, self.rect.bottom = (self.x, self.y)
         
@@ -120,17 +120,18 @@ class Ghost(Opponent):
         cls.images['eyesdown']  = loadframes("ghost", ("eyesdown.gif",))
 
     def loadanims(self):
-        self.left      = Anim(self.images['left'],      (10, 10))
-        self.right     = Anim(self.images['right'],     (10, 10))
-        self.up        = Anim(self.images['up'],        (10, 10))
-        self.down      = Anim(self.images['down'],      (10, 10))
+        self.anims = {}
+        self.anims['left']      = Anim(self.images['left'],      (10, 10))
+        self.anims['right']     = Anim(self.images['right'],     (10, 10))
+        self.anims['up']        = Anim(self.images['up'],        (10, 10))
+        self.anims['down']      = Anim(self.images['down'],      (10, 10))
         
-        self.blue      = Anim(self.images['blue'],      (10, 10))
+        self.anims['blue']      = Anim(self.images['blue'],      (10, 10))
         
-        self.eyesright = Anim(self.images['eyesright'], (100,))
-        self.eyesleft  = Anim(self.images['eyesleft'],  (100,))
-        self.eyesup    = Anim(self.images['eyesup'],    (100,))
-        self.eyesdown  = Anim(self.images['eyesdown'],  (100,))
+        self.anims['eyesright'] = Anim(self.images['eyesright'], (100,))
+        self.anims['eyesleft']  = Anim(self.images['eyesleft'],  (100,))
+        self.anims['eyesup']    = Anim(self.images['eyesup'],    (100,))
+        self.anims['eyesdown']  = Anim(self.images['eyesdown'],  (100,))
 
     def draw(self, surface, camera):
         if self.ttl:
@@ -150,10 +151,10 @@ class Ghost(Opponent):
             ydist = yt - self.y
             if abs(xdist) < abs(ydist): # Closer to the top or bottom edge
                 if ydist < 0: self.y += self.speed
-                else: self.y -= self.speed
+                else:         self.y -= self.speed
             else: # Closer to the left or right edge
                 if xdist < 0: self.x += self.speed
-                else: self.y -= self.speed
+                else:         self.y -= self.speed
             self.rect.center = (self.x, self.y)
         else: # call basic opponent move
             Opponent.move(self, (xt, yt))
@@ -166,24 +167,25 @@ class Ghost(Opponent):
             self.move((xt, yt))
         else:
             self.move((xt, yt))
-            if self.pause: self.current_anim = self.blue
+            if self.pause: self.current_anim = self.anims['blue']
             else: self.point((xt - self.x, yt - self.y))
 
-    def point(self, (xdist, ydist), dead = False): # Look your little ghosty-eyes in the right direction.
+    # Look your little ghosty-eyes in the correct direction.
+    def point(self, (xdist, ydist), dead = False):
         if abs(xdist) > abs(ydist): # Need to move more X, look either left or right
             if xdist < 0: # Player to the left, look right
-                if dead: self.current_anim = self.eyesright
-                else: self.current_anim = self.left
+                if dead: self.current_anim = self.anims['eyesright']
+                else:    self.current_anim = self.anims['left']
             else:         # Player to the right, look left
-                if dead: self.current_anim = self.eyesleft
-                else: self.current_anim = self.right
+                if dead: self.current_anim = self.anims['eyesleft']
+                else:    self.current_anim = self.anims['right']
         else:
             if ydist < 0: # Player above, look down
-                if dead: self.current_anim = self.eyesdown
-                else: self.current_anim = self.up
+                if dead: self.current_anim = self.anims['eyesdown']
+                else:    self.current_anim = self.anims['up']
             else:         # Player below, look up
-                if dead: self.current_anim = self.eyesup
-                else: self.current_anim = self.down
+                if dead: self.current_anim = self.anims['eyesup']
+                else:    self.current_anim = self.anims['down']
 
     def destroy(self):
         self.ttl = 999 # ttl technically meaningless, but it indicates destruction
@@ -196,7 +198,7 @@ class Copter(Opponent):
     def __init__(self, word, (x, y), statics, speed = 2.5):
         super(Copter, self).__init__(word, (x, y), statics, speed)
         self.loadanims()
-        self.current_anim = self.fly_anim
+        self.current_anim = self.anims['fly']
         self.rect = self.current_anim.get_rect()
         self.rect.centerx, self.rect.bottom = (self.x, self.y)
         self.direction = 'l'
@@ -213,14 +215,15 @@ class Copter(Opponent):
         cls.images['fly']        = loadframes("copter", ["fly%s.gif" % i for i in xrange(1, 7)])
 
     def loadanims(self):
-        self.fly_anim = Anim(self.images['fly'], (10, 10, 10, 10, 10, 10))
-        self.explosion = Anim(self.images['explosion'], (4, 4) * 5, ends = True)
-        self.explosions = RenderUpdatesDraw([self.explosion.clone(newdelay = i * 5, newoffset = rand_offset(20)) for i in xrange(3)])
+        self.anims = {}
+        self.anims['fly'] = Anim(self.images['fly'], (10, 10, 10, 10, 10, 10))
+        self.anims['explosion'] = Anim(self.images['explosion'], (4, 4) * 5, ends = True)
+        self.anims['explosions'] = RenderUpdatesDraw([self.anims['explosion'].clone(newdelay = i * 5, newoffset = rand_offset(20)) for i in xrange(3)])
 
     def draw(self, surface, camera):
         if self.ttl:
-            [explosion.tick() for explosion in self.explosions]
-            exprects = self.explosions.draw(surface, self.rect.move(-camera[0], -camera[1])) # Need to merge into one rect
+            [explosion.tick() for explosion in self.anims['explosions']]
+            exprects = self.anims['explosions'].draw(surface, self.rect.move(-camera[0], -camera[1])) # Need to merge into one rect
             return exprects[0].unionall(exprects[1:])
         else:
             drawx, drawy = self.x - camera[0], self.y - camera[1]
@@ -268,7 +271,9 @@ class Copter(Opponent):
             if not -2 < ydist < 2:
                 oldy = self.y
                 oldrect = self.rect
-                if collidex: nydist = 1 # If we're trying to get through a wall, speed up movement in y direction
+                if collidex:
+                    # If we're trying to get through a wall, speed up movement in y direction
+                    nydist = 1 
                 if ydist < 0:
                     self.y -= nydist * self.speed
                 else:
@@ -294,6 +299,7 @@ class Copter(Opponent):
             self.rect = realrect
                         
         self.rect.centerx, self.rect.bottom = (self.x, self.y)
+
     def tick(self, (xt, yt)):
         self.current_anim.tick()
         if self.ttl is not None:
@@ -307,8 +313,9 @@ class Copter(Opponent):
                 if self.direction == 'l': self.direction = 'r'
                 elif self.direction == 'r': self.direction = 'l'
             self.move((xt, yt))
+
     def destroy(self):
-        self.ttl = max([explosion.total_time() for explosion in self.explosions])
+        self.ttl = max([explosion.total_time() for explosion in self.anims['explosions']])
         
 class Commando(Opponent):
     name = "Commando"
@@ -363,7 +370,7 @@ class Soldier(Opponent):
         super(Soldier, self).__init__(word, (x, y), statics, speed)
         self.jumpspeed = 4.5
         self.loadanims()
-        self.current_anim = self.runleft
+        self.current_anim = self.anims['runleft']
         self.rect = self.current_anim.get_rect()
         self.rect.centerx, self.rect.bottom = (self.x, self.y)
         self.direction = 'l'
@@ -385,33 +392,34 @@ class Soldier(Opponent):
         cls.images['jumpleft']  = flippedframes(cls.images['jumpright'])
 
     def loadanims(self):
-        self.idleright  = Anim(self.images['idleright'],  (30, 60))
-        self.idleleft   = Anim(self.images['idleleft'],   (30, 60))
+        self.anims = {}
+        self.anims['idleright']  = Anim(self.images['idleright'],  (30, 60))
+        self.anims['idleleft']   = Anim(self.images['idleleft'],   (30, 60))
         
-        self.runright   = Anim(self.images['runright'],   (15, 15, 15, 15))
-        self.runleft    = Anim(self.images['runleft'],    (15, 15, 15, 15))
+        self.anims['runright']   = Anim(self.images['runright'],   (15, 15, 15, 15))
+        self.anims['runleft']    = Anim(self.images['runleft'],    (15, 15, 15, 15))
         
-        self.fallright  = Anim(self.images['fallright'],  (20, 400))
-        self.fallleft   = Anim(self.images['fallleft'],   (20, 400))
+        self.anims['fallright']  = Anim(self.images['fallright'],  (20, 400))
+        self.anims['fallleft']   = Anim(self.images['fallleft'],   (20, 400))
         
-        self.jumpright  = Anim(self.images['jumpright'],  (5, 5))
-        self.jumpleft   = Anim(self.images['jumpright'],  (5, 5))
+        self.anims['jumpright']  = Anim(self.images['jumpright'],  (5, 5))
+        self.anims['jumpleft']   = Anim(self.images['jumpright'],  (5, 5))
         
-        self.explosion  = Anim(self.images['explosion'], (4, 4) * 5, ends = True)
-        self.explosions = RenderUpdatesDraw([self.explosion.clone(newdelay = i * 5, newoffset = rand_offset(20)) for i in xrange(5)])
+        self.anims['explosion']  = Anim(self.images['explosion'], (4, 4) * 5, ends = True)
+        self.anims['explosions'] = RenderUpdatesDraw([self.anims['explosion'].clone(newdelay = i * 5, newoffset = rand_offset(20)) for i in xrange(5)])
 
     def setanim(self):
         anims = {
-          States.jumping : {'l' : self.jumpleft, 'r' : self.jumpright},
-          States.falling : {'l' : self.fallleft, 'r' : self.fallright},
-          States.running : {'l' : self.runleft,  'r' : self.runright},
+          States.jumping : {'l' : self.anims['jumpleft'], 'r' : self.anims['jumpright']},
+          States.falling : {'l' : self.anims['fallleft'], 'r' : self.anims['fallright']},
+          States.running : {'l' : self.anims['runleft'],  'r' : self.anims['runright']},
         }
         self.current_anim = anims[self.state][self.direction]
 
     def draw(self, surface, camera):
         if self.ttl:
-            [explosion.tick() for explosion in self.explosions]
-            exprects = self.explosions.draw(surface, self.rect.move(-camera[0], -camera[1]))
+            [explosion.tick() for explosion in self.anims['explosions']]
+            exprects = self.anims['explosions'].draw(surface, self.rect.move(-camera[0], -camera[1]))
             # Need to merge into one rect
             return exprects[0].unionall(exprects[1:])
         else:
@@ -469,8 +477,8 @@ class Soldier(Opponent):
                 self.y += game_constants.jumpspeed
                 if self.state == States.running:
                     self.state = States.falling
-                    self.runright.reset()
-                    self.runleft.reset()
+                    self.anims['runright'].reset()
+                    self.anims['runleft'].reset()
             else: # Hitting the ground
                 self.y += dist
                 self.state = States.running
@@ -515,9 +523,9 @@ class Soldier(Opponent):
             return
 
         self.delayframes = 0
-        self.jumpright.reset()
-        self.jumpleft.reset()
+        self.anims['jumpright'].reset()
+        self.anims['jumpleft'].reset()
         self.state = States.jumping
 
     def destroy(self):
-        self.ttl = max([explosion.total_time() for explosion in self.explosions])
+        self.ttl = max([explosion.total_time() for explosion in self.anims['explosions']])
