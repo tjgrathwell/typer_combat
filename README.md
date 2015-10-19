@@ -19,4 +19,8 @@ Launch the game with a command like this:
 
 ## Running tests
 
-`python2.7-32 -m unittest discover`
+All tests:
+`python2.7-32 -m unittest discover -s tests`
+
+One test:
+`python2.7-32 -m unittest discover -s tests -p test_feeder.py`

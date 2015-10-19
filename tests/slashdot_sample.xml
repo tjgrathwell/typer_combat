@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:syn="http://purl.org/rss/1.0/modules/syndication/" xmlns:admin="http://webns.net/mvcb/" xmlns:feedburner="http://rssnamespace.org/feedburner/ext/1.0">
+
+  <channel rdf:about="http://slashdot.org/">
+    <title>Slashdot</title>
+    <link>http://slashdot.org/</link>
+    <description>News for nerds, stuff that matters</description>
+    <dc:language>en-us</dc:language>
+    <dc:rights>Copyright 1997-2012, Geeknet, Inc.  All Rights Reserved.</dc:rights>
+    <dc:date>2012-02-10T02:28:10+00:00</dc:date>
+    <dc:publisher>Geeknet, Inc.</dc:publisher>
+
+    <dc:creator>help@slashdot.org</dc:creator>
+    <dc:subject>Technology</dc:subject>
+    <syn:updateBase>1970-01-01T00:00+00:00</syn:updateBase>
+    <syn:updateFrequency>1</syn:updateFrequency>
+    <syn:updatePeriod>hourly</syn:updatePeriod>
+    <items>
+      <rdf:Seq>
+        <rdf:li rdf:resource="http://yro.slashdot.org/story/12/02/09/238211/intel-settles-ny-antitrust-case?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+        <rdf:li rdf:resource="http://it.slashdot.org/story/12/02/09/2320247/the-gradual-death-of-the-brick-and-mortar-tech-store?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+
+        <rdf:li rdf:resource="http://apple.slashdot.org/story/12/02/09/2256241/hackers-hit-apple-supplier-foxconn?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+        <rdf:li rdf:resource="http://hardware.slashdot.org/story/12/02/09/2213228/engelbarts-keyboard-available-for-touchscreens?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+        <rdf:li rdf:resource="http://science.slashdot.org/story/12/02/09/2152204/the-himalayas-and-nearby-peaks-have-lost-no-ice-in-past-10-years-study-shows?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+        <rdf:li rdf:resource="http://yro.slashdot.org/story/12/02/09/2136232/hacked-emails-reveal-russian-astroturfing-program?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+        <rdf:li rdf:resource="http://idle.slashdot.org/story/12/02/09/1937257/how-much-stuff-can-timothy-jam-into-his-new-hoodies-pockets-video?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+        <rdf:li rdf:resource="http://science.slashdot.org/story/12/02/09/2032204/mild-electric-shock-to-brain-may-boost-spatial-memory?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+        <rdf:li rdf:resource="http://entertainment.slashdot.org/story/12/02/09/195225/pink-floyd-engineer-alan-parsons-rips-audiophiles-youtube-and-jonas-brothers?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+        <rdf:li rdf:resource="http://search.slashdot.org/story/12/02/09/1857220/online-privacy-worth-less-than-marshmallow-fluff-six-pack?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+        <rdf:li rdf:resource="http://politics.slashdot.org/story/12/02/09/182245/us-approves-two-new-nuclear-reactors?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+
+        <rdf:li rdf:resource="http://games.slashdot.org/story/12/02/09/1845249/double-fine-raises-700000-in-24-hours-with-crowdfunding?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+        <rdf:li rdf:resource="http://apple.slashdot.org/story/12/02/09/1659208/fbi-file-notes-steve-jobs-reality-distortion-field?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+        <rdf:li rdf:resource="http://ask.slashdot.org/story/12/02/09/1633256/ask-slashdot-where-are-the-open-source-jobs?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+        <rdf:li rdf:resource="http://hardware.slashdot.org/story/12/02/09/1629259/sponsor-a-valve-on-colossus?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+      </rdf:Seq>
+    </items>
+    <image rdf:resource="http://a.fsdn.com/sd/topics/topicslashdot.gif" />
+    <textinput rdf:resource="http://slashdot.org/search.pl" />
+    <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/rdf+xml" href="http://rss.slashdot.org/Slashdot/slashdot" /><feedburner:info uri="slashdot/slashdot" /><atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="hub" href="http://pubsubhubbub.appspot.com/" /></channel>
+  <image rdf:about="http://a.fsdn.com/sd/topics/topicslashdot.gif">
+    <title>Slashdot</title>
+
+    <url>http://a.fsdn.com/sd/topics/topicslashdot.gif</url>
+    <link>http://slashdot.org/</link>
+  </image>
+  <item rdf:about="http://yro.slashdot.org/story/12/02/09/238211/intel-settles-ny-antitrust-case?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+    <title>Intel Settles NY Antitrust Case</title>
+    <link>http://rss.slashdot.org/~r/Slashdot/slashdot/~3/GL8WkhWMmoE/intel-settles-ny-antitrust-case</link>
+    <description>&lt;p&gt;&lt;a href="http://feedads.g.doubleclick.net/~at/TRgt55_QZ-ybcCxvLEhXIi38Gd4/0/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/TRgt55_QZ-ybcCxvLEhXIi38Gd4/0/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;br/&gt;
+
+      &lt;a href="http://feedads.g.doubleclick.net/~at/TRgt55_QZ-ybcCxvLEhXIi38Gd4/1/da"&gt;&lt;img src="http://feedads.g.doubleclick.net/~at/TRgt55_QZ-ybcCxvLEhXIi38Gd4/1/di" border="0" ismap="true"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;clustermonkey writes "Intel Corporation and the New York Attorney General have agreed to terminate the lawsuit alleging violation of U.S. and state antitrust laws that was filed by the New York Attorney General in November 2009. Intel did not have to admit any violation of law (if there ever was any) nor did it have to admit or deny that the allegations in the complaint are true. Most importantly, the settlement does not require any changes to how the company does business. The settlement includes a $6.5 million payment that is "intended only to cover some of the costs incurred by the New York Attorney General in the litigation." Here's the full settlement, and Intel's official press release."&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+      &lt;a class="slashpop" href="http://twitter.com/home?status=Intel+Settles+NY+Antitrust+Case%3A+http%3A%2F%2Fbit.ly%2FxSIaoP"&gt;&lt;img src="http://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+      &lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fyro.slashdot.org%2Fstory%2F12%2F02%2F09%2F238211%2Fintel-settles-ny-antitrust-case%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="http://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+      &lt;a class="nobg" href="http://plus.google.com/share?url=http://yro.slashdot.org/story/12/02/09/238211/intel-settles-ny-antitrust-case?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="http://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+      &lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="http://yro.slashdot.org/story/12/02/09/238211/intel-settles-ny-antitrust-case?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="http://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=2663639&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;&lt;img src="http://feeds.feedburner.com/~r/Slashdot/slashdot/~4/GL8WkhWMmoE" height="1" width="1"/&gt;</description>
+
+    <dc:creator>samzenpus</dc:creator>
+    <dc:date>2012-02-10T01:23:00+00:00</dc:date>
+    <dc:subject>intel</dc:subject>
+    <slash:department>show-us-the-money</slash:department>
+    <slash:section>yro</slash:section>
+    <slash:comments>14</slash:comments>
+    <slash:hit_parade>14,14,11,9,1,0,0</slash:hit_parade>
+    <feedburner:origLink>http://yro.slashdot.org/story/12/02/09/238211/intel-settles-ny-antitrust-case?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</feedburner:origLink></item>
+
+  <textinput rdf:about="http://slashdot.org/search.pl">
+    <title>Search Slashdot</title>
+    <description>Search Slashdot stories</description>
+    <name>query</name>
+    <link>http://slashdot.org/search.pl</link>
+  </textinput>
+</rdf:RDF>
