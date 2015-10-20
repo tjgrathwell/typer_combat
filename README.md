@@ -12,6 +12,7 @@ Here's one of the many possible ways you might achieve success:
 
 Install Python 2.7 from https://www.python.org/downloads/
 Install the latest pygame from http://www.pygame.org/download.shtml
+Install other dependencies with pip: `pip install -r requirements.txt`
 
 Launch the game with a command like this:
 

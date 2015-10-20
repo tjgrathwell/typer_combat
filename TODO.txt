@@ -24,7 +24,6 @@ Challenge Screen
   Fix feeds to get sentences
 
 Architecture
-  Use feedparser.py for feeds.
   Make an EventManager class ("Mediator") that parses events on tick and dispatches whatever signals
     need to be done depending on current scene.
 

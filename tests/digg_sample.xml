@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+  <channel>
+    <title>Digg Top Stories</title>
+    <description>Digg - What the Internet is talking about right now</description>
+    <link>http://digg.com/</link>
+    <lastBuildDate>Mon, 19 Oct 2015 02:47:20 +0000</lastBuildDate>
+    <pubDate>Mon, 19 Oct 2015 02:47:20 +0000</pubDate>
+    <ttl>15</ttl>
+    <item>
+      <title>Road-Tripping With The Jersey Devil</title>
+      <description>A writer and New Jersey native returns to her state in search of the mythical beast that made a town (Leeds Point) famous.</description>
+      <link>http://fusion.net/story/215059/real-jersey-devil-history-origins-legend-myth/</link>
+      <guid>http://on.digg.com/1MMIHfr</guid>
+      <pubDate>Mon, 19 Oct 2015 02:07:16 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

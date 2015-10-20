@@ -12,7 +12,6 @@ def sample_xml_content(filename):
 class testFeeder (unittest.TestCase):
     def setUp(self):
         self.feeder = feeder.getFeeder('Google')
-        self.slashdot_feeder = feeder.getFeeder('Slashdot')
 
     def testStripTags(self):
         self.assertEqual(
@@ -50,11 +49,20 @@ class testFeeder (unittest.TestCase):
     def testSlashdot(self):
         slashdot_sample_xml = sample_xml_content('slashdot_sample.xml')
 
-        filtered_text = self.slashdot_feeder.filter(feedparser.parse(slashdot_sample_xml))
+        filtered_text = feeder.getFeeder('Slashdot').filter(feedparser.parse(slashdot_sample_xml))
 
         good_words = self.feeder.good_words(filtered_text)
         self.assertEqual(set(good_words),
                          set([u'attorney', u'alleging', u'violation', u'agreed', u'some', u'general', u'have', u'settlement', u'corporation', u'there', u'only', u'state', u'does', u'ever', u'complaint', u'full', u'that', u'terminate', u'company', u'million', u'allegations', u'includes', u'most', u'york', u'filed', u'press', u'november', u'lawsuit', u'payment', u'incurred', u'deny', u'intel', u'antitrust', u'require', u'official', u'cover', u'admit', u'costs', u'changes', u'laws']))
+
+    def testDigg(self):
+        digg_sample_xml = sample_xml_content('digg_sample.xml')
+
+        filtered_text = feeder.getFeeder('Digg').filter(feedparser.parse(digg_sample_xml))
+
+        good_words = self.feeder.good_words(filtered_text)
+        self.assertEqual(set(good_words),
+                         set([u'town', u'search', u'made', u'mythical', u'that', u'writer', u'returns', u'beast', u'state', u'jersey', u'native']))
 
     def testWordIsGood(self):
         # too short
